@@ -6,7 +6,7 @@ SpaceState shows whether a hackerspace is open and notifies its users when that 
 
 Start here when picking the work up again.
 
-**Everything is merged into `dev` in both repositories; there are no open pull requests and no local changes.**
+**Everything is merged into `dev` in both repositories; there are no open pull requests and no local changes. Merged feature branches were deleted, so both repositories only have `dev` and `master`.**
 
 - SpacePush: the complete rewrite ([#1](https://github.com/kerker00/SpacePush/pull/1)), incl. two review rounds. 102 EUnit tests pass, xref and Dialyzer are clean, a local run against the real sources worked (also after `kill -9`).
 - SpaceState: package, macOS app, localization, icon, the legacy-layout comment fix, Xcode's project file formatting and this document (#1–#7).
@@ -148,6 +148,7 @@ Until the apps register devices, SpacePush runs but has nobody to notify.
 ### 3. Housekeeping
 
 - Archive [SpaceStateBar](https://github.com/kerker00/SpaceStateBar/settings) and [SpaceStateBackEnd](https://github.com/kerker00/SpaceStateBackEnd/settings) on GitHub (Settings → Danger Zone → Archive this repository). Both are still unarchived.
+- Do not delete the branches `REST-Api` and `handle-state` in SpaceStateBackEnd: they were never merged into its `master` and hold its latest 2015 work (19–20 commits, incl. the REST API). Archiving keeps them as they are.
 
 ### 4. iOS app
 
