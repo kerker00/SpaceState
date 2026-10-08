@@ -44,7 +44,7 @@ struct StatusPanel: View {
                 Text(store.status.title)
                     .foregroundStyle(store.status.color)
                 if let since = store.info?.state?.lastChange, store.lastError == nil {
-                    Text("since \(since, format: .relative(presentation: .named))")
+                    Text("Changed \(since, format: .relative(presentation: .named))")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
