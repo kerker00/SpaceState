@@ -16,6 +16,6 @@ extension StatusService {
 extension SpacePushClient {
     /// A client that identifies the app or widget to SpacePush (see `ClientIdentity`).
     static func configured(baseURL: URL) -> SpacePushClient {
-        SpacePushClient(baseURL: baseURL, headers: ClientIdentity.headers)
+        SpacePushClient(baseURL: baseURL, headers: ClientIdentity.headers, activePeriods: ClientIdentity.activePeriods)
     }
 }

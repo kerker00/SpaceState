@@ -1,18 +1,23 @@
 import Foundation
+import SpacePushClient
 
-/// How the apps identify themselves to SpacePush, for its usage statistics:
+/// How the apps describe themselves to SpacePush, for its usage statistics:
 /// a user agent such as `SpaceState/2.0.0 (iOS 26.0)` and, from the apps only,
-/// a random install ID. The ID is created on first launch, tied to nothing
-/// else, and goes away when the app is deleted. Widgets send no ID, since
-/// they have their own storage and would count as separate installs.
+/// which day, week and month a request is the first of (see `ActivePeriods`).
+/// No ID is sent. Widgets report no periods, since they have their own storage
+/// and would count as separate installs.
 enum ClientIdentity {
     static var headers: [String: String] {
-        var headers = ["User-Agent": userAgent]
-        if !isWidget {
-            headers["X-SpaceState-Install"] = installID
-        }
-        return headers
+        ["User-Agent": userAgent]
     }
+
+    /// Shared by all clients, so concurrent requests report a period once.
+    static let activePeriods: ActivePeriods? = {
+        guard !isWidget else { return nil }
+        // Earlier builds stored a random install ID; it is no longer sent.
+        UserDefaults.standard.removeObject(forKey: "installID")
+        return ActivePeriods.userDefaults()
+    }()
 
     /// `"ios"` or `"macos"`, sent with the push registration.
     static var platform: String {
@@ -21,17 +26,6 @@ enum ClientIdentity {
         #else
         "ios"
         #endif
-    }
-
-    private static let installIDKey = "installID"
-
-    private static var installID: String {
-        if let id = UserDefaults.standard.string(forKey: installIDKey) {
-            return id
-        }
-        let id = UUID().uuidString.lowercased()
-        UserDefaults.standard.set(id, forKey: installIDKey)
-        return id
     }
 
     private static var isWidget: Bool {
