@@ -3,3 +3,7 @@
 .swiftpm/
 xcuserdata/
 DerivedData/
+
+# APNs keys and other secrets never belong in the repository.
+*.p8
+*.pem
