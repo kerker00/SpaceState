@@ -1,18 +1,19 @@
 import Foundation
 import Observation
 import SpaceAPI
+import SpacePushClient
 
-/// The list of spaces to choose from, loaded on demand from the SpaceAPI aggregator.
+/// The list of spaces to choose from, loaded on demand through SpacePush or from the SpaceAPI aggregator.
 @Observable
 final class DirectoryStore {
     private(set) var entries: [DirectoryEntry] = []
     private(set) var lastError: (any Error)?
     private(set) var isLoading = false
 
-    private let client: StatusClient
+    private let service: StatusService
 
-    init(client: StatusClient = StatusClient()) {
-        self.client = client
+    init(service: StatusService = .configured) {
+        self.service = service
     }
 
     func load() async {
@@ -21,7 +22,7 @@ final class DirectoryStore {
         defer { isLoading = false }
 
         do {
-            entries = try await client.directory()
+            entries = try await service.directory()
             lastError = nil
         } catch {
             lastError = error

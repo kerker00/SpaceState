@@ -42,7 +42,7 @@ final class StatusStore {
 
     static let refreshIntervals: [Duration] = [.seconds(60), .seconds(120), .seconds(300), .seconds(600), .seconds(900)]
 
-    private let client: StatusClient
+    private let service: StatusService
     private let defaults: UserDefaults
     private var pollTask: Task<Void, Never>?
 
@@ -51,8 +51,8 @@ final class StatusStore {
         static let refreshSeconds = "refreshSeconds"
     }
 
-    init(client: StatusClient = StatusClient(), defaults: UserDefaults = .standard) {
-        self.client = client
+    init(service: StatusService = .configured, defaults: UserDefaults = .standard) {
+        self.service = service
         self.defaults = defaults
         endpoint = defaults.string(forKey: Keys.endpoint).flatMap(URL.init(string:)) ?? Mainframe.spaceAPIEndpoint
         let seconds = defaults.integer(forKey: Keys.refreshSeconds)
@@ -76,9 +76,9 @@ final class StatusStore {
         defer { isRefreshing = false }
 
         do {
-            async let info = client.space(at: endpoint)
+            async let info = service.space(at: endpoint)
             // The rooms are extra detail; failing to load them must not hide the space's state.
-            let rooms = Mainframe.isMainframe(endpoint) ? (try? await client.mainframeRooms()) ?? [] : []
+            let rooms = Mainframe.isMainframe(endpoint) ? (try? await service.mainframeRooms()) ?? [] : []
             let fetchedInfo = try await info
             guard endpoint == self.endpoint else { return }
             self.info = fetchedInfo
