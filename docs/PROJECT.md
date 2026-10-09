@@ -6,14 +6,14 @@ SpaceState shows whether a hackerspace is open and notifies its users when that 
 
 Start here when picking the work up again.
 
-**SpacePush runs in production** at `https://push.grafixmafia.net` on the Uberspace 7 account, as a supervisord service, with a Sandbox & Production APNs key. It serves the apps the spaces' state (`/v1/directory`, `/v1/spaces`, `/v1/mainframe/rooms`) and sends notifications. How it was built and how to update it is in the [SpacePush README](https://github.com/kerker00/SpacePush#deploy-on-uberspace-7). The server still runs the branch `feature/read-proxy`; it switches to the 2.0.0 release (`git fetch && git switch --detach v2.0.0` in `~/spacepush/src`, then the update steps).
+**SpacePush runs in production** at `https://push.grafixmafia.net` on the Uberspace 7 account, as a supervisord service. There are two APNs keys, one for Sandbox and one for Production; until the server uses `apns_keys` (SpacePush branch `feature/apns-keys`), it signs both environments with the Production key, so pushes to development builds fail. It serves the apps the spaces' state (`/v1/directory`, `/v1/spaces`, `/v1/mainframe/rooms`) and sends notifications. How it was built and how to update it is in the [SpacePush README](https://github.com/kerker00/SpacePush#deploy-on-uberspace-7). The server still runs the branch `feature/read-proxy`; it switches to the 2.0.0 release (`git fetch && git switch --detach v2.0.0` in `~/spacepush/src`, then the update steps).
 
 **Release 2.0.0** of SpaceState and SpacePush: `dev` merged into `master`, tagged `v2.0.0`, with GitHub releases in both repositories.
 
 **Next steps:**
 
 1. Switch the server from `feature/read-proxy` to `master` (or the `v2.0.0` tag) and run the update steps.
-2. Revoke the old sandbox-only APNs key once the new key has delivered a notification.
+2. Set `apns_keys` in the server's `sys.config` to both keys (see the SpacePush README), then test push on the iPhone and the Mac in both environments.
 3. TestFlight build, to test the production APNs environment.
 4. Housekeeping: archive SpaceStateBar and SpaceStateBackEnd.
 
@@ -50,7 +50,7 @@ Both active repositories use `dev` as the integration branch; feature branches s
 | German localization | done for both apps | SpaceState #3 |
 | App icon (Icon Composer, Liquid Glass) | done | SpaceState #4 |
 | SpacePush rewrite | done, tested | SpacePush #1, 2.0.0 |
-| APNs key (`.p8`) | created 2026-10-09 (Sandbox & Production), stored locally outside the repositories, verified with SpacePush | – |
+| APNs keys (`.p8`) | two keys created 2026-10-09, one for Sandbox and one for Production; stored locally outside the repositories and on the server | – |
 | SpacePush in production | running on Uberspace at `https://push.grafixmafia.net` | SpacePush #3, 2.0.0 |
 | Push in the macOS app | registration, notifications and status window done; tested end to end against a local SpacePush | SpaceState #10 |
 | iOS app | status, rooms, space picker, settings, push registration; reads through SpacePush with direct fallback | SpaceState #11, #12, #13 |
@@ -142,7 +142,7 @@ Still open:
 
 - UI to choose several spaces or single Mainframe rooms; today it follows the selected space.
 
-The APNs key exists (see Status); SpacePush reads it from `apns_key_file` with `apns_key_id` set. Never commit it – `*.p8` is in the `.gitignore` of both repositories.
+The APNs keys exist (see Status); SpacePush reads one per environment from `apns_keys`, or a single key for both from `apns_key_file` and `apns_key_id`. The apps register with the environment of their signature (`aps-environment`), not of the build configuration. Never commit a key – `*.p8` is in the `.gitignore` of both repositories.
 
 #### Running the local push test again
 

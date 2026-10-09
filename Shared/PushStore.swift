@@ -37,14 +37,10 @@ final class PushStore {
 
     private static let enabledKey = "pushEnabled"
 
-    /// Builds run from Xcode get sandbox tokens, TestFlight and App Store builds production ones.
-    private static let environment: PushEnvironment = {
-        #if DEBUG
-        .sandbox
-        #else
-        .production
-        #endif
-    }()
+    /// The APNs environment of this build's signature, which decides where its token is valid:
+    /// development-signed builds (also Release builds run from Xcode) get sandbox tokens,
+    /// TestFlight, App Store and Developer ID builds production ones.
+    private static let environment: PushEnvironment = SigningEnvironment.current
 
     /// - Parameter serviceURL: Defaults to `SpacePushURL` from the Info.plist, set per build configuration.
     init(serviceURL: URL? = StatusService.configuredServiceURL, defaults: UserDefaults = .standard) {
@@ -123,4 +119,53 @@ final class PushStore {
         UIApplication.shared.registerForRemoteNotifications()
         #endif
     }
+}
+
+/// Reads `aps-environment` from the app's signature instead of guessing from the build
+/// configuration: a Release build signed for development still gets sandbox tokens.
+private enum SigningEnvironment {
+    static var current: PushEnvironment {
+        switch apsEnvironment {
+        case "development": .sandbox
+        case "production": .production
+        default: fallback
+        }
+    }
+
+    /// Used when the signature cannot be read.
+    private static var fallback: PushEnvironment {
+        #if DEBUG
+        .sandbox
+        #else
+        .production
+        #endif
+    }
+
+    #if os(macOS)
+    private static var apsEnvironment: String? {
+        guard let task = SecTaskCreateFromSelf(nil) else { return nil }
+        return SecTaskCopyValueForEntitlement(task, "com.apple.developer.aps-environment" as CFString, nil) as? String
+    }
+    #else
+    /// Development and ad hoc builds embed their provisioning profile, a signed plist whose
+    /// entitlements hold `aps-environment`. TestFlight and App Store builds have none.
+    private static var apsEnvironment: String? {
+        #if targetEnvironment(simulator)
+        return "development"
+        #else
+        guard let url = Bundle.main.url(forResource: "embedded", withExtension: "mobileprovision") else {
+            return "production"
+        }
+        guard let data = try? Data(contentsOf: url),
+              let start = data.range(of: Data("<?xml".utf8)),
+              let end = data.range(of: Data("</plist>".utf8), in: start.lowerBound..<data.endIndex),
+              let profile = try? PropertyListSerialization.propertyList(
+                  from: data[start.lowerBound..<end.upperBound], format: nil
+              ) as? [String: Any],
+              let entitlements = profile["Entitlements"] as? [String: Any]
+        else { return nil }
+        return entitlements["aps-environment"] as? String
+        #endif
+    }
+    #endif
 }
