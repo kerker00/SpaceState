@@ -1,46 +1,86 @@
-# MainFrameStatusBar
-Disclaimer: this application is still under construction! The main function, showing the space status works well, but many features are not working. This is an alpha version! 
-## About
-This is a small Mac OSX Menu application that will show the status of the hackspace mainframe located in oldenburg. 
-    
-- O is for Open
-- C is for Closed
-- X is for Unknown state (no connection)
+# SpaceState
 
-The api and site source can be found here:    
-[https://github.com/spaceapi](https://github.com/spaceapi)   
+Shows whether a hackerspace is open – in the macOS menu bar, on iOS and in widgets on both.
 
-This application is written int the swift programming language and is attended to be a test project. 
+Any space listed in the [SpaceAPI directory](https://spaceapi.io) works. For [Mainframe Oldenburg](https://www.kreativitaet-trifft-technik.de) the app also shows its rooms (Radstelle, 3D Lab, Machining) and finer states such as "members only" or "closing".
 
-## Todos 
-Some features are still in progress
-- display more details given by space api 
-- cache data requested data  and store settings 
-- Build a push notification service (work in progress)
-- make use of iOS 8 Features (e.g. notification center)
+Project status, decisions and next steps: [docs/PROJECT.md](docs/PROJECT.md).
 
-# Credits
-The icon is made with the help of
-[AppIconTemplate.com](http://appicontemplate.com)
+## Features
 
-# License
+### Everywhere
 
-Copyright (c) 2014 Markus Müller GrafixMafia.Net
+- Any space from the SpaceAPI directory, searchable by name and address; Mainframe Oldenburg is the default.
+- Open, closed or unknown at a glance, with the time of the last change and the space's status message.
+- Mainframe's rooms (Space, Radstelle, 3D Lab, Machining) with their own states.
+- Push notifications when the selected space opens or closes, sent by [SpacePush](https://github.com/kerker00/SpacePush).
+- State is read through SpacePush, with direct SpaceAPI requests as fallback.
+- English and German.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+### macOS
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+- Menu bar item with the current state; a click opens a panel with details, rooms, the space's website, refresh and settings.
+- Settings: space, check interval, open at login, Dock icon, notifications.
+- Clicking a notification (or the Dock icon) opens the status in a regular window.
+- Desktop and Notification Center widgets (small and medium).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+### iOS
+
+- Status screen with rooms, status message and a link to the space's website.
+- Settings sheet with space search and notifications.
+- Home screen widgets (small and medium) and lock screen widgets (circular, rectangular, inline).
+
+Each widget chooses its own space, so several widgets can show different spaces.
+
+## Screenshots
+
+| macOS menu bar | macOS settings | macOS widget |
+| --- | --- | --- |
+| ![Menu bar panel showing Mainframe open with its rooms](docs/screenshots/macos-menu-bar.png) | ![Settings with check interval, login item, Dock icon and notifications](docs/screenshots/macos-settings.png) | ![Small desktop widget](docs/screenshots/macos-widget.png) |
+
+| iOS (German) |
+| --- |
+| ![iOS status screen showing Mainframe open with its rooms](docs/screenshots/ios-status.png) |
+
+## Requirements
+
+For the Apple apps:
+
+- macOS 26 / iOS 26
+- Xcode 26 or later
+
+The underlying [SpaceStateKit package](SpaceStateKit/README.md) requires Swift 6.2 or later. Linux support is planned and has not yet been verified with a Linux build and test run.
+
+## Structure
+
+| Path | Contents |
+| --- | --- |
+| `SpaceStateKit/` | Swift package: `SpaceAPI` (generic SpaceAPI client) and `MainframeStatus` (Mainframe extras) |
+| `Shared/` | App code shared by macOS and iOS |
+| `macOS/` | Menu bar app |
+| `iOS/` | iOS app |
+| `Widget/` | WidgetKit extension for both platforms |
+| `Config/` | Info.plist additions and entitlements |
+| `docs/` | Project status and screenshots |
+
+## Build
+
+Open `SpaceState.xcodeproj` and run the `SpaceState-macOS` or `SpaceState-iOS` scheme.
+
+Package tests:
+
+    cd SpaceStateKit && swift test
+
+## Linux and package extraction
+
+When the API stabilizes, the generic `SpaceAPI` library is intended to move into its own repository, with Linux support tested from the start. The current library uses Foundation and has no SwiftUI, AppKit or UIKit dependencies. `MainframeStatus` remains a separate, optional module for Mainframe's rooms and extra states.
+
+The first useful Linux application would be a command-line tool for finding spaces and querying their status, with human-readable and JSON output. This would let the community integrate it into status bars, scripts and displays in a hackerspace. Distributing Linux binaries would make the tool accessible to users who do not develop in Swift.
+
+A Linux desktop interface would be a separate client using the same library. The existing Apple apps use SwiftUI; Linux desktop integration and local notifications belong in the Linux client.
+
+See [SpaceStateKit's Linux plan](SpaceStateKit/README.md#linux-support-plan) for the required portability changes and verification.
+
+## License
+
+MIT, see [LICENSE.MD](LICENSE.MD).
