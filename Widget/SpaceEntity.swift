@@ -29,13 +29,31 @@ struct SpaceEntity: AppEntity {
     init(_ entry: DirectoryEntry) {
         self.init(id: entry.endpoint.absoluteString, name: entry.info.name, address: entry.info.location?.address)
     }
+
+    private static let namesKey = "spaceNames"
+
+    /// The space for an identifier without going to the network: Mainframe is built in,
+    /// others are remembered from the last loaded list, anything else shows its host.
+    static func known(_ id: String) -> SpaceEntity {
+        if id == mainframe.id {
+            return .mainframe
+        }
+        let names = UserDefaults.standard.dictionary(forKey: namesKey) as? [String: String]
+        return SpaceEntity(id: id, name: names?[id] ?? URL(string: id)?.host() ?? id, address: nil)
+    }
+
+    static func remember(_ spaces: [SpaceEntity]) {
+        let names = Dictionary(spaces.map { ($0.id, $0.name) }, uniquingKeysWith: { first, _ in first })
+        UserDefaults.standard.set(names, forKey: namesKey)
+    }
 }
 
 /// Offers the spaces from the directory, searchable by name and address.
 struct SpaceQuery: EntityStringQuery {
+    /// Answered without the network: the system asks while setting up a widget and
+    /// cancels slow answers, which on macOS left widgets without a configuration.
     func entities(for identifiers: [SpaceEntity.ID]) async throws -> [SpaceEntity] {
-        let spaces = try await allSpaces()
-        return identifiers.compactMap { id in spaces.first { $0.id == id } }
+        identifiers.map(SpaceEntity.known)
     }
 
     func entities(matching query: String) async throws -> [SpaceEntity] {
@@ -53,7 +71,9 @@ struct SpaceQuery: EntityStringQuery {
     }
 
     private func allSpaces() async throws -> [SpaceEntity] {
-        try await StatusService.configured.directory().map(SpaceEntity.init)
+        let spaces = try await StatusService.configured.directory().map(SpaceEntity.init)
+        SpaceEntity.remember(spaces)
+        return spaces
     }
 }
 
