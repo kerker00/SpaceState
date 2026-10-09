@@ -48,7 +48,7 @@ final class PushStore {
 
     /// - Parameter serviceURL: Defaults to `SpacePushURL` from the Info.plist, set per build configuration.
     init(serviceURL: URL? = StatusService.configuredServiceURL, defaults: UserDefaults = .standard) {
-        client = serviceURL.map { SpacePushClient(baseURL: $0) }
+        client = serviceURL.map(SpacePushClient.configured)
         self.defaults = defaults
         isEnabled = defaults.bool(forKey: Self.enabledKey)
     }
@@ -103,7 +103,12 @@ final class PushStore {
         let registration = Registration(deviceToken: deviceToken, subscriptions: subscriptions)
         guard registration != registered else { return }
         do {
-            try await client.register(deviceToken: deviceToken, environment: Self.environment, subscriptions: subscriptions)
+            try await client.register(
+                deviceToken: deviceToken,
+                environment: Self.environment,
+                subscriptions: subscriptions,
+                platform: ClientIdentity.platform
+            )
             registered = registration
             status = .registered
         } catch {
