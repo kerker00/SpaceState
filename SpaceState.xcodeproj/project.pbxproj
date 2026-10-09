@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A1000000000000000000000B /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000000D /* SpaceAPI */; };
 		A1000000000000000000000C /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000000E /* MainframeStatus */; };
+		A10000000000000000000016 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000017 /* SpacePushClient */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 			files = (
 				A1000000000000000000000B /* SpaceAPI in Frameworks */,
 				A1000000000000000000000C /* MainframeStatus in Frameworks */,
+				A10000000000000000000016 /* SpacePushClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +83,7 @@
 			packageProductDependencies = (
 				A1000000000000000000000D /* SpaceAPI */,
 				A1000000000000000000000E /* MainframeStatus */,
+				A10000000000000000000017 /* SpacePushClient */,
 			);
 			productName = SpaceState;
 			productReference = A10000000000000000000004 /* SpaceState.app */;
@@ -202,7 +205,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/macOS.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -218,9 +223,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacestate;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush;
 				PRODUCT_NAME = SpaceState;
 				SDKROOT = macosx;
+				SPACEPUSH_URL = "http://127.0.0.1:8080";
 				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Debug;
@@ -230,7 +236,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/macOS.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -246,9 +254,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacestate;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush;
 				PRODUCT_NAME = SpaceState;
 				SDKROOT = macosx;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Release;
@@ -291,6 +300,10 @@
 		A1000000000000000000000E /* MainframeStatus */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MainframeStatus;
+		};
+		A10000000000000000000017 /* SpacePushClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpacePushClient;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

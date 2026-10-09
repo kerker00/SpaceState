@@ -2,14 +2,11 @@ import SwiftUI
 
 @main
 struct SpaceStateApp: App {
-    @State private var store: StatusStore
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var directory = DirectoryStore()
 
-    init() {
-        let store = StatusStore()
-        store.startPolling()
-        _store = State(initialValue: store)
-    }
+    /// Shared with the status window the app delegate opens for notification clicks.
+    private var store: StatusStore { appDelegate.store }
 
     var body: some Scene {
         MenuBarExtra {
@@ -22,9 +19,12 @@ struct SpaceStateApp: App {
             }
         }
         .menuBarExtraStyle(.window)
+        .onChange(of: store.pushSubscriptions, initial: true) { _, subscriptions in
+            appDelegate.push.update(subscriptions: subscriptions)
+        }
 
         Settings {
-            SettingsView(store: store, directory: directory)
+            SettingsView(store: store, directory: directory, push: appDelegate.push)
         }
     }
 }
