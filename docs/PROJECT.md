@@ -2,33 +2,25 @@
 
 SpaceState shows whether a hackerspace is open and notifies its users when that changes. This document records where the revival of the 2014–2016 project stands, the decisions behind it, and what comes next. Last updated 2026-10-09.
 
-## Where we left off (2026-10-09)
+## Where we left off (2026-10-09, evening)
 
 Start here when picking the work up again.
 
-**The first real push worked end to end on 2026-10-09:** SpacePush running locally on the Mac with the APNs key sent notifications through the APNs sandbox to the macOS app, for an ordinary space (HSBNE) and for Mainframe's rooms. The app re-registered on its own when the selected space changed, and SpacePush retried a delivery after Apple had closed the idle connection.
+**SpacePush runs in production** at `https://push.grafixmafia.net` on the Uberspace 7 account, as a supervisord service, with a Sandbox & Production APNs key. It serves the apps the spaces' state (`/v1/directory`, `/v1/spaces`, `/v1/mainframe/rooms`) and sends notifications. How it was built and how to update it is in the [SpacePush README](https://github.com/kerker00/SpacePush#deploy-on-uberspace-7). The server currently runs the branch `feature/read-proxy`; after SpacePush #3 is merged it switches to `dev` (`git switch dev && git pull` in `~/spacepush/src`, then the update steps).
 
-**Branches with work that is committed but not yet merged:**
+**Open pull requests:**
 
-- SpaceState `feature/push-registration`: push registration in the macOS app, the `SpacePushClient` package module, the status window for notification clicks, the Dock icon setting, the new bundle ID and this update.
-- SpacePush `fix/apns-topic`: default `apns_topic` changed to the new bundle ID `net.grafixmafia.spacepush`.
+- SpacePush [#3](https://github.com/kerker00/SpacePush/pull/3): read proxy, hardening, deploy templates and guide, directory size fix.
+- SpaceState [#11](https://github.com/kerker00/SpaceState/pull/11): the iOS app.
+- SpaceState [#12](https://github.com/kerker00/SpaceState/pull/12), stacked on #11: web-link and size limits, and the apps reading through SpacePush with direct fallback.
 
-`dev` in both repositories has everything else. `master` is still the 2016 state; merging `dev` into `master` is a release step and needs an explicit decision.
+**Next steps:**
 
-**Priorities agreed for the next session:**
-
-1. Merge the two branches above (after the `SpacePushClient` tests have run; they were added but not yet run).
-2. Host SpacePush on Uberspace – needs answers 1–3 below.
-3. Push in the apps – the remaining details (see step 2 below).
-4. Housekeeping: archive the two old repositories.
-5. iOS app – later; it is not urgent.
-
-**Questions to answer before continuing** (deferred on 2026-10-08):
-
-1. Uberspace version: U7 or U8? `cat /etc/os-release` on the host answers it.
-2. Who manages DNS for `grafixmafia.net`?
-3. SSH host and user for the Uberspace account, and may Claude connect to look around (no changes without approval)?
-4. Push in the apps: which details still need discussing before work starts (see [step 2](#2-push-in-the-apps-ios-and-macos))?
+1. Push test on the iPhone against production (Debug builds talk to `https://push.grafixmafia.net` now).
+2. Merge the open pull requests; switch the server to `dev`.
+3. Revoke the old sandbox-only APNs key once the new key has delivered a notification.
+4. TestFlight build, to test the production APNs environment.
+5. Housekeeping: archive SpaceStateBar and SpaceStateBackEnd.
 
 **How to check the current state:**
 
@@ -64,10 +56,10 @@ Both active repositories use `dev` as the integration branch; feature branches s
 | App icon (Icon Composer, Liquid Glass) | done | SpaceState #4 |
 | SpacePush rewrite | done, tested locally, merged into `dev` | SpacePush #1 |
 | APNs key (`.p8`) | created 2026-10-09 (Sandbox & Production), stored locally outside the repositories, verified with SpacePush | – |
-| Hosting of SpacePush | planned on Uberspace, open questions below | – |
+| SpacePush in production | running on Uberspace at `https://push.grafixmafia.net` | SpacePush #3 |
 | Push in the macOS app | registration, notifications and status window done; tested end to end against a local SpacePush | branch `feature/push-registration` |
 | iOS app | first version: status, rooms, space picker, settings, push registration; builds for the simulator, not yet run | branch `feature/ios-app` |
-| Widgets | low priority | – |
+| Widgets | iOS (home and lock screen) and macOS (desktop, Notification Center); each widget picks its space | branch `feature/widgets` |
 
 ## Architecture
 
@@ -89,11 +81,12 @@ Both active repositories use `dev` as the integration branch; feature branches s
 - `SpaceStateKit/` – local Swift package with three modules:
   - `SpaceAPI`: generic SpaceAPI client. Reads schema v15 and the flat v0.12 layout leniently, reads the directory from the aggregator. Contains nothing specific to Mainframe.
   - `MainframeStatus`: rooms and finer states of Mainframe Oldenburg.
-  - `SpacePushClient`: registers and removes devices with SpacePush.
+  - `SpacePushClient`: registers and removes devices with SpacePush, reads the spaces' state from it, and `StatusService`, which the apps use for all reads: SpacePush first, the spaces directly if SpacePush fails.
 - `Shared/` – app code for both platforms: `StatusStore` (selected space, polling, persisted choice), `DirectoryStore`, `PushStore` (permission, device token, registration), display helpers, string catalog, app icon.
 - `macOS/` – `MenuBarExtra` with a status panel; a regular status window with the same view, opened by clicking a notification or the Dock icon; settings (space picker, refresh interval, open at login, show in Dock, notifications). The app delegate owns the `StatusStore` so both views share it.
 - `iOS/` – iPhone and iPad app (iOS 26): status of the selected space with Mainframe's rooms, pull to refresh, link to the website; settings sheet with space picker, refresh interval and notifications. Same bundle ID as the macOS app, so both form one App Store entry.
-- `SPACEPUSH_URL` build setting, read from the Info.plist as `SpacePushURL`: `http://127.0.0.1:8080` in Debug, the planned `https://push.grafixmafia.net` in Release.
+- `Widget/` – WidgetKit extension, built twice (`SpaceStateWidget-iOS`, `SpaceStateWidget-macOS`) and embedded in the apps, bundle ID `net.grafixmafia.spacepush.widget`. Small and medium widgets everywhere, plus circular, rectangular and inline on the iPhone lock screen. Each widget is configured with an App Intent to show any space from the directory (default Mainframe; medium shows Mainframe's rooms). It reads through `StatusService` and refreshes every 15 minutes; the apps reload widgets when they see a change. From `Shared/` it takes only the display helpers, `StatusService+Configured` and the string catalog – the app-only files are listed as exceptions in the project.
+- `SPACEPUSH_URL` build setting, read from the Info.plist as `SpacePushURL`: `https://push.grafixmafia.net` in Debug and Release. SpacePush tells sandbox and production devices apart itself. For a local SpacePush, set it to `http://127.0.0.1:8080` in Debug.
 - Bundle ID `net.grafixmafia.spacepush` (see Decisions), team `7E3BJ546SA`, App Sandbox with outgoing network access. `NSAllowsArbitraryLoads` is set because some SpaceAPI endpoints are plain HTTP.
 
 ### SpacePush
@@ -125,23 +118,20 @@ See the [SpacePush README](https://github.com/kerker00/SpacePush#readme) for the
 | A regular status window in addition to the menu bar panel | Notification clicks need something that can be opened from code; it shows the same view. |
 | Dock icon optional (`Show in Dock`, off by default) | A menu bar app by default, as before; some users prefer a Dock icon. |
 | Use [GMSnagNav](https://github.com/kerker00/GMSnagNav) if a view needs a sidebar | Own package, already used in PreCal. |
-| Widgets are low priority | The menu bar and notifications cover the main use. |
+| Widgets configured per widget with an App Intent instead of following the app's selected space | Several widgets can show different spaces, and no App Group is needed between app and widget. |
 
 ## Next steps
 
-### 1. SpacePush on Uberspace
+### 1. SpacePush on Uberspace – done
 
-1. Provide Erlang/OTP 28 and build the release on the Uberspace host or in a Linux container that matches it; a release built on macOS does not run on Linux.
-2. Run it as a supervised service that restarts on failure and after reboots.
-3. Add the subdomain (for example `push.grafixmafia.net`) with `uberspace web domain add` and route it with `uberspace web backend set … --http --port 8080`; the certificate is issued automatically. Check whether the backend must listen on `0.0.0.0` instead of the default `127.0.0.1` (`http_ip`).
-4. Production configuration (a separate config file, not `config/sys.config`): `trust_proxy` on, logger level `notice` (with `info`, every process start is logged as a progress report), data under `~/spacepush/data`, the `.p8` key readable only by the account, `apns_key_id` set.
-5. Check `GET /health` from outside, then register a development build and wait for a real state change.
+Running since 2026-10-09 on Uberspace 7 (CentOS 7) at `https://push.grafixmafia.net`:
 
-#### Open questions
+- OpenSSL 3.5.9 (static) and Erlang/OTP 28.5.0.7 built in the home directory, since the system's OpenSSL 1.0.2 and OTP 21 are too old.
+- The release runs as a supervisord service on port 52184, which is closed to the outside; Uberspace's web backend forwards HTTPS to it. DNS: `A`/`AAAA` records for `push` at Namecheap.
+- Configuration, APNs key and data live outside the release under `~/spacepush/`.
+- The user runs all commands on the host; Claude prepares them.
 
-- Uberspace version (U7 or U8) – decides how the service and Erlang are set up. `cat /etc/os-release` on the host answers it.
-- Who manages DNS for `grafixmafia.net` – the subdomain needs a record pointing to the Uberspace host.
-- SSH host and user for setting it up, and whether Claude may connect to look around (no changes without approval).
+The full procedure, updates, rollback and troubleshooting are in the [SpacePush README](https://github.com/kerker00/SpacePush#deploy-on-uberspace-7).
 
 ### 2. Push in the apps (iOS and macOS)
 
@@ -171,7 +161,7 @@ The APNs key exists (see Status); SpacePush reads it from `apns_key_file` with `
           -spacepush tracker_file '"<scratch>/tracker.bin"' \
           -eval 'application:ensure_all_started(spacepush).'
 
-2. Run the macOS app from Xcode (Debug talks to `127.0.0.1:8080`) and turn on notifications in its settings.
+2. Set `SPACEPUSH_URL` to `http://127.0.0.1:8080` for Debug, run the macOS app from Xcode and turn on notifications in its settings.
 3. Inject a change from a second node: `rpc:call(Node, spacepush_outbox, enqueue, [[{{Endpoint, Room}, Name, From, To}]])`. To check the outbox, read `ets:tab2list(spacepush_outbox_entries)` – do not call `spacepush_outbox:due/3` with a future time: it drops entries that would be expired at that time.
 
 ### 3. Housekeeping
@@ -185,7 +175,7 @@ First version on branch `feature/ios-app`: target `SpaceState-iOS` sharing `Shar
 
 Still to do:
 
-- Run it in the simulator and on a device; a push test works in the simulator on Apple silicon, where Debug's `127.0.0.1:8080` reaches SpacePush on the Mac. A device needs the Mac's LAN address and SpacePush listening on it.
+- Push test on a device against production SpacePush.
 - A sidebar on iPad via GMSnagNav, if several spaces are shown at once later.
 
 ### Later

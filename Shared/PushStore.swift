@@ -47,14 +47,10 @@ final class PushStore {
     }()
 
     /// - Parameter serviceURL: Defaults to `SpacePushURL` from the Info.plist, set per build configuration.
-    init(serviceURL: URL? = PushStore.configuredServiceURL, defaults: UserDefaults = .standard) {
+    init(serviceURL: URL? = StatusService.configuredServiceURL, defaults: UserDefaults = .standard) {
         client = serviceURL.map { SpacePushClient(baseURL: $0) }
         self.defaults = defaults
         isEnabled = defaults.bool(forKey: Self.enabledKey)
-    }
-
-    static var configuredServiceURL: URL? {
-        (Bundle.main.object(forInfoDictionaryKey: "SpacePushURL") as? String).flatMap(URL.init(string:))
     }
 
     /// Requests a device token at launch if notifications were turned on before.
