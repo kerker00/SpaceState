@@ -16,10 +16,10 @@
 		A10000000000000000000135 /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000138 /* SpaceAPI */; };
 		A10000000000000000000136 /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000139 /* MainframeStatus */; };
 		A10000000000000000000137 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000013A /* SpacePushClient */; };
-		A10000000000000000000154 /* SpaceStateWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000130 /* SpaceStateWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A10000000000000000000145 /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000148 /* SpaceAPI */; };
 		A10000000000000000000146 /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000149 /* MainframeStatus */; };
 		A10000000000000000000147 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000014A /* SpacePushClient */; };
+		A10000000000000000000154 /* SpaceStateWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000130 /* SpaceStateWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A10000000000000000000158 /* SpaceStateWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000140 /* SpaceStateWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -606,17 +606,17 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/Widget-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
-				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
-				PRODUCT_NAME = SpaceStateWidget;
-				SKIP_INSTALL = YES;
-				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
+				PRODUCT_NAME = SpaceStateWidget;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -629,17 +629,17 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/Widget-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
-				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
-				PRODUCT_NAME = SpaceStateWidget;
-				SKIP_INSTALL = YES;
-				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
+				PRODUCT_NAME = SpaceStateWidget;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -649,23 +649,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = 7E3BJ546SA;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Config/Widget-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
-				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
-				PRODUCT_NAME = SpaceStateWidget;
-				SKIP_INSTALL = YES;
-				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Widget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
+				PRODUCT_NAME = SpaceStateWidget;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Debug;
@@ -674,23 +674,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = 7E3BJ546SA;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Config/Widget-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
-				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
-				PRODUCT_NAME = SpaceStateWidget;
-				SKIP_INSTALL = YES;
-				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Widget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
+				PRODUCT_NAME = SpaceStateWidget;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Release;
