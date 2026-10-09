@@ -14,10 +14,11 @@ Start here when picking the work up again.
 
 **Priorities agreed for the next session:**
 
-1. Host SpacePush on Uberspace – needs answers 1–3 below.
-2. Push in the apps – details still to be discussed.
-3. Housekeeping: archive the two old repositories.
-4. iOS app – later; it is not urgent.
+1. Local push test: SpacePush on the Mac with the APNs key, the macOS app registering via `127.0.0.1:8080`, a state change injected in `rebar3 shell`. Needs only the token registration in the macOS app (part of step 2), no hosting.
+2. Host SpacePush on Uberspace – needs answers 1–3 below.
+3. Push in the apps – details still to be discussed.
+4. Housekeeping: archive the two old repositories.
+5. iOS app – later; it is not urgent.
 
 **Questions to answer before continuing** (deferred on 2026-10-08):
 
@@ -59,6 +60,7 @@ Both active repositories use `dev` as the integration branch; feature branches s
 | German localization | done for the macOS app | SpaceState #3 |
 | App icon (Icon Composer, Liquid Glass) | done | SpaceState #4 |
 | SpacePush rewrite | done, tested locally, merged into `dev` | SpacePush #1 |
+| APNs key (`.p8`) | created 2026-10-09 (Sandbox & Production), stored locally outside the repositories, verified with SpacePush | – |
 | Hosting of SpacePush | planned on Uberspace, open questions below | – |
 | Push in the apps | not started, to be discussed | – |
 | iOS app | not started, low priority; shared code is ready | – |
@@ -141,7 +143,7 @@ Still to be discussed. What is needed:
 - Re-register on every launch; SpacePush expires registrations not renewed within 60 days.
 - UI to choose which spaces (and Mainframe rooms) to be notified about; `DELETE` when the user turns notifications off.
 - String catalog entries for the six body keys SpacePush sends: `PUSH_STATE_OPEN`, `PUSH_STATE_CLOSED`, `PUSH_STATE_KEYHOLDER`, `PUSH_STATE_MEMBER`, `PUSH_STATE_OPEN_PLUS`, `PUSH_STATE_CLOSING`.
-- An APNs key (`.p8`) from the Apple Developer account, with its key ID, for SpacePush.
+- The APNs key exists (see Status); SpacePush reads it from `apns_key_file` with `apns_key_id` set. Never commit it – `*.p8` is in SpacePush's `.gitignore`.
 
 Until the apps register devices, SpacePush runs but has nobody to notify.
 
