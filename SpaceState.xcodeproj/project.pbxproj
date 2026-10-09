@@ -13,16 +13,97 @@
 		A10000000000000000000026 /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000029 /* SpaceAPI */; };
 		A10000000000000000000027 /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000002A /* MainframeStatus */; };
 		A10000000000000000000028 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000002B /* SpacePushClient */; };
+		A10000000000000000000135 /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000138 /* SpaceAPI */; };
+		A10000000000000000000136 /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000139 /* MainframeStatus */; };
+		A10000000000000000000137 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000013A /* SpacePushClient */; };
+		A10000000000000000000154 /* SpaceStateWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000130 /* SpaceStateWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A10000000000000000000145 /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000148 /* SpaceAPI */; };
+		A10000000000000000000146 /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000149 /* MainframeStatus */; };
+		A10000000000000000000147 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000014A /* SpacePushClient */; };
+		A10000000000000000000158 /* SpaceStateWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000140 /* SpaceStateWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A10000000000000000000156 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000000000000000000131;
+			remoteInfo = "SpaceStateWidget-iOS";
+		};
+		A1000000000000000000015A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000000000000000000141;
+			remoteInfo = "SpaceStateWidget-macOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A10000000000000000000153 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A10000000000000000000154 /* SpaceStateWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000157 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A10000000000000000000158 /* SpaceStateWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A10000000000000000000004 /* SpaceState.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceState.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000020 /* SpaceState.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceState.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000130 /* SpaceStateWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SpaceStateWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000140 /* SpaceStateWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SpaceStateWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A10000000000000000000151 /* Exceptions for "Shared" folder in "SpaceStateWidget-iOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIcon.icon,
+				DirectoryStore.swift,
+				PushStatusDisplay.swift,
+				PushStore.swift,
+				StatusStore.swift,
+			);
+			target = A10000000000000000000131 /* SpaceStateWidget-iOS */;
+		};
+		A10000000000000000000152 /* Exceptions for "Shared" folder in "SpaceStateWidget-macOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIcon.icon,
+				DirectoryStore.swift,
+				PushStatusDisplay.swift,
+				PushStore.swift,
+				StatusStore.swift,
+			);
+			target = A10000000000000000000141 /* SpaceStateWidget-macOS */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A10000000000000000000005 /* Shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A10000000000000000000151 /* Exceptions for "Shared" folder in "SpaceStateWidget-iOS" target */,
+				A10000000000000000000152 /* Exceptions for "Shared" folder in "SpaceStateWidget-macOS" target */,
+			);
 			path = Shared;
 			sourceTree = "<group>";
 		};
@@ -34,6 +115,11 @@
 		A10000000000000000000021 /* iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = iOS;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000150 /* Widget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Widget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -59,6 +145,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000000000000000000133 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000135 /* SpaceAPI in Frameworks */,
+				A10000000000000000000136 /* MainframeStatus in Frameworks */,
+				A10000000000000000000137 /* SpacePushClient in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000143 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000145 /* SpaceAPI in Frameworks */,
+				A10000000000000000000146 /* MainframeStatus in Frameworks */,
+				A10000000000000000000147 /* SpacePushClient in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -68,6 +174,7 @@
 				A10000000000000000000005 /* Shared */,
 				A10000000000000000000006 /* macOS */,
 				A10000000000000000000021 /* iOS */,
+				A10000000000000000000150 /* Widget */,
 				A10000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -77,6 +184,8 @@
 			children = (
 				A10000000000000000000004 /* SpaceState.app */,
 				A10000000000000000000020 /* SpaceState.app */,
+				A10000000000000000000130 /* SpaceStateWidget.appex */,
+				A10000000000000000000140 /* SpaceStateWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,10 +200,12 @@
 				A10000000000000000000008 /* Sources */,
 				A10000000000000000000009 /* Frameworks */,
 				A1000000000000000000000A /* Resources */,
+				A10000000000000000000157 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A10000000000000000000159 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A10000000000000000000005 /* Shared */,
@@ -117,10 +228,12 @@
 				A10000000000000000000023 /* Sources */,
 				A10000000000000000000024 /* Frameworks */,
 				A10000000000000000000025 /* Resources */,
+				A10000000000000000000153 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A10000000000000000000155 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A10000000000000000000005 /* Shared */,
@@ -136,6 +249,58 @@
 			productReference = A10000000000000000000020 /* SpaceState.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A10000000000000000000131 /* SpaceStateWidget-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000000000000000000013B /* Build configuration list for PBXNativeTarget "SpaceStateWidget-iOS" */;
+			buildPhases = (
+				A10000000000000000000132 /* Sources */,
+				A10000000000000000000133 /* Frameworks */,
+				A10000000000000000000134 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A10000000000000000000005 /* Shared */,
+				A10000000000000000000150 /* Widget */,
+			);
+			name = "SpaceStateWidget-iOS";
+			packageProductDependencies = (
+				A10000000000000000000138 /* SpaceAPI */,
+				A10000000000000000000139 /* MainframeStatus */,
+				A1000000000000000000013A /* SpacePushClient */,
+			);
+			productName = SpaceStateWidget;
+			productReference = A10000000000000000000130 /* SpaceStateWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A10000000000000000000141 /* SpaceStateWidget-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000000000000000000014B /* Build configuration list for PBXNativeTarget "SpaceStateWidget-macOS" */;
+			buildPhases = (
+				A10000000000000000000142 /* Sources */,
+				A10000000000000000000143 /* Frameworks */,
+				A10000000000000000000144 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A10000000000000000000005 /* Shared */,
+				A10000000000000000000150 /* Widget */,
+			);
+			name = "SpaceStateWidget-macOS";
+			packageProductDependencies = (
+				A10000000000000000000148 /* SpaceAPI */,
+				A10000000000000000000149 /* MainframeStatus */,
+				A1000000000000000000014A /* SpacePushClient */,
+			);
+			productName = SpaceStateWidget;
+			productReference = A10000000000000000000140 /* SpaceStateWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -150,6 +315,12 @@
 						CreatedOnToolsVersion = 27.0;
 					};
 					A10000000000000000000022 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					A10000000000000000000131 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					A10000000000000000000141 = {
 						CreatedOnToolsVersion = 27.0;
 					};
 				};
@@ -174,6 +345,8 @@
 			targets = (
 				A10000000000000000000007 /* SpaceState-macOS */,
 				A10000000000000000000022 /* SpaceState-iOS */,
+				A10000000000000000000131 /* SpaceStateWidget-iOS */,
+				A10000000000000000000141 /* SpaceStateWidget-macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -187,6 +360,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A10000000000000000000025 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000134 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000144 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -210,7 +397,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000000000000000000132 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000142 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A10000000000000000000155 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000000131 /* SpaceStateWidget-iOS */;
+			targetProxy = A10000000000000000000156 /* PBXContainerItemProxy */;
+		};
+		A10000000000000000000159 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000000141 /* SpaceStateWidget-macOS */;
+			targetProxy = A1000000000000000000015A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A10000000000000000000011 /* Debug */ = {
@@ -385,6 +599,102 @@
 			};
 			name = Release;
 		};
+		A1000000000000000000013C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Widget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
+				PRODUCT_NAME = SpaceStateWidget;
+				SKIP_INSTALL = YES;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1000000000000000000013D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Widget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
+				PRODUCT_NAME = SpaceStateWidget;
+				SKIP_INSTALL = YES;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A1000000000000000000014C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Widget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
+				PRODUCT_NAME = SpaceStateWidget;
+				SKIP_INSTALL = YES;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+			};
+			name = Debug;
+		};
+		A1000000000000000000014D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Widget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush.widget;
+				PRODUCT_NAME = SpaceStateWidget;
+				SKIP_INSTALL = YES;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -411,6 +721,24 @@
 			buildConfigurations = (
 				A1000000000000000000002D /* Debug */,
 				A1000000000000000000002E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000000000000000000013B /* Build configuration list for PBXNativeTarget "SpaceStateWidget-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000000000000000000013C /* Debug */,
+				A1000000000000000000013D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000000000000000000014B /* Build configuration list for PBXNativeTarget "SpaceStateWidget-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000000000000000000014C /* Debug */,
+				A1000000000000000000014D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -446,6 +774,30 @@
 			productName = MainframeStatus;
 		};
 		A1000000000000000000002B /* SpacePushClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpacePushClient;
+		};
+		A10000000000000000000138 /* SpaceAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpaceAPI;
+		};
+		A10000000000000000000139 /* MainframeStatus */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MainframeStatus;
+		};
+		A1000000000000000000013A /* SpacePushClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpacePushClient;
+		};
+		A10000000000000000000148 /* SpaceAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpaceAPI;
+		};
+		A10000000000000000000149 /* MainframeStatus */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MainframeStatus;
+		};
+		A1000000000000000000014A /* SpacePushClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SpacePushClient;
 		};

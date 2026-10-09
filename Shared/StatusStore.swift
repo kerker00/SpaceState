@@ -3,6 +3,7 @@ import MainframeStatus
 import Observation
 import SpaceAPI
 import SpacePushClient
+import WidgetKit
 
 /// Keeps the status of the selected space current and remembers the user's choices.
 @Observable
@@ -81,6 +82,10 @@ final class StatusStore {
             let rooms = Mainframe.isMainframe(endpoint) ? (try? await service.mainframeRooms()) ?? [] : []
             let fetchedInfo = try await info
             guard endpoint == self.endpoint else { return }
+            // Widgets refresh only a few times an hour; tell them when the app sees a change.
+            if fetchedInfo.status != self.info?.status || rooms.map(\.state) != self.rooms.map(\.state) {
+                WidgetCenter.shared.reloadAllTimelines()
+            }
             self.info = fetchedInfo
             self.rooms = rooms
             lastError = nil

@@ -59,7 +59,7 @@ Both active repositories use `dev` as the integration branch; feature branches s
 | SpacePush in production | running on Uberspace at `https://push.grafixmafia.net` | SpacePush #3 |
 | Push in the macOS app | registration, notifications and status window done; tested end to end against a local SpacePush | branch `feature/push-registration` |
 | iOS app | first version: status, rooms, space picker, settings, push registration; builds for the simulator, not yet run | branch `feature/ios-app` |
-| Widgets | low priority | – |
+| Widgets | iOS (home and lock screen) and macOS (desktop, Notification Center); each widget picks its space | branch `feature/widgets` |
 
 ## Architecture
 
@@ -85,6 +85,7 @@ Both active repositories use `dev` as the integration branch; feature branches s
 - `Shared/` – app code for both platforms: `StatusStore` (selected space, polling, persisted choice), `DirectoryStore`, `PushStore` (permission, device token, registration), display helpers, string catalog, app icon.
 - `macOS/` – `MenuBarExtra` with a status panel; a regular status window with the same view, opened by clicking a notification or the Dock icon; settings (space picker, refresh interval, open at login, show in Dock, notifications). The app delegate owns the `StatusStore` so both views share it.
 - `iOS/` – iPhone and iPad app (iOS 26): status of the selected space with Mainframe's rooms, pull to refresh, link to the website; settings sheet with space picker, refresh interval and notifications. Same bundle ID as the macOS app, so both form one App Store entry.
+- `Widget/` – WidgetKit extension, built twice (`SpaceStateWidget-iOS`, `SpaceStateWidget-macOS`) and embedded in the apps, bundle ID `net.grafixmafia.spacepush.widget`. Small and medium widgets everywhere, plus circular, rectangular and inline on the iPhone lock screen. Each widget is configured with an App Intent to show any space from the directory (default Mainframe; medium shows Mainframe's rooms). It reads through `StatusService` and refreshes every 15 minutes; the apps reload widgets when they see a change. From `Shared/` it takes only the display helpers, `StatusService+Configured` and the string catalog – the app-only files are listed as exceptions in the project.
 - `SPACEPUSH_URL` build setting, read from the Info.plist as `SpacePushURL`: `https://push.grafixmafia.net` in Debug and Release. SpacePush tells sandbox and production devices apart itself. For a local SpacePush, set it to `http://127.0.0.1:8080` in Debug.
 - Bundle ID `net.grafixmafia.spacepush` (see Decisions), team `7E3BJ546SA`, App Sandbox with outgoing network access. `NSAllowsArbitraryLoads` is set because some SpaceAPI endpoints are plain HTTP.
 
@@ -117,7 +118,7 @@ See the [SpacePush README](https://github.com/kerker00/SpacePush#readme) for the
 | A regular status window in addition to the menu bar panel | Notification clicks need something that can be opened from code; it shows the same view. |
 | Dock icon optional (`Show in Dock`, off by default) | A menu bar app by default, as before; some users prefer a Dock icon. |
 | Use [GMSnagNav](https://github.com/kerker00/GMSnagNav) if a view needs a sidebar | Own package, already used in PreCal. |
-| Widgets are low priority | The menu bar and notifications cover the main use. |
+| Widgets configured per widget with an App Intent instead of following the app's selected space | Several widgets can show different spaces, and no App Group is needed between app and widget. |
 
 ## Next steps
 
