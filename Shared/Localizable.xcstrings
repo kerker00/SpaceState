@@ -299,6 +299,16 @@
         }
       }
     },
+    "Show in Dock": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im Dock anzeigen"
+          }
+        }
+      }
+    },
     "Space": {
       "localizations": {
         "de": {

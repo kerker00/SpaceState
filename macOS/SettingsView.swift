@@ -75,6 +75,7 @@ private struct SpacePicker: View {
 private struct GeneralSettings: View {
     @Bindable var store: StatusStore
     var push: PushStore
+    @AppStorage(DockIcon.defaultsKey) private var showDockIcon = false
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var loginItemError: String?
 
@@ -97,6 +98,11 @@ private struct GeneralSettings: View {
                     .font(.caption)
                     .foregroundStyle(.red)
             }
+
+            Toggle("Show in Dock", isOn: $showDockIcon)
+                .onChange(of: showDockIcon) { _, visible in
+                    DockIcon.apply(visible: visible)
+                }
 
             Section {
                 Toggle("Notify me when the state changes", isOn: notificationsEnabled)

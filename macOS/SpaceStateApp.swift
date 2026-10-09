@@ -3,14 +3,10 @@ import SwiftUI
 @main
 struct SpaceStateApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    @State private var store: StatusStore
     @State private var directory = DirectoryStore()
 
-    init() {
-        let store = StatusStore()
-        store.startPolling()
-        _store = State(initialValue: store)
-    }
+    /// Shared with the status window the app delegate opens for notification clicks.
+    private var store: StatusStore { appDelegate.store }
 
     var body: some Scene {
         MenuBarExtra {
