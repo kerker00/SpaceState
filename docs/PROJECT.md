@@ -66,7 +66,7 @@ Both active repositories use `dev` as the integration branch; feature branches s
 | APNs key (`.p8`) | created 2026-10-09 (Sandbox & Production), stored locally outside the repositories, verified with SpacePush | – |
 | Hosting of SpacePush | planned on Uberspace, open questions below | – |
 | Push in the macOS app | registration, notifications and status window done; tested end to end against a local SpacePush | branch `feature/push-registration` |
-| iOS app | not started, low priority; shared code is ready | – |
+| iOS app | first version: status, rooms, space picker, settings, push registration; builds for the simulator, not yet run | branch `feature/ios-app` |
 | Widgets | low priority | – |
 
 ## Architecture
@@ -92,6 +92,7 @@ Both active repositories use `dev` as the integration branch; feature branches s
   - `SpacePushClient`: registers and removes devices with SpacePush.
 - `Shared/` – app code for both platforms: `StatusStore` (selected space, polling, persisted choice), `DirectoryStore`, `PushStore` (permission, device token, registration), display helpers, string catalog, app icon.
 - `macOS/` – `MenuBarExtra` with a status panel; a regular status window with the same view, opened by clicking a notification or the Dock icon; settings (space picker, refresh interval, open at login, show in Dock, notifications). The app delegate owns the `StatusStore` so both views share it.
+- `iOS/` – iPhone and iPad app (iOS 26): status of the selected space with Mainframe's rooms, pull to refresh, link to the website; settings sheet with space picker, refresh interval and notifications. Same bundle ID as the macOS app, so both form one App Store entry.
 - `SPACEPUSH_URL` build setting, read from the Info.plist as `SpacePushURL`: `http://127.0.0.1:8080` in Debug, the planned `https://push.grafixmafia.net` in Release.
 - Bundle ID `net.grafixmafia.spacepush` (see Decisions), team `7E3BJ546SA`, App Sandbox with outgoing network access. `NSAllowsArbitraryLoads` is set because some SpaceAPI endpoints are plain HTTP.
 
@@ -180,9 +181,12 @@ The APNs key exists (see Status); SpacePush reads it from `apns_key_file` with `
 
 ### 4. iOS app
 
-- Add an iOS 26 target to `SpaceState.xcodeproj` that shares `Shared/`, the string catalog and the icon.
-- Screens: status of the selected space (with Mainframe rooms), space picker from the directory, settings.
-- Sidebar on iPad via GMSnagNav if a sidebar is needed.
+First version on branch `feature/ios-app`: target `SpaceState-iOS` sharing `Shared/`, the string catalog and the icon; status screen, settings sheet, space picker and push registration (`aps-environment` in `Config/iOS.entitlements`).
+
+Still to do:
+
+- Run it in the simulator and on a device; a push test works in the simulator on Apple silicon, where Debug's `127.0.0.1:8080` reaches SpacePush on the Mac. A device needs the Mac's LAN address and SpacePush listening on it.
+- A sidebar on iPad via GMSnagNav, if several spaces are shown at once later.
 
 ### Later
 

@@ -10,10 +10,14 @@
 		A1000000000000000000000B /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000000D /* SpaceAPI */; };
 		A1000000000000000000000C /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000000E /* MainframeStatus */; };
 		A10000000000000000000016 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000017 /* SpacePushClient */; };
+		A10000000000000000000026 /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000029 /* SpaceAPI */; };
+		A10000000000000000000027 /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000002A /* MainframeStatus */; };
+		A10000000000000000000028 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000002B /* SpacePushClient */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A10000000000000000000004 /* SpaceState.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceState.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000020 /* SpaceState.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceState.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -25,6 +29,11 @@
 		A10000000000000000000006 /* macOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = macOS;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000021 /* iOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -40,6 +49,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000000000000000000024 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000026 /* SpaceAPI in Frameworks */,
+				A10000000000000000000027 /* MainframeStatus in Frameworks */,
+				A10000000000000000000028 /* SpacePushClient in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -48,6 +67,7 @@
 			children = (
 				A10000000000000000000005 /* Shared */,
 				A10000000000000000000006 /* macOS */,
+				A10000000000000000000021 /* iOS */,
 				A10000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				A10000000000000000000004 /* SpaceState.app */,
+				A10000000000000000000020 /* SpaceState.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -89,6 +110,32 @@
 			productReference = A10000000000000000000004 /* SpaceState.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A10000000000000000000022 /* SpaceState-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000000000000000000002C /* Build configuration list for PBXNativeTarget "SpaceState-iOS" */;
+			buildPhases = (
+				A10000000000000000000023 /* Sources */,
+				A10000000000000000000024 /* Frameworks */,
+				A10000000000000000000025 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A10000000000000000000005 /* Shared */,
+				A10000000000000000000021 /* iOS */,
+			);
+			name = "SpaceState-iOS";
+			packageProductDependencies = (
+				A10000000000000000000029 /* SpaceAPI */,
+				A1000000000000000000002A /* MainframeStatus */,
+				A1000000000000000000002B /* SpacePushClient */,
+			);
+			productName = SpaceState;
+			productReference = A10000000000000000000020 /* SpaceState.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -100,6 +147,9 @@
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					A10000000000000000000007 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					A10000000000000000000022 = {
 						CreatedOnToolsVersion = 27.0;
 					};
 				};
@@ -123,6 +173,7 @@
 			projectRoot = "";
 			targets = (
 				A10000000000000000000007 /* SpaceState-macOS */,
+				A10000000000000000000022 /* SpaceState-iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -135,10 +186,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000000000000000000025 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A10000000000000000000008 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000023 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -262,6 +327,64 @@
 			};
 			name = Release;
 		};
+		A1000000000000000000002D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Config/iOS.entitlements;
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush;
+				PRODUCT_NAME = SpaceState;
+				SDKROOT = iphoneos;
+				SPACEPUSH_URL = "http://127.0.0.1:8080";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1000000000000000000002E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Config/iOS.entitlements;
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush;
+				PRODUCT_NAME = SpaceState;
+				SDKROOT = iphoneos;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -279,6 +402,15 @@
 			buildConfigurations = (
 				A10000000000000000000014 /* Debug */,
 				A10000000000000000000015 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000000000000000000002C /* Build configuration list for PBXNativeTarget "SpaceState-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000000000000000000002D /* Debug */,
+				A1000000000000000000002E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -302,6 +434,18 @@
 			productName = MainframeStatus;
 		};
 		A10000000000000000000017 /* SpacePushClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpacePushClient;
+		};
+		A10000000000000000000029 /* SpaceAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SpaceAPI;
+		};
+		A1000000000000000000002A /* MainframeStatus */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MainframeStatus;
+		};
+		A1000000000000000000002B /* SpacePushClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SpacePushClient;
 		};

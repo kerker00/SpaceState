@@ -41,6 +41,16 @@
         }
       }
     },
+    "Done": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
+          }
+        }
+      }
+    },
     "General": {
       "localizations": {
         "de": {
@@ -279,6 +289,16 @@
         }
       }
     },
+    "Rooms": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Räume"
+          }
+        }
+      }
+    },
     "Search spaces": {
       "localizations": {
         "de": {
@@ -365,6 +385,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stand: %@"
+          }
+        }
+      }
+    },
+    "Website": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Website"
           }
         }
       }
