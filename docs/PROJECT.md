@@ -6,21 +6,16 @@ SpaceState shows whether a hackerspace is open and notifies its users when that 
 
 Start here when picking the work up again.
 
-**SpacePush runs in production** at `https://push.grafixmafia.net` on the Uberspace 7 account, as a supervisord service, with a Sandbox & Production APNs key. It serves the apps the spaces' state (`/v1/directory`, `/v1/spaces`, `/v1/mainframe/rooms`) and sends notifications. How it was built and how to update it is in the [SpacePush README](https://github.com/kerker00/SpacePush#deploy-on-uberspace-7). The server currently runs the branch `feature/read-proxy`; after SpacePush #3 is merged it switches to `dev` (`git switch dev && git pull` in `~/spacepush/src`, then the update steps).
+**SpacePush runs in production** at `https://push.grafixmafia.net` on the Uberspace 7 account, as a supervisord service, with a Sandbox & Production APNs key. It serves the apps the spaces' state (`/v1/directory`, `/v1/spaces`, `/v1/mainframe/rooms`) and sends notifications. How it was built and how to update it is in the [SpacePush README](https://github.com/kerker00/SpacePush#deploy-on-uberspace-7). The server still runs the branch `feature/read-proxy`; it switches to the 2.0.0 release (`git fetch && git switch --detach v2.0.0` in `~/spacepush/src`, then the update steps).
 
-**Open pull requests:**
-
-- SpacePush [#3](https://github.com/kerker00/SpacePush/pull/3): read proxy, hardening, deploy templates and guide, directory size fix.
-- SpaceState [#11](https://github.com/kerker00/SpaceState/pull/11): the iOS app.
-- SpaceState [#12](https://github.com/kerker00/SpaceState/pull/12), stacked on #11: web-link and size limits, and the apps reading through SpacePush with direct fallback.
+**Release 2.0.0** of SpaceState and SpacePush: `dev` merged into `master`, tagged `v2.0.0`, with GitHub releases in both repositories.
 
 **Next steps:**
 
-1. Push test on the iPhone against production (Debug builds talk to `https://push.grafixmafia.net` now).
-2. Merge the open pull requests; switch the server to `dev`.
-3. Revoke the old sandbox-only APNs key once the new key has delivered a notification.
-4. TestFlight build, to test the production APNs environment.
-5. Housekeeping: archive SpaceStateBar and SpaceStateBackEnd.
+1. Switch the server from `feature/read-proxy` to `master` (or the `v2.0.0` tag) and run the update steps.
+2. Revoke the old sandbox-only APNs key once the new key has delivered a notification.
+3. TestFlight build, to test the production APNs environment.
+4. Housekeeping: archive SpaceStateBar and SpaceStateBackEnd.
 
 **How to check the current state:**
 
@@ -39,7 +34,7 @@ Start here when picking the work up again.
 
 | Repository | Contents | State |
 | --- | --- | --- |
-| [kerker00/SpaceState](https://github.com/kerker00/SpaceState) | macOS app, upcoming iOS app, `SpaceStateKit` package | active |
+| [kerker00/SpaceState](https://github.com/kerker00/SpaceState) | macOS and iOS apps with widgets, `SpaceStateKit` package | active |
 | [kerker00/SpacePush](https://github.com/kerker00/SpacePush) | Erlang/OTP push service | active |
 | [kerker00/SpaceStateBar](https://github.com/kerker00/SpaceStateBar) | 2014 macOS menu bar app | superseded by this repo, to be archived |
 | [kerker00/SpaceStateBackEnd](https://github.com/kerker00/SpaceStateBackEnd) | 2015 Erlang prototype that polled the old SpaceAPI directory | superseded by SpacePush, to be archived |
@@ -52,14 +47,14 @@ Both active repositories use `dev` as the integration branch; feature branches s
 | --- | --- | --- |
 | `SpaceStateKit` package (`SpaceAPI`, `MainframeStatus`) | done, tested | SpaceState #1, #5 |
 | macOS menu bar app | done | SpaceState #2 |
-| German localization | done for the macOS app | SpaceState #3 |
+| German localization | done for both apps | SpaceState #3 |
 | App icon (Icon Composer, Liquid Glass) | done | SpaceState #4 |
-| SpacePush rewrite | done, tested locally, merged into `dev` | SpacePush #1 |
+| SpacePush rewrite | done, tested | SpacePush #1, 2.0.0 |
 | APNs key (`.p8`) | created 2026-10-09 (Sandbox & Production), stored locally outside the repositories, verified with SpacePush | – |
-| SpacePush in production | running on Uberspace at `https://push.grafixmafia.net` | SpacePush #3 |
-| Push in the macOS app | registration, notifications and status window done; tested end to end against a local SpacePush | branch `feature/push-registration` |
-| iOS app | first version: status, rooms, space picker, settings, push registration; builds for the simulator, not yet run | branch `feature/ios-app` |
-| Widgets | iOS (home and lock screen) and macOS (desktop, Notification Center); each widget picks its space | branch `feature/widgets` |
+| SpacePush in production | running on Uberspace at `https://push.grafixmafia.net` | SpacePush #3, 2.0.0 |
+| Push in the macOS app | registration, notifications and status window done; tested end to end against a local SpacePush | SpaceState #10 |
+| iOS app | status, rooms, space picker, settings, push registration; reads through SpacePush with direct fallback | SpaceState #11, #12, #13 |
+| Widgets | iOS (home and lock screen) and macOS (desktop, Notification Center); each widget picks its space | SpaceState #13 |
 
 ## Architecture
 
@@ -135,7 +130,7 @@ The full procedure, updates, rollback and troubleshooting are in the [SpacePush 
 
 ### 2. Push in the apps (iOS and macOS)
 
-Done for macOS (branch `feature/push-registration`):
+Done for macOS (SpaceState #10):
 
 - Push entitlement (`com.apple.developer.aps-environment`) in `Config/macOS.entitlements`.
 - `PushStore` asks for permission, receives the device token and sends `PUT /v1/devices/<token>` with `environment` `sandbox` in Debug and `production` otherwise. It re-registers on every launch and whenever the subscriptions change, and sends `DELETE` when notifications are turned off.
@@ -146,7 +141,6 @@ Done for macOS (branch `feature/push-registration`):
 Still open:
 
 - UI to choose several spaces or single Mainframe rooms; today it follows the selected space.
-- The same for the iOS app once it exists.
 
 The APNs key exists (see Status); SpacePush reads it from `apns_key_file` with `apns_key_id` set. Never commit it – `*.p8` is in the `.gitignore` of both repositories.
 
@@ -171,7 +165,7 @@ The APNs key exists (see Status); SpacePush reads it from `apns_key_file` with `
 
 ### 4. iOS app
 
-First version on branch `feature/ios-app`: target `SpaceState-iOS` sharing `Shared/`, the string catalog and the icon; status screen, settings sheet, space picker and push registration (`aps-environment` in `Config/iOS.entitlements`).
+First version in SpaceState #11: target `SpaceState-iOS` sharing `Shared/`, the string catalog and the icon; status screen, settings sheet, space picker and push registration (`aps-environment` in `Config/iOS.entitlements`).
 
 Still to do:
 
@@ -181,7 +175,6 @@ Still to do:
 ### Later
 
 - Publish `SpaceAPI` as its own Swift package (`git subtree split`), with DocC and a listing on spaceapi.io.
-- Widgets.
 - Access control for the SpacePush API (for example App Attest) if the current cap, expiry and rate limit turn out not to be enough.
 - A real APNs delivery test and a load test for SpacePush (both not done yet; everything else is covered by tests).
 - If deliveries for one APNs environment pile up while its connection is down, they take the sender's free slots for that round; fine at this scale, worth revisiting if usage grows.
