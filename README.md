@@ -16,6 +16,7 @@ Project status, decisions and next steps: [docs/PROJECT.md](docs/PROJECT.md).
 - Push notifications when the selected space opens or closes, sent by [SpacePush](https://github.com/kerker00/SpacePush).
 - State is read through SpacePush, with direct SpaceAPI requests as fallback.
 - English and German.
+- Anonymous usage statistics for SpacePush: the apps send a random install ID, created on first launch and tied to nothing else, and their version and OS version. SpacePush stores only a keyed hash of the ID and keeps just the counts after 40 days; see [SpacePush's statistics](https://github.com/kerker00/SpacePush#statistics).
 
 ### macOS
 
