@@ -71,6 +71,26 @@
         }
       }
     },
+    "Notifications are turned off in System Settings.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mitteilungen sind in den Systemeinstellungen ausgeschaltet."
+          }
+        }
+      }
+    },
+    "Notify me when the state changes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benachrichtigen, wenn sich der Zustand ändert"
+          }
+        }
+      }
+    },
     "Open": {
       "localizations": {
         "de": {
@@ -111,6 +131,114 @@
         }
       }
     },
+    "PUSH_STATE_CLOSED": {
+      "comment": "Notification body sent by SpacePush as loc-key.",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt geschlossen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now closed"
+          }
+        }
+      }
+    },
+    "PUSH_STATE_CLOSING": {
+      "comment": "Notification body sent by SpacePush as loc-key.",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schließt gleich"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closing soon"
+          }
+        }
+      }
+    },
+    "PUSH_STATE_KEYHOLDER": {
+      "comment": "Notification body sent by SpacePush as loc-key.",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur für Keyholder"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keyholders only"
+          }
+        }
+      }
+    },
+    "PUSH_STATE_MEMBER": {
+      "comment": "Notification body sent by SpacePush as loc-key.",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur für Mitglieder"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Members only"
+          }
+        }
+      }
+    },
+    "PUSH_STATE_OPEN": {
+      "comment": "Notification body sent by SpacePush as loc-key.",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt geöffnet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now open"
+          }
+        }
+      }
+    },
+    "PUSH_STATE_OPEN_PLUS": {
+      "comment": "Notification body sent by SpacePush as loc-key.",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt offen+"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now open+"
+          }
+        }
+      }
+    },
     "Quit": {
       "localizations": {
         "de": {
@@ -127,6 +255,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aktualisieren"
+          }
+        }
+      }
+    },
+    "Registering…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird registriert …"
+          }
+        }
+      }
+    },
+    "Registration failed: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrierung fehlgeschlagen: %@"
           }
         }
       }
@@ -207,6 +355,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stand: %@"
+          }
+        }
+      }
+    },
+    "You will be notified about the selected space.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du wirst über den ausgewählten Space benachrichtigt."
           }
         }
       }

@@ -5,6 +5,7 @@ import SwiftUI
 struct SettingsView: View {
     var store: StatusStore
     var directory: DirectoryStore
+    var push: PushStore
 
     var body: some View {
         TabView {
@@ -12,7 +13,7 @@ struct SettingsView: View {
                 SpacePicker(store: store, directory: directory)
             }
             Tab("General", systemImage: "gearshape") {
-                GeneralSettings(store: store)
+                GeneralSettings(store: store, push: push)
             }
         }
         .frame(width: 460, height: 420)
@@ -73,6 +74,7 @@ private struct SpacePicker: View {
 
 private struct GeneralSettings: View {
     @Bindable var store: StatusStore
+    var push: PushStore
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var loginItemError: String?
 
@@ -95,8 +97,34 @@ private struct GeneralSettings: View {
                     .font(.caption)
                     .foregroundStyle(.red)
             }
+
+            Section {
+                Toggle("Notify me when the state changes", isOn: notificationsEnabled)
+                if let pushStatus {
+                    Text(pushStatus)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
         .formStyle(.grouped)
+    }
+
+    private var notificationsEnabled: Binding<Bool> {
+        Binding(
+            get: { push.isEnabled },
+            set: { enabled in Task { await push.setEnabled(enabled) } }
+        )
+    }
+
+    private var pushStatus: LocalizedStringKey? {
+        switch push.status {
+        case .off: nil
+        case .denied: "Notifications are turned off in System Settings."
+        case .registering: "Registering…"
+        case .registered: "You will be notified about the selected space."
+        case .failed(let message): "Registration failed: \(message)"
+        }
     }
 
     private func updateLoginItem(enabled: Bool) {

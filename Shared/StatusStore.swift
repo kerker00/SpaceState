@@ -2,6 +2,7 @@ import Foundation
 import MainframeStatus
 import Observation
 import SpaceAPI
+import SpacePushClient
 
 /// Keeps the status of the selected space current and remembers the user's choices.
 @Observable
@@ -90,5 +91,13 @@ final class StatusStore {
             lastError = error
         }
         lastUpdate = .now
+    }
+}
+
+extension StatusStore {
+    /// What to be notified about: the selected space and, for Mainframe, each of its rooms.
+    var pushSubscriptions: [PushSubscription] {
+        [PushSubscription(endpoint: endpoint)]
+            + rooms.filter { $0.id != "space" }.map { PushSubscription(endpoint: endpoint, room: $0.id) }
     }
 }

@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct SpaceStateApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var store: StatusStore
     @State private var directory = DirectoryStore()
 
@@ -22,9 +23,12 @@ struct SpaceStateApp: App {
             }
         }
         .menuBarExtraStyle(.window)
+        .onChange(of: store.pushSubscriptions, initial: true) { _, subscriptions in
+            appDelegate.push.update(subscriptions: subscriptions)
+        }
 
         Settings {
-            SettingsView(store: store, directory: directory)
+            SettingsView(store: store, directory: directory, push: appDelegate.push)
         }
     }
 }
