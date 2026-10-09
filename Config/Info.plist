@@ -2,14 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- Spaces from the SpaceAPI directory may still serve their endpoint over plain HTTP. -->
-	<!-- SpacePush service; set per build configuration with SPACEPUSH_URL. -->
-	<key>SpacePushURL</key>
-	<string>$(SPACEPUSH_URL)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>SpacePushURL</key>
+	<string>$(SPACEPUSH_URL)</string>
 </dict>
 </plist>

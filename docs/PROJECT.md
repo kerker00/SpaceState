@@ -88,7 +88,7 @@ Both active repositories use `dev` as the integration branch; feature branches s
   - `MainframeStatus`: rooms and finer states of Mainframe Oldenburg.
 - `Shared/` – app code for both platforms: `StatusStore` (selected space, polling, persisted choice), `DirectoryStore`, display helpers, string catalog, app icon.
 - `macOS/` – `MenuBarExtra` with a status panel and settings (space picker, refresh interval, open at login).
-- Bundle ID `net.grafixmafia.spacestate`, team `7E3BJ546SA`, App Sandbox with outgoing network access. `NSAllowsArbitraryLoads` is set because some SpaceAPI endpoints are plain HTTP.
+- Bundle ID `net.grafixmafia.spacepush` (see Decisions), team `7E3BJ546SA`, App Sandbox with outgoing network access. `NSAllowsArbitraryLoads` is set because some SpaceAPI endpoints are plain HTTP.
 
 ### SpacePush
 
@@ -115,6 +115,7 @@ See the [SpacePush README](https://github.com/kerker00/SpacePush#readme) for the
 | Host SpacePush on Uberspace | Domain, HTTPS, process supervision and backups already exist there; no home VM or tunnel needed. |
 | SpacePush reliability rules from two review rounds: confirm only on fresh data, persistent outbox, one request per device and topic, send only on connections that are up, versioned registrations and disk formats | Every rule has a test; see the SpacePush pull request for the reasoning. |
 | iOS app after hosting and push | Agreed priority; the macOS app covers daily use until then. |
+| Bundle ID `net.grafixmafia.spacepush` instead of the old `net.grafixmafia.spacestate` | The old ID is taken but can no longer be assigned to the team, neither in Xcode nor in the developer portal. The app keeps its name SpaceState; SpacePush's `apns_topic` must match this ID. |
 | Use [GMSnagNav](https://github.com/kerker00/GMSnagNav) if a view needs a sidebar | Own package, already used in PreCal. |
 | Widgets are low priority | The menu bar and notifications cover the main use. |
 

@@ -207,6 +207,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Config/macOS.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -222,10 +223,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacestate;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush;
 				PRODUCT_NAME = SpaceState;
-				SPACEPUSH_URL = "http://127.0.0.1:8080";
 				SDKROOT = macosx;
+				SPACEPUSH_URL = "http://127.0.0.1:8080";
 				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Debug;
@@ -237,6 +238,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Config/macOS.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7E3BJ546SA;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -252,10 +254,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacestate;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.spacepush;
 				PRODUCT_NAME = SpaceState;
-				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				SDKROOT = macosx;
+				SPACEPUSH_URL = "https://push.grafixmafia.net";
 				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Release;

@@ -5,6 +5,7 @@ import SwiftUI
 /// The window that opens from the menu bar icon.
 struct StatusPanel: View {
     var store: StatusStore
+    @Environment(\.openSettings) private var openSettings
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -85,8 +86,11 @@ struct StatusPanel: View {
                 }
                 .help("Open website")
             }
-            SettingsLink {
-                Image(systemName: "gearshape")
+            // SettingsLink does not reliably bring the window to the front in an app
+            // without a Dock icon, so activate the app first.
+            Button("Settings", systemImage: "gearshape") {
+                NSApplication.shared.activate()
+                openSettings()
             }
             .help("Settings")
             Button("Quit", systemImage: "power") {
