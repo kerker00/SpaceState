@@ -73,7 +73,7 @@ Both active repositories use `dev` as the integration branch; feature branches s
 
 ### Apps
 
-- `SpaceStateKit/` – local Swift package with three modules:
+- [SpaceStateKit](https://github.com/kerker00/SpaceStateKit) – independently maintained Swift package, pinned to version `0.1.0` in Xcode, with three modules:
   - `SpaceAPI`: generic SpaceAPI client. Reads schema v15 and the flat v0.12 layout leniently, reads the directory from the aggregator. Contains nothing specific to Mainframe.
   - `MainframeStatus`: rooms and finer states of Mainframe Oldenburg.
   - `SpacePushClient`: registers and removes devices with SpacePush, reads the spaces' state from it, and `StatusService`, which the apps use for all reads: SpacePush first, the spaces directly if SpacePush fails.
