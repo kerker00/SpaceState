@@ -10,11 +10,5 @@
 	<!-- SpacePush service; set per build configuration with SPACEPUSH_URL. -->
 	<key>SpacePushURL</key>
 	<string>$(SPACEPUSH_URL)</string>
-	<!-- The direct fallback may reach spaces that only serve plain HTTP. -->
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 </dict>
 </plist>
