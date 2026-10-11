@@ -4,14 +4,17 @@ import SwiftUI
 /// Information a space publishes, shared by the phone app and the Mac's detail window.
 struct SpaceDetailsView: View {
     var info: SpaceInfo
+    #if os(macOS)
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
 
     private var palette: SpaceDetailsPalette {
         SpaceDetailsPalette(dark: colorScheme == .dark, increasedContrast: contrast == .increased)
     }
+    #endif
 
     var body: some View {
+        #if os(macOS)
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 if let address = text(info.location?.address) {
@@ -66,7 +69,7 @@ struct SpaceDetailsView: View {
 
                 if let website = info.website {
                     SpaceDetailsCard("Website", palette: palette) {
-                        SpaceDetailLinkRow(link: SpaceDetailLink(
+                        MacSpaceDetailLinkRow(link: SpaceDetailLink(
                             id: "website", title: "Website", value: website.absoluteString,
                             destination: website, symbolName: "safari"
                         ), palette: palette)
@@ -81,8 +84,85 @@ struct SpaceDetailsView: View {
         }
         .background(palette.background)
         .navigationTitle(info.name)
+        #else
+        List {
+            if let address = text(info.location?.address) {
+                SpaceDetailsSection("Address") {
+                    Text(address)
+                        .textSelection(.enabled)
+                }
+            }
+
+            if let hint = text(info.location?.hint) {
+                SpaceDetailsSection("Access") {
+                    Text(hint)
+                        .textSelection(.enabled)
+                }
+            }
+
+            let contacts = SpaceDetailLink.contacts(for: info.contact)
+            if !contacts.isEmpty {
+                SpaceDetailsSection("Contacts") {
+                    ForEach(contacts) { link in
+                        SpaceDetailLinkRow(link: link)
+                    }
+                }
+            }
+
+            ForEach(Array(keymasters.enumerated()), id: \.offset) { _, keymaster in
+                SpaceDetailsSection("Keyholder") {
+                    if let name = text(keymaster.name) {
+                        Text(name)
+                            .font(.headline)
+                    }
+                    if let nickname = text(keymaster.ircNick) {
+                        LabeledContent("IRC nickname") {
+                            Text(nickname)
+                                .foregroundStyle(.primary)
+                                .textSelection(.enabled)
+                        }
+                    }
+                    ForEach(SpaceDetailLink.contacts(for: SpaceInfo.Contact(
+                        email: keymaster.email, phone: keymaster.phone,
+                        matrix: keymaster.matrix, mastodon: keymaster.mastodon, xmpp: keymaster.xmpp
+                    ))) { link in
+                        SpaceDetailLinkRow(link: link)
+                    }
+                }
+            }
+
+            let feeds = SpaceDetailLink.feeds(for: info.feeds)
+            if !feeds.isEmpty {
+                SpaceDetailsSection("Feeds") {
+                    ForEach(feeds) { link in
+                        SpaceDetailLinkRow(link: link)
+                    }
+                }
+            }
+
+            if let website = info.website {
+                Section {
+                    Link(destination: website) {
+                        HStack {
+                            Label("Website", systemImage: "safari")
+                            Spacer()
+                            Image(systemName: "arrow.up.right")
+                                .accessibilityHidden(true)
+                        }
+                            .foregroundStyle(.primary)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .foregroundStyle(.primary)
+        .listStyle(.insetGrouped)
+        .navigationTitle(info.name)
+        #endif
     }
 
+    #if os(macOS)
     @ViewBuilder
     private func linkRows(_ links: [SpaceDetailLink]) -> some View {
         ForEach(Array(links.enumerated()), id: \.element.id) { index, link in
@@ -92,9 +172,10 @@ struct SpaceDetailsView: View {
                     .frame(height: 1)
                     .accessibilityHidden(true)
             }
-            SpaceDetailLinkRow(link: link, palette: palette)
+            MacSpaceDetailLinkRow(link: link, palette: palette)
         }
     }
+    #endif
 
     private var keymasters: [SpaceInfo.Keymaster] {
         info.contact.keymasters.filter { person in
@@ -109,6 +190,7 @@ struct SpaceDetailsView: View {
     }
 }
 
+#if os(macOS)
 private struct SpaceDetailsCard<Content: View>: View {
     let title: LocalizedStringResource
     let palette: SpaceDetailsPalette
@@ -138,7 +220,7 @@ private struct SpaceDetailsCard<Content: View>: View {
     }
 }
 
-private struct SpaceDetailLinkRow: View {
+private struct MacSpaceDetailLinkRow: View {
     var link: SpaceDetailLink
     var palette: SpaceDetailsPalette
 
@@ -186,15 +268,9 @@ private struct SpaceDetailLinkRow: View {
 }
 
 private enum SpaceDetailsFont {
-    #if os(macOS)
     static let body = Font.system(size: 15)
     static let label = Font.system(size: 13, weight: .semibold)
     static let heading = Font.system(size: 17, weight: .bold)
-    #else
-    static let body = Font.body
-    static let label = Font.subheadline.weight(.semibold)
-    static let heading = Font.title3.bold()
-    #endif
 }
 
 /// Opaque, contrasting surfaces avoid inactive-window dimming of secondary list text.
@@ -216,3 +292,64 @@ private struct SpaceDetailsPalette {
         accent = dark ? Color(red: 140 / 255, green: 198 / 255, blue: 255 / 255) : Color(red: 20 / 255, green: 94 / 255, blue: 168 / 255)
     }
 }
+#else
+private struct SpaceDetailsSection<Content: View>: View {
+    let title: LocalizedStringResource
+    let content: Content
+
+    init(_ title: LocalizedStringResource, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+
+    var body: some View {
+        Section {
+            content
+        } header: {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.primary)
+        }
+    }
+}
+
+private struct SpaceDetailLinkRow: View {
+    var link: SpaceDetailLink
+
+    var body: some View {
+        if let destination = link.destination {
+            Link(destination: destination) {
+                HStack {
+                    label
+                    Spacer(minLength: 12)
+                    Image(systemName: "arrow.up.right")
+                        .foregroundStyle(.primary)
+                        .accessibilityHidden(true)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        } else {
+            label
+                .textSelection(.enabled)
+        }
+    }
+
+    private var label: some View {
+        Label {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(link.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
+                Text(link.value)
+                    .font(.body)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } icon: {
+            Image(systemName: link.symbolName)
+                .foregroundStyle(.primary)
+        }
+    }
+}
+#endif
