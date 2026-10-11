@@ -7,22 +7,22 @@ struct SpaceDetailsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
 
-    private var palette: SpaceDetailsPalette {
-        SpaceDetailsPalette(dark: colorScheme == .dark, increasedContrast: contrast == .increased)
+    private var palette: SpacePalette {
+        SpacePalette(colorScheme: colorScheme, contrast: contrast)
     }
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: SpaceLayout.sectionSpacing) {
                 if let address = text(info.location?.address) {
-                    SpaceDetailsCard("Address", palette: palette) {
+                    SpaceCard("Address") {
                         Text(address)
                             .textSelection(.enabled)
                     }
                 }
 
                 if let hint = text(info.location?.hint) {
-                    SpaceDetailsCard("Access", palette: palette) {
+                    SpaceCard("Access") {
                         Text(hint)
                             .textSelection(.enabled)
                     }
@@ -30,22 +30,22 @@ struct SpaceDetailsView: View {
 
                 let contacts = SpaceDetailLink.contacts(for: info.contact)
                 if !contacts.isEmpty {
-                    SpaceDetailsCard("Contacts", palette: palette) {
+                    SpaceCard("Contacts") {
                         linkRows(contacts)
                     }
                 }
 
                 ForEach(Array(keymasters.enumerated()), id: \.offset) { _, keymaster in
-                    SpaceDetailsCard("Keyholder", palette: palette) {
+                    SpaceCard("Keyholder") {
                         if let name = text(keymaster.name) {
                             Text(name)
-                                .font(SpaceDetailsFont.body.weight(.semibold))
+                                .font(SpaceTypography.body.weight(.semibold))
                         }
                         if let nickname = text(keymaster.ircNick) {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("IRC nickname")
-                                    .font(SpaceDetailsFont.label)
-                                    .foregroundStyle(palette.label)
+                                    .font(SpaceTypography.label)
+                                    .foregroundStyle(palette.secondaryText)
                                 Text(nickname)
                                     .textSelection(.enabled)
                             }
@@ -59,13 +59,13 @@ struct SpaceDetailsView: View {
 
                 let feeds = SpaceDetailLink.feeds(for: info.feeds)
                 if !feeds.isEmpty {
-                    SpaceDetailsCard("Feeds", palette: palette) {
+                    SpaceCard("Feeds") {
                         linkRows(feeds)
                     }
                 }
 
                 if let website = info.website {
-                    SpaceDetailsCard("Website", palette: palette) {
+                    SpaceCard("Website") {
                         SpaceDetailLinkRow(link: SpaceDetailLink(
                             id: "website", title: "Website", value: website.absoluteString,
                             destination: website, symbolName: "safari"
@@ -73,10 +73,10 @@ struct SpaceDetailsView: View {
                     }
                 }
             }
-            .font(SpaceDetailsFont.body)
+            .font(SpaceTypography.body)
             .foregroundStyle(palette.text)
-            .frame(maxWidth: 720, alignment: .leading)
-            .padding(20)
+            .frame(maxWidth: SpaceLayout.readableWidth, alignment: .leading)
+            .padding(SpaceLayout.pagePadding)
             .frame(maxWidth: .infinity, alignment: .center)
         }
         .background(palette.background)
@@ -109,38 +109,9 @@ struct SpaceDetailsView: View {
     }
 }
 
-private struct SpaceDetailsCard<Content: View>: View {
-    let title: LocalizedStringResource
-    let palette: SpaceDetailsPalette
-    let content: Content
-
-    init(_ title: LocalizedStringResource, palette: SpaceDetailsPalette, @ViewBuilder content: () -> Content) {
-        self.title = title
-        self.palette = palette
-        self.content = content()
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text(title)
-                .font(SpaceDetailsFont.heading)
-                .foregroundStyle(palette.text)
-                .accessibilityAddTraits(.isHeader)
-            content
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(18)
-        .background(palette.surface, in: RoundedRectangle(cornerRadius: 12))
-        .overlay {
-            RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(palette.border, lineWidth: 1)
-        }
-    }
-}
-
 private struct SpaceDetailLinkRow: View {
     var link: SpaceDetailLink
-    var palette: SpaceDetailsPalette
+    var palette: SpacePalette
 
     var body: some View {
         if let destination = link.destination {
@@ -155,7 +126,7 @@ private struct SpaceDetailLinkRow: View {
     }
 
     private var label: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: SpaceLayout.rowSpacing) {
             Image(systemName: link.symbolName)
                 .font(.system(size: 17))
                 .foregroundStyle(palette.accent)
@@ -164,10 +135,10 @@ private struct SpaceDetailLinkRow: View {
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 5) {
                 Text(link.title)
-                    .font(SpaceDetailsFont.label)
-                    .foregroundStyle(palette.label)
+                    .font(SpaceTypography.label)
+                    .foregroundStyle(palette.secondaryText)
                 Text(link.value)
-                    .font(SpaceDetailsFont.body.weight(.medium))
+                    .font(SpaceTypography.body.weight(.medium))
                     .foregroundStyle(palette.text)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -180,39 +151,7 @@ private struct SpaceDetailLinkRow: View {
             }
         }
         .padding(.vertical, 6)
-        .frame(minHeight: 44)
+        .frame(minHeight: SpaceLayout.minimumControlHeight)
         .contentShape(Rectangle())
-    }
-}
-
-private enum SpaceDetailsFont {
-    #if os(macOS)
-    static let body = Font.system(size: 15)
-    static let label = Font.system(size: 13, weight: .semibold)
-    static let heading = Font.system(size: 17, weight: .bold)
-    #else
-    static let body = Font.body
-    static let label = Font.subheadline.weight(.semibold)
-    static let heading = Font.title3.bold()
-    #endif
-}
-
-/// Opaque, contrasting surfaces avoid inactive-window dimming of secondary list text.
-/// The palette follows system appearance and its increased-contrast preference.
-private struct SpaceDetailsPalette {
-    let background: Color
-    let surface: Color
-    let text: Color
-    let label: Color
-    let border: Color
-    let accent: Color
-
-    init(dark: Bool, increasedContrast: Bool) {
-        background = dark ? Color(red: 15 / 255, green: 18 / 255, blue: 23 / 255) : Color(red: 243 / 255, green: 244 / 255, blue: 246 / 255)
-        surface = dark ? Color(red: 32 / 255, green: 38 / 255, blue: 48 / 255) : .white
-        text = dark ? Color(red: 243 / 255, green: 245 / 255, blue: 247 / 255) : Color(red: 23 / 255, green: 32 / 255, blue: 43 / 255)
-        label = increasedContrast ? text : (dark ? Color(red: 199 / 255, green: 208 / 255, blue: 221 / 255) : Color(red: 53 / 255, green: 67 / 255, blue: 85 / 255))
-        border = increasedContrast ? text : (dark ? Color(red: 75 / 255, green: 87 / 255, blue: 104 / 255) : Color(red: 197 / 255, green: 202 / 255, blue: 211 / 255))
-        accent = dark ? Color(red: 140 / 255, green: 198 / 255, blue: 255 / 255) : Color(red: 20 / 255, green: 94 / 255, blue: 168 / 255)
     }
 }
