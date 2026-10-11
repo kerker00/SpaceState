@@ -50,13 +50,13 @@ For the Apple apps:
 - macOS 26 / iOS 26
 - Xcode 26 or later
 
-The underlying [SpaceStateKit package](SpaceStateKit/README.md) requires Swift 6.2 or later. Linux support is planned and has not yet been verified with a Linux build and test run.
+The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) requires Swift 6.2 or later. Xcode resolves the independently maintained package at the exact version `0.1.0`. The Kit repository owns its tests, Linux/macOS CI and releases.
 
 ## Structure
 
 | Path | Contents |
 | --- | --- |
-| `SpaceStateKit/` | Swift package: `SpaceAPI` (generic SpaceAPI client) and `MainframeStatus` (Mainframe extras) |
+| External `SpaceStateKit` dependency | Swift products `SpaceAPI`, `MainframeStatus` and `SpacePushClient`, pinned in the Xcode project |
 | `Shared/` | App code shared by macOS and iOS |
 | `macOS/` | Menu bar app |
 | `iOS/` | iOS app |
@@ -68,19 +68,21 @@ The underlying [SpaceStateKit package](SpaceStateKit/README.md) requires Swift 6
 
 Open `SpaceState.xcodeproj` and run the `SpaceState-macOS` or `SpaceState-iOS` scheme.
 
-Package tests:
+The package sources are maintained separately. To run their tests in this workspace:
 
-    cd SpaceStateKit && swift test
+```sh
+cd ../SpaceStateKit
+swift test
+python3 IntegrationTests/run.py
+```
 
-## Linux and package extraction
+## Shared package and Linux CLI
 
-When the API stabilizes, the generic `SpaceAPI` library is intended to move into its own repository, with Linux support tested from the start. The current library uses Foundation and has no SwiftUI, AppKit or UIKit dependencies. `MainframeStatus` remains a separate, optional module for Mainframe's rooms and extra states.
+[SpaceStateKit](https://github.com/kerker00/SpaceStateKit) contains the three shared products, their tests and fixtures. The original package history was preserved during extraction. Update the exact package version in Xcode deliberately when adopting a new release; do not reintroduce a source copy into this repository.
 
-The first useful Linux application would be a command-line tool for finding spaces and querying their status, with human-readable and JSON output. This would let the community integrate it into status bars, scripts and displays in a hackerspace. Distributing Linux binaries would make the tool accessible to users who do not develop in Swift.
+[SpaceStateCLI](https://github.com/kerker00/SpaceStateCLI) uses the same package for `search`, `status` and polling `watch`, with text, JSON, NDJSON and Waybar output. Linux/macOS verification and installation requirements are documented in those repositories.
 
-A Linux desktop interface would be a separate client using the same library. The existing Apple apps use SwiftUI; Linux desktop integration and local notifications belong in the Linux client.
-
-See [SpaceStateKit's Linux plan](SpaceStateKit/README.md#linux-support-plan) for the required portability changes and verification.
+A future Linux desktop interface and its notifications remain separate work. The Apple apps continue to own their SwiftUI interface, widgets and APNs device integration.
 
 ## License
 

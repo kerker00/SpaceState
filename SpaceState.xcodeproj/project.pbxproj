@@ -336,7 +336,7 @@
 			mainGroup = A10000000000000000000002;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A1000000000000000000000F /* XCLocalSwiftPackageReference "SpaceStateKit" */,
+				A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A10000000000000000000003 /* Products */;
@@ -747,60 +747,76 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		A1000000000000000000000F /* XCLocalSwiftPackageReference "SpaceStateKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = SpaceStateKit;
+/* Begin XCRemoteSwiftPackageReference section */
+		A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kerker00/SpaceStateKit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.1.0;
+			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		A1000000000000000000000D /* SpaceAPI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpaceAPI;
 		};
 		A1000000000000000000000E /* MainframeStatus */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = MainframeStatus;
 		};
 		A10000000000000000000017 /* SpacePushClient */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpacePushClient;
 		};
 		A10000000000000000000029 /* SpaceAPI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpaceAPI;
 		};
 		A1000000000000000000002A /* MainframeStatus */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = MainframeStatus;
 		};
 		A1000000000000000000002B /* SpacePushClient */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpacePushClient;
 		};
 		A10000000000000000000138 /* SpaceAPI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpaceAPI;
 		};
 		A10000000000000000000139 /* MainframeStatus */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = MainframeStatus;
 		};
 		A1000000000000000000013A /* SpacePushClient */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpacePushClient;
 		};
 		A10000000000000000000148 /* SpaceAPI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpaceAPI;
 		};
 		A10000000000000000000149 /* MainframeStatus */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = MainframeStatus;
 		};
 		A1000000000000000000014A /* SpacePushClient */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpacePushClient;
 		};
 /* End XCSwiftPackageProductDependency section */
