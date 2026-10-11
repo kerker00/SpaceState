@@ -7,66 +7,41 @@ struct StatusPanel: View {
     var store: StatusStore
     var showDetails: () -> Void
     @Environment(\.openSettings) private var openSettings
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorSchemeContrast) private var contrast
+
+    private var palette: SpacePalette {
+        SpacePalette(colorScheme: colorScheme, contrast: contrast)
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            header
-
-            if let message = store.info?.state?.message, store.lastError == nil {
-                Text(message)
-                    .foregroundStyle(.secondary)
-            }
+        VStack(alignment: .leading, spacing: SpaceLayout.sectionSpacing) {
+            SpaceStatusCard(
+                status: store.status,
+                name: store.info?.name ?? store.endpoint.host() ?? "",
+                changedAt: store.lastError == nil ? store.info?.state?.lastChange : nil,
+                message: store.lastError == nil ? store.info?.state?.message : nil
+            )
 
             if !store.rooms.isEmpty {
-                Divider()
-                rooms
+                SpaceRoomsCard(rooms: store.rooms)
             }
 
             if let error = store.lastError {
-                Label(error.localizedDescription, systemImage: "exclamationmark.triangle")
-                    .foregroundStyle(.secondary)
-                    .font(.callout)
+                SpaceCard {
+                    Label(error.localizedDescription, systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(palette.secondaryText)
+                }
             }
 
-            Divider()
             footer
         }
-        .padding()
-        .frame(width: 300)
-    }
-
-    private var header: some View {
-        HStack(alignment: .top) {
-            Image(systemName: store.status.symbolName)
-                .font(.title)
-                .foregroundStyle(store.status.color)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(store.info?.name ?? store.endpoint.host() ?? "")
-                    .font(.headline)
-                Text(store.status.title)
-                    .foregroundStyle(store.status.color)
-                if let since = store.info?.state?.lastChange, store.lastError == nil {
-                    Text("Changed \(since, format: .relative(presentation: .named))")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            Spacer()
-        }
-    }
-
-    private var rooms: some View {
-        Grid(alignment: .leading, verticalSpacing: 6) {
-            ForEach(store.rooms) { room in
-                GridRow {
-                    StatusDot(color: room.state.color)
-                    Text(room.name)
-                    Text(room.state.title)
-                        .foregroundStyle(.secondary)
-                        .gridColumnAlignment(.trailing)
-                }
-            }
-        }
+        .font(SpaceTypography.body)
+        .foregroundStyle(palette.text)
+        .tint(palette.accent)
+        .padding(SpaceLayout.pagePadding)
+        .frame(width: 360)
+        .background(palette.background)
     }
 
     private var footer: some View {
@@ -74,7 +49,7 @@ struct StatusPanel: View {
             if let lastUpdate = store.lastUpdate {
                 Text("Updated \(lastUpdate, format: .dateTime.hour().minute())")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(palette.secondaryText)
             }
             Spacer()
             Button("Refresh", systemImage: "arrow.clockwise") {
@@ -106,5 +81,6 @@ struct StatusPanel: View {
         }
         .labelStyle(.iconOnly)
         .buttonStyle(.borderless)
+        .foregroundStyle(palette.accent)
     }
 }

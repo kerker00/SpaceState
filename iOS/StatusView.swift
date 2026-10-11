@@ -8,36 +8,45 @@ struct StatusView: View {
     var directory: DirectoryStore
     var push: PushStore
     @State private var showsSettings = false
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorSchemeContrast) private var contrast
+
+    private var palette: SpacePalette {
+        SpacePalette(colorScheme: colorScheme, contrast: contrast)
+    }
 
     var body: some View {
         NavigationStack {
             List {
                 Section {
-                    header
-                    if let message = store.info?.state?.message, store.lastError == nil {
-                        Text(message)
-                            .foregroundStyle(.secondary)
-                    }
+                    SpaceStatusCard(
+                        status: store.status,
+                        changedAt: store.lastError == nil ? store.info?.state?.lastChange : nil,
+                        message: store.lastError == nil ? store.info?.state?.message : nil
+                    )
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
                 }
 
                 if !store.rooms.isEmpty {
-                    Section("Rooms") {
-                        ForEach(store.rooms) { room in
-                            HStack {
-                                StatusDot(color: room.state.color)
-                                Text(room.name)
-                                Spacer()
-                                Text(room.state.title)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
+                    Section {
+                        SpaceRoomsCard(rooms: store.rooms)
+                            .listRowInsets(EdgeInsets())
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                     }
                 }
 
                 if let error = store.lastError {
                     Section {
-                        Label(error.localizedDescription, systemImage: "exclamationmark.triangle")
-                            .foregroundStyle(.secondary)
+                        SpaceCard {
+                            Label(error.localizedDescription, systemImage: "exclamationmark.triangle")
+                                .foregroundStyle(palette.secondaryText)
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                     }
                 }
 
@@ -54,8 +63,15 @@ struct StatusView: View {
                             }
                         }
                     }
+                    .listRowBackground(palette.surface)
                 }
             }
+            .listStyle(.insetGrouped)
+            .listSectionSpacing(SpaceLayout.sectionSpacing)
+            .scrollContentBackground(.hidden)
+            .background(palette.background)
+            .foregroundStyle(palette.text)
+            .tint(palette.accent)
             .refreshable {
                 await store.refresh()
             }
@@ -70,7 +86,7 @@ struct StatusView: View {
                     ToolbarItem(placement: .status) {
                         Text("Updated \(lastUpdate, format: .dateTime.hour().minute())")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(palette.secondaryText)
                     }
                 }
             }
@@ -78,24 +94,5 @@ struct StatusView: View {
                 SettingsSheet(store: store, directory: directory, push: push)
             }
         }
-    }
-
-    private var header: some View {
-        HStack(spacing: 16) {
-            Image(systemName: store.status.symbolName)
-                .font(.largeTitle)
-                .foregroundStyle(store.status.color)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(store.status.title)
-                    .font(.title2.bold())
-                    .foregroundStyle(store.status.color)
-                if let since = store.info?.state?.lastChange, store.lastError == nil {
-                    Text("Changed \(since, format: .relative(presentation: .named))")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-            }
-        }
-        .padding(.vertical, 4)
     }
 }

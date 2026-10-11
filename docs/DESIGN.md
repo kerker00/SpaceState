@@ -31,6 +31,8 @@ SpaceCard("Address") {
 }
 ```
 
-`SpaceLayout` centralizes page/card insets, section/row spacing, the 720-point reading width and the 44-point minimum control height. `SpaceTypography` keeps the readable Mac sizes and uses semantic, Dynamic Type fonts on iOS. Native navigation, controls, selectable text and link behavior remain part of each view.
+`SpaceLayout` centralizes page/card insets, section/row spacing, the 720-point reading width and the 44-point minimum control height. `SpaceTypography` keeps the readable Mac sizes and uses semantic, Dynamic Type fonts on iOS, including an emphasized status title. Native navigation, controls, selectable text and link behavior remain part of each view.
 
-The detail view uses these components. Defining the shared palette does not change status screens or WidgetKit rendering; each consumer adopts the appropriate roles explicitly.
+The detail view, iPhone status screen, Mac menu bar panel and regular Mac status window use these components. `SpaceStatusCard` combines the status symbol/title, change time and message. `SpaceRoomsCard` keeps room names and localized state labels together; rows stack vertically at accessibility text sizes. Restricted room states use amber, while open, closed and unknown keep their own color roles.
+
+The iPhone screen keeps its native list, pull-to-refresh, navigation links and settings sheet. Both Mac status surfaces keep their existing actions. WidgetKit rendering and space/settings pickers still use their existing presentation; each consumer adopts the appropriate roles explicitly.
