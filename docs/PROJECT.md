@@ -1,6 +1,10 @@
 # SpaceState – project status and plan
 
-SpaceState shows whether a hackerspace is open and notifies its users when that changes. This document records where the revival of the 2014–2016 project stands, the decisions behind it, and what comes next. Last updated 2026-10-09.
+SpaceState shows whether a hackerspace is open and notifies its users when that changes. This document records where the revival of the 2014–2016 project stands, the decisions behind it, and what comes next. Last updated 2026-10-11.
+
+## SpaceAPI details (2026-10-11)
+
+Phase 2 adopts the independently maintained SpaceStateKit at exact version `0.2.0`. The iOS status screen opens a Space details page; the Mac status panel opens the same information in a separate window. It shows the address and access hint, available contacts and keyholders, and blog, wiki, calendar and Flickr feed links. Empty sections are omitted. Contact destinations are constructed with a fixed scheme allowlist; malformed contact strings remain readable text. Status icons and sensors await the separate decisions and phases in the workspace plan.
 
 ## Where we left off (2026-10-09, evening)
 
@@ -20,7 +24,7 @@ Start here when picking the work up again.
 **How to check the current state:**
 
     # SpaceState: package tests (about 10 s) and macOS build
-    cd SpaceStateKit && swift test
+    cd ../SpaceStateKit && swift test
     xcodebuild -project SpaceState.xcodeproj -scheme SpaceState-macOS -destination 'platform=macOS' build
 
     # SpacePush: tests (about 2 s), static checks, local run on http://127.0.0.1:8080
@@ -34,7 +38,7 @@ Start here when picking the work up again.
 
 | Repository | Contents | State |
 | --- | --- | --- |
-| [kerker00/SpaceState](https://github.com/kerker00/SpaceState) | macOS and iOS apps with widgets, `SpaceStateKit` package | active |
+| [kerker00/SpaceState](https://github.com/kerker00/SpaceState) | macOS and iOS apps with widgets; external `SpaceStateKit` dependency | active |
 | [kerker00/SpacePush](https://github.com/kerker00/SpacePush) | Erlang/OTP push service | active |
 | [kerker00/SpaceStateBar](https://github.com/kerker00/SpaceStateBar) | 2014 macOS menu bar app | superseded by this repo, to be archived |
 | [kerker00/SpaceStateBackEnd](https://github.com/kerker00/SpaceStateBackEnd) | 2015 Erlang prototype that polled the old SpaceAPI directory | superseded by SpacePush, to be archived |
@@ -73,7 +77,7 @@ Both active repositories use `dev` as the integration branch; feature branches s
 
 ### Apps
 
-- `SpaceStateKit/` – local Swift package with three modules:
+- [SpaceStateKit](https://github.com/kerker00/SpaceStateKit) – independently maintained Swift package, pinned to version `0.2.0` in Xcode, with three modules:
   - `SpaceAPI`: generic SpaceAPI client. Reads schema v15 and the flat v0.12 layout leniently, reads the directory from the aggregator. Contains nothing specific to Mainframe.
   - `MainframeStatus`: rooms and finer states of Mainframe Oldenburg.
   - `SpacePushClient`: registers and removes devices with SpacePush, reads the spaces' state from it, and `StatusService`, which the apps use for all reads: SpacePush first, the spaces directly if SpacePush fails.
@@ -103,7 +107,7 @@ See the [SpacePush README](https://github.com/kerker00/SpacePush#readme) for the
 | Exception for Mainframe Oldenburg only: rooms and finer states from `openState`, polled in the same loop | Rooms (Radstelle, 3D Lab, Machining) and states such as "members only" are not part of SpaceAPI. |
 | Mainframe states: `none` = closed, `keyholder`/`member`/`closing` = not public, `open`/`open+` = open | Matches `ktt-ol/spacestatus2` (`openValues.go`). |
 | `valid: false` in the aggregator does not discard a space | A schema error elsewhere does not make the open flag wrong. |
-| Keep `SpaceStateKit` in this repository for now; publish `SpaceAPI` as its own package once stable | Avoids two pull requests per change while the API is still moving. No Swift SpaceAPI package exists yet. |
+| Maintain `SpaceStateKit` in its own repository and pin an exact release in Xcode | App, CLI and Android can share the same versioned library without source copies. |
 | SpacePush stays Erlang/OTP, with gun (APNs HTTP/2) and cowboy (API) as the only dependencies | Revives the original design; jiffy replaced by OTP's `json`. The legacy binary APNs interface was shut down in 2021. |
 | Dependencies pinned to releases at least a month old (gun 2.6.0, cowboy 2.19.0) | The newest releases were published the day they were chosen. |
 | Host SpacePush on Uberspace | Domain, HTTPS, process supervision and backups already exist there; no home VM or tunnel needed. |

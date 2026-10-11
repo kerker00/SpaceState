@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     let store = StatusStore()
     let push = PushStore()
     private var statusWindow: NSWindow?
+    private var detailsWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         if DockIcon.isVisible {
@@ -55,12 +56,44 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     }
 
     private func makeStatusWindow() -> NSWindow {
-        let window = NSWindow(contentViewController: NSHostingController(rootView: StatusPanel(store: store)))
+        let window = NSWindow(contentViewController: NSHostingController(rootView: StatusPanel(store: store, showDetails: showDetailsWindow)))
         window.title = "SpaceState"
         window.styleMask = [.titled, .closable, .miniaturizable]
         window.isReleasedWhenClosed = false
         window.center()
         window.setFrameAutosaveName("StatusWindow")
         return window
+    }
+
+    /// A regular window keeps contacts and feeds available after the menu bar closes.
+    func showDetailsWindow() {
+        guard store.info != nil else { return }
+        let window = detailsWindow ?? makeDetailsWindow()
+        detailsWindow = window
+        NSApplication.shared.activate()
+        window.makeKeyAndOrderFront(nil)
+    }
+
+    private func makeDetailsWindow() -> NSWindow {
+        let window = NSWindow(contentViewController: NSHostingController(rootView: SpaceDetailsWindow(store: store)))
+        window.title = String(localized: "Space details")
+        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.setFrameAutosaveName("SpaceDetailsWindow")
+        return window
+    }
+}
+
+private struct SpaceDetailsWindow: View {
+    var store: StatusStore
+
+    var body: some View {
+        NavigationStack {
+            if let info = store.info {
+                SpaceDetailsView(info: info)
+            }
+        }
+        .frame(minWidth: 440, minHeight: 500)
     }
 }

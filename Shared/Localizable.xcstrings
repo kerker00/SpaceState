@@ -11,6 +11,46 @@
         }
       }
     },
+    "Access": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zugang"
+          }
+        }
+      }
+    },
+    "Address": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adresse"
+          }
+        }
+      }
+    },
+    "Blog": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blog"
+          }
+        }
+      }
+    },
+    "Calendar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender"
+          }
+        }
+      }
+    },
     "Changed %@": {
       "localizations": {
         "de": {
@@ -61,12 +101,52 @@
         }
       }
     },
+    "Contacts": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontakte"
+          }
+        }
+      }
+    },
     "Done": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Fertig"
+          }
+        }
+      }
+    },
+    "Email": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-Mail"
+          }
+        }
+      }
+    },
+    "Feeds": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feeds"
+          }
+        }
+      }
+    },
+    "Flickr": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flickr"
           }
         }
       }
@@ -81,6 +161,46 @@
         }
       }
     },
+    "Gopher": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gopher"
+          }
+        }
+      }
+    },
+    "IRC": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IRC"
+          }
+        }
+      }
+    },
+    "IRC nickname": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IRC-Nickname"
+          }
+        }
+      }
+    },
+    "Keyholder": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schlüsselträger"
+          }
+        }
+      }
+    },
     "Keyholders only": {
       "localizations": {
         "de": {
@@ -91,12 +211,52 @@
         }
       }
     },
+    "Mailing list": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mailingliste"
+          }
+        }
+      }
+    },
+    "Mastodon": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mastodon"
+          }
+        }
+      }
+    },
+    "Matrix": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Matrix"
+          }
+        }
+      }
+    },
     "Members only": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Nur Mitglieder"
+          }
+        }
+      }
+    },
+    "Mumble": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mumble"
           }
         }
       }
@@ -269,6 +429,16 @@
         }
       }
     },
+    "Phone": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefon"
+          }
+        }
+      }
+    },
     "Quit": {
       "localizations": {
         "de": {
@@ -309,12 +479,32 @@
         }
       }
     },
+    "Report an issue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Problem melden"
+          }
+        }
+      }
+    },
     "Rooms": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Räume"
+          }
+        }
+      }
+    },
+    "SIP": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SIP"
           }
         }
       }
@@ -389,6 +579,16 @@
         }
       }
     },
+    "Space details": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Space-Details"
+          }
+        }
+      }
+    },
     "Spaces unavailable": {
       "localizations": {
         "de": {
@@ -445,6 +645,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Website"
+          }
+        }
+      }
+    },
+    "Wiki": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiki"
+          }
+        }
+      }
+    },
+    "XMPP": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XMPP"
           }
         }
       }
