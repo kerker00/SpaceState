@@ -69,6 +69,8 @@ The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) re
 
 Open `SpaceState.xcodeproj` and run the `SpaceState-macOS` or `SpaceState-iOS` scheme.
 
+Appearance roles and reusable SwiftUI components are documented in [docs/DESIGN.md](docs/DESIGN.md).
+
 The package sources are maintained separately. To run their tests in this workspace:
 
 ```sh
