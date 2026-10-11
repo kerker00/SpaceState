@@ -8,14 +8,14 @@ struct SpaceDetailsView: View {
     var body: some View {
         List {
             if let address = text(info.location?.address) {
-                Section("Address") {
+                SpaceDetailsSection("Address") {
                     Text(address)
                         .textSelection(.enabled)
                 }
             }
 
             if let hint = text(info.location?.hint) {
-                Section("Access") {
+                SpaceDetailsSection("Access") {
                     Text(hint)
                         .textSelection(.enabled)
                 }
@@ -23,7 +23,7 @@ struct SpaceDetailsView: View {
 
             let contacts = SpaceDetailLink.contacts(for: info.contact)
             if !contacts.isEmpty {
-                Section("Contacts") {
+                SpaceDetailsSection("Contacts") {
                     ForEach(contacts) { link in
                         SpaceDetailLinkRow(link: link)
                     }
@@ -31,14 +31,17 @@ struct SpaceDetailsView: View {
             }
 
             ForEach(Array(keymasters.enumerated()), id: \.offset) { _, keymaster in
-                Section("Keyholder") {
+                SpaceDetailsSection("Keyholder") {
                     if let name = text(keymaster.name) {
                         Text(name)
                             .font(.headline)
                     }
                     if let nickname = text(keymaster.ircNick) {
-                        LabeledContent("IRC nickname", value: nickname)
-                            .textSelection(.enabled)
+                        LabeledContent("IRC nickname") {
+                            Text(nickname)
+                                .foregroundStyle(.primary)
+                                .textSelection(.enabled)
+                        }
                     }
                     ForEach(SpaceDetailLink.contacts(for: SpaceInfo.Contact(
                         email: keymaster.email, phone: keymaster.phone,
@@ -51,7 +54,7 @@ struct SpaceDetailsView: View {
 
             let feeds = SpaceDetailLink.feeds(for: info.feeds)
             if !feeds.isEmpty {
-                Section("Feeds") {
+                SpaceDetailsSection("Feeds") {
                     ForEach(feeds) { link in
                         SpaceDetailLinkRow(link: link)
                     }
@@ -61,11 +64,30 @@ struct SpaceDetailsView: View {
             if let website = info.website {
                 Section {
                     Link(destination: website) {
-                        Label("Website", systemImage: "safari")
+                        HStack {
+                            Label("Website", systemImage: "safari")
+                            Spacer()
+                            Image(systemName: "arrow.up.right")
+                                .accessibilityHidden(true)
+                        }
+                            .foregroundStyle(.primary)
+                            .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
+                    #if os(macOS)
+                    .listRowBackground(Color(nsColor: .controlBackgroundColor))
+                    #endif
                 }
             }
         }
+        .foregroundStyle(.primary)
+        #if os(macOS)
+        .listStyle(.inset)
+        .scrollContentBackground(.hidden)
+        .background(Color(nsColor: .windowBackgroundColor))
+        #else
+        .listStyle(.insetGrouped)
+        #endif
         .navigationTitle(info.name)
     }
 
@@ -82,14 +104,45 @@ struct SpaceDetailsView: View {
     }
 }
 
+private struct SpaceDetailsSection<Content: View>: View {
+    let title: LocalizedStringResource
+    let content: Content
+
+    init(_ title: LocalizedStringResource, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+
+    var body: some View {
+        Section {
+            content
+        } header: {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.primary)
+        }
+        #if os(macOS)
+        .listRowBackground(Color(nsColor: .controlBackgroundColor))
+        #endif
+    }
+}
+
 private struct SpaceDetailLinkRow: View {
     var link: SpaceDetailLink
 
     var body: some View {
         if let destination = link.destination {
             Link(destination: destination) {
-                label
+                HStack {
+                    label
+                    Spacer(minLength: 12)
+                    Image(systemName: "arrow.up.right")
+                        .foregroundStyle(.primary)
+                        .accessibilityHidden(true)
+                }
+                .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
         } else {
             label
                 .textSelection(.enabled)
@@ -98,15 +151,18 @@ private struct SpaceDetailLinkRow: View {
 
     private var label: some View {
         Label {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(link.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
                 Text(link.value)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(3)
+                    .font(.body)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         } icon: {
             Image(systemName: link.symbolName)
+                .foregroundStyle(.primary)
         }
     }
 }
