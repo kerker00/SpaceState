@@ -10,7 +10,7 @@ struct SpaceStateApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            StatusPanel(store: store)
+            StatusPanel(store: store, showDetails: appDelegate.showDetailsWindow)
         } label: {
             Label {
                 Text(store.status.title)

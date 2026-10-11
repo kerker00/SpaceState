@@ -41,10 +41,17 @@ struct StatusView: View {
                     }
                 }
 
-                if let website = store.info?.website {
+                if let info = store.info {
                     Section {
-                        Link(destination: website) {
-                            Label("Website", systemImage: "safari")
+                        NavigationLink {
+                            SpaceDetailsView(info: info)
+                        } label: {
+                            Label("Space details", systemImage: "info.circle")
+                        }
+                        if let website = info.website {
+                            Link(destination: website) {
+                                Label("Website", systemImage: "safari")
+                            }
                         }
                     }
                 }

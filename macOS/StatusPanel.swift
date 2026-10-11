@@ -5,6 +5,7 @@ import SwiftUI
 /// The window that opens from the menu bar icon.
 struct StatusPanel: View {
     var store: StatusStore
+    var showDetails: () -> Void
     @Environment(\.openSettings) private var openSettings
 
     var body: some View {
@@ -80,6 +81,12 @@ struct StatusPanel: View {
                 Task { await store.refresh() }
             }
             .disabled(store.isRefreshing)
+            if store.info != nil {
+                Button("Space details", systemImage: "info.circle") {
+                    showDetails()
+                }
+                .help("Space details")
+            }
             if let website = store.info?.website {
                 Link(destination: website) {
                     Image(systemName: "safari")
