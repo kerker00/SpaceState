@@ -4,7 +4,7 @@ Shows whether a hackerspace is open – in the macOS menu bar, on iOS and in wid
 
 Any space listed in the [SpaceAPI directory](https://spaceapi.io) works. For [Mainframe Oldenburg](https://www.kreativitaet-trifft-technik.de) the app also shows its rooms (Radstelle, 3D Lab, Machining) and finer states such as "members only" or "closing".
 
-Project status, decisions and next steps: [docs/PROJECT.md](docs/PROJECT.md).
+Architecture and build configuration: [docs/PROJECT.md](docs/PROJECT.md). The maintained roadmap for all SpaceState projects is the local `../Plan.md` in the shared workspace; it is not part of this repository.
 
 ## Features
 
@@ -15,7 +15,7 @@ Project status, decisions and next steps: [docs/PROJECT.md](docs/PROJECT.md).
 - Mainframe's rooms (Space, Radstelle, 3D Lab, Machining) with their own states.
 - Push notifications when the selected space opens or closes, sent by [SpacePush](https://github.com/kerker00/SpacePush).
 - State is read through SpacePush, with direct SpaceAPI requests as fallback.
-- Space details with address, access instructions, contacts, keyholders and links to the space’s feeds.
+- Space details with address, access instructions, contacts, keyholders and links to the space’s feeds, presented in the same card layout on macOS and iPhone.
 - English and German.
 - Usage statistics for SpacePush without an identifier: the apps send their version and OS version, and mark the first request of each day, week and month (`X-SpaceState-First`); SpacePush only adds these up. See [SpacePush's statistics](https://github.com/kerker00/SpacePush#statistics).
 
@@ -26,10 +26,10 @@ Project status, decisions and next steps: [docs/PROJECT.md](docs/PROJECT.md).
 - Clicking a notification (or the Dock icon) opens the status in a regular window.
 - Desktop and Notification Center widgets (small and medium).
 
-### iOS
+### iPhone
 
 - Status screen with rooms, status message and a link to the space's website.
-- Settings sheet with space search and notifications.
+- Settings sheet with space search, check interval and notifications.
 - Home screen widgets (small and medium) and lock screen widgets (circular, rectangular, inline).
 
 Each widget chooses its own space, so several widgets can show different spaces.
@@ -48,7 +48,7 @@ Each widget chooses its own space, so several widgets can show different spaces.
 
 For the Apple apps:
 
-- macOS 26 / iOS 26
+- macOS 26 / iOS 26 (iPhone)
 - Xcode 26 or later
 
 The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) requires Swift 6.2 or later. Xcode resolves the independently maintained package at the exact version `0.2.0`. The Kit repository owns its tests, Linux/macOS CI and releases.
@@ -63,7 +63,7 @@ The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) re
 | `iOS/` | iOS app |
 | `Widget/` | WidgetKit extension for both platforms |
 | `Config/` | Info.plist additions and entitlements |
-| `docs/` | Project status and screenshots |
+| `docs/` | Architecture and screenshots |
 
 ## Build
 
@@ -83,9 +83,9 @@ python3 IntegrationTests/run.py
 
 [SpaceStateKit](https://github.com/kerker00/SpaceStateKit) contains the three shared products, their tests and fixtures. The original package history was preserved during extraction. Update the exact package version in Xcode deliberately when adopting a new release; do not reintroduce a source copy into this repository.
 
-[SpaceStateCLI](https://github.com/kerker00/SpaceStateCLI) uses the same package for `search`, `status` and polling `watch`, with text, JSON, NDJSON and Waybar output. Linux/macOS verification and installation requirements are documented in those repositories.
+[SpaceStateCLI](https://github.com/kerker00/SpaceStateCLI) `0.3.0` uses the same package for `show` (the default command), `info`, `search` and polling `watch`, with text, JSON, NDJSON and Waybar output. Linux/macOS verification and installation requirements are documented in those repositories.
 
-A future Linux desktop interface and its notifications remain separate work. The Apple apps continue to own their SwiftUI interface, widgets and APNs device integration.
+The Apple apps own their SwiftUI interface, widgets and APNs device integration; the shared package supplies their data and service clients.
 
 ## License
 

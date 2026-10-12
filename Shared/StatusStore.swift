@@ -39,8 +39,6 @@ final class StatusStore {
         lastError == nil ? info?.status ?? .unknown : .unknown
     }
 
-    var isMainframe: Bool { Mainframe.isMainframe(endpoint) }
-
     static let refreshIntervals: [Duration] = [.seconds(60), .seconds(120), .seconds(300), .seconds(600), .seconds(900)]
 
     private let service: StatusService
