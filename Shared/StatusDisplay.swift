@@ -26,6 +26,14 @@ extension SpaceStatus {
         case .unknown: .secondary
         }
     }
+
+    func color(in palette: SpacePalette) -> Color {
+        switch self {
+        case .open: palette.statusOpen
+        case .closed: palette.statusClosed
+        case .unknown: palette.statusUnknown
+        }
+    }
 }
 
 extension MainframeRoomState {
@@ -47,6 +55,15 @@ extension MainframeRoomState {
         case .keyholder, .member, .closing: .orange
         case .closed: .red
         case .unknown: .secondary
+        }
+    }
+
+    func color(in palette: SpacePalette) -> Color {
+        switch self {
+        case .open, .openPlus: palette.statusOpen
+        case .keyholder, .member, .closing: palette.accent
+        case .closed: palette.statusClosed
+        case .unknown: palette.statusUnknown
         }
     }
 }

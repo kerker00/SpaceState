@@ -44,6 +44,7 @@ enum SpaceLayout {
     static let cardSpacing: CGFloat = 14
     static let cardCornerRadius: CGFloat = 16
     static let rowSpacing: CGFloat = 12
+    static let compactSpacing: CGFloat = 8
     static let minimumControlHeight: CGFloat = 44
     static let readableWidth: CGFloat = 720
 }
@@ -53,10 +54,12 @@ enum SpaceTypography {
     static let body = Font.system(size: 15)
     static let label = Font.system(size: 13, weight: .semibold)
     static let heading = Font.system(size: 17, weight: .bold)
+    static let status = Font.system(size: 24, weight: .bold)
     #else
     static let body = Font.body
     static let label = Font.subheadline.weight(.semibold)
     static let heading = Font.title3.bold()
+    static let status = Font.title.bold()
     #endif
 }
 
