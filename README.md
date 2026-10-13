@@ -52,7 +52,7 @@ For the Apple apps:
 - macOS 26 / iOS 26 (iPhone)
 - Xcode 26 or later
 
-The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) requires Swift 6.2 or later. Xcode resolves the independently maintained package at the exact version `0.2.0`. The Kit repository owns its tests, Linux/macOS CI and releases.
+The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) requires Swift 6.2 or later. Xcode resolves the independently maintained package at the exact version `0.3.1`. The Kit repository owns its tests, Linux/macOS CI and releases.
 
 ## Structure
 
