@@ -35,7 +35,9 @@ struct PushSubscriptionsTests {
         #expect(wanted.count == 3)
         responses.failRooms = true
         await store.refresh()
-        #expect(store.rooms.isEmpty)
+        #expect(store.rooms.count == 2)
+        #expect(store.lastRoomsError != nil)
+        #expect(store.displayRooms.allSatisfy { $0.state.status == .unknown })
         #expect(store.pushSubscriptions == wanted)
         let restarted = StatusStore(service: responses.service, defaults: defaults, reloadWidgets: {})
         #expect(restarted.pushSubscriptions == wanted)

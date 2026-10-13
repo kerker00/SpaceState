@@ -57,7 +57,7 @@ struct SpaceStatusView: View {
                     Image(systemName: entry.status.symbolName)
                 }
                 if let since = entry.since {
-                    Text(since, style: .relative)
+                    Text("Changed \(since, format: .relative(presentation: .named))")
                         .foregroundStyle(.secondary)
                 }
             }
@@ -65,7 +65,7 @@ struct SpaceStatusView: View {
         case .systemMedium:
             HStack(alignment: .top, spacing: 16) {
                 summary
-                if !entry.rooms.isEmpty {
+                if !entry.rooms.isEmpty || entry.roomsUnavailable {
                     Divider()
                     rooms
                 }
@@ -88,8 +88,13 @@ struct SpaceStatusView: View {
                 .font(.subheadline.bold())
                 .foregroundStyle(entry.status.color)
             if let since = entry.since {
-                Text(since, style: .relative)
+                Text("Changed \(since, format: .relative(presentation: .named))")
                     .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            if let observedAt = entry.observedAt {
+                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+                    .font(.caption2)
                     .foregroundStyle(.secondary)
             }
         }
@@ -98,6 +103,11 @@ struct SpaceStatusView: View {
 
     private var rooms: some View {
         VStack(alignment: .leading, spacing: 6) {
+            if entry.roomsUnavailable {
+                Text("No current room data")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             ForEach(entry.rooms.prefix(5)) { room in
                 HStack(spacing: 6) {
                     StatusDot(color: room.state.color)

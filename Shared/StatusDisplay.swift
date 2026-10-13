@@ -45,7 +45,7 @@ extension MainframeRoomState {
         case .open: "Open"
         case .openPlus: "Open+"
         case .closing: "Closing"
-        case .unknown(let raw): "Unknown (\(raw))"
+        case .unknown(let raw): raw.isEmpty ? "Unknown" : "Unknown (\(raw))"
         }
     }
 

@@ -4,6 +4,8 @@ import SwiftUI
 /// Information a space publishes, shared by the phone app and the Mac's detail window.
 struct SpaceDetailsView: View {
     var info: SpaceInfo
+    var timing: ObservationTiming? = nil
+    var lastReadFailed = false
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
 
@@ -14,6 +16,20 @@ struct SpaceDetailsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: SpaceLayout.sectionSpacing) {
+                if let timing {
+                    SpaceCard("Observation") {
+                        TimelineView(.periodic(from: .now, by: 30)) { context in
+                            if lastReadFailed || timing.freshness(at: context.date) != .current {
+                                Text("Showing last known details")
+                                    .foregroundStyle(palette.secondaryText)
+                            }
+                            if let observedAt = timing.observedAt {
+                                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+                                    .font(SpaceTypography.label)
+                            }
+                        }
+                    }
+                }
                 if let address = text(info.location?.address) {
                     SpaceCard("Address") {
                         Text(address)

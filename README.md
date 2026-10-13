@@ -35,6 +35,32 @@ Architecture and build configuration: [docs/PROJECT.md](docs/PROJECT.md). The ma
 
 Each widget chooses its own space, so several widgets can show different spaces.
 
+## Observation times
+
+The app and directory use the observation APIs from Kit 0.3.2. “Observed” (German
+“Stand”) describes the original successful proxy fetch or directory observation;
+a direct read uses the successful receipt time. “Last checked” describes the
+client's latest attempt, including a failure. Neither time replaces a state-change
+timestamp. A successful HTTP read does not prove that the provider physically
+measured a door at that instant.
+
+Proxy age limits and expiry headers are preserved, with a conservative 15-minute
+default for older proxies and direct reads. Missing, future, expired or otherwise
+unproven observations provide unknown current status. Timers update the app and
+directory between polls; failed directory reads retain the searchable list with
+unknown current flags. Details remain available as a labelled last known view.
+
+Space and Mainframe room reads have independent observation times and errors.
+A failed room read retains the last known names and values, displays their status
+as unknown, and does not remove desired push subscriptions. A successful room
+read remains usable even when the separate space read fails.
+
+Widget timelines include explicit unknown entries at the space and room expiry
+times, independently of the next network refresh. WidgetKit controls when entries
+and reloads are rendered; local tests and unsigned builds do not establish device
+scheduling or push delivery. Widget selection and appearance behavior are otherwise
+unchanged.
+
 ## Screenshots
 
 | macOS menu bar | macOS settings | macOS widget |
@@ -52,7 +78,7 @@ For the Apple apps:
 - macOS 26 / iOS 26 (iPhone)
 - Xcode 26 or later
 
-The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) requires Swift 6.2 or later. Xcode resolves the independently maintained package at the exact version `0.3.1`. The Kit repository owns its tests, Linux/macOS CI and releases.
+The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) requires Swift 6.2 or later. Xcode resolves the independently maintained package at the exact version `0.3.2`. The Kit repository owns its tests, Linux/macOS CI and releases.
 
 ## Structure
 
@@ -74,7 +100,8 @@ Appearance roles and reusable SwiftUI components are documented in [docs/DESIGN.
 
 The hostless macOS `SpaceState-PushTests` scheme compiles the production stores
 and tests push ordering, retries, permission changes, retained room subscriptions,
-coordinated status refreshes, polling and widget reload triggers:
+coordinated status refreshes, polling, observation expiry, directory freshness and
+widget timeline transitions/reload triggers:
 
 ```sh
 xcodebuild -project SpaceState.xcodeproj -scheme SpaceState-PushTests \

@@ -19,12 +19,23 @@ struct StatusPanel: View {
             SpaceStatusCard(
                 status: store.status,
                 name: store.info?.name ?? store.endpoint.host() ?? "",
-                changedAt: store.lastError == nil ? store.info?.state?.lastChange : nil,
-                message: store.lastError == nil ? store.info?.state?.message : nil
+                changedAt: store.lastError == nil && store.freshness == .current ? store.info?.state?.lastChange : nil,
+                message: store.lastError == nil && store.freshness == .current ? store.info?.state?.message : nil
             )
 
             if !store.rooms.isEmpty {
-                SpaceRoomsCard(rooms: store.rooms)
+                SpaceRoomsCard(rooms: store.displayRooms, observedAt: store.roomsTiming?.observedAt,
+                    unavailable: store.lastRoomsError != nil || store.roomsFreshness != .current)
+            }
+
+            if store.info != nil && store.lastError == nil && store.freshness != .current {
+                Text("No current observation").font(SpaceTypography.label)
+            }
+            if let error = store.lastRoomsError {
+                SpaceCard {
+                    Label("Rooms unavailable: \(error.localizedDescription)", systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(palette.secondaryText)
+                }
             }
 
             if let error = store.lastError {
@@ -46,8 +57,15 @@ struct StatusPanel: View {
 
     private var footer: some View {
         HStack {
-            if let lastUpdate = store.lastUpdate {
-                Text("Updated \(lastUpdate, format: .dateTime.hour().minute())")
+            if store.observationTiming != nil || store.lastAttempt != nil {
+                VStack(alignment: .leading) {
+                    if let observedAt = store.observationTiming?.observedAt {
+                        Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+                    }
+                    if let attempt = store.lastAttempt {
+                        Text("Last checked \(attempt, format: .dateTime.hour().minute())")
+                    }
+                }
                     .font(.caption)
                     .foregroundStyle(palette.secondaryText)
             }

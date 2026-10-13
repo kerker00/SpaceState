@@ -1,7 +1,17 @@
 import Foundation
 import SpaceAPI
 import SpacePushClient
+import Synchronization
 import Testing
+
+final class ObservationTestClock: Sendable {
+    private nonisolated let storage: Mutex<Date>
+    nonisolated init(_ date: Date) { storage = Mutex(date) }
+    nonisolated var date: Date {
+        get { storage.withLock { $0 } }
+        set { storage.withLock { $0 = newValue } }
+    }
+}
 
 @MainActor
 final class StatusFixture {
@@ -11,7 +21,8 @@ final class StatusFixture {
     let ticker = ControlledRetry()
     let a = URL(string: "https://a.invalid/status")!
     let b = URL(string: "https://b.invalid/status")!
-    var date = Date(timeIntervalSince1970: 100)
+    let clock = ObservationTestClock(Date(timeIntervalSince1970: 100))
+    var date: Date { get { clock.date } set { clock.date = newValue } }
     var reloads = 0
     var pollDurations: [Duration] = []
     var store: StatusStore!
@@ -20,7 +31,8 @@ final class StatusFixture {
         defaults = UserDefaults(suiteName: suite)!
         defaults.set(a.absoluteString, forKey: "spaceEndpoint")
         let transport = transport
-        let service = StatusService(spacePush: nil, direct: StatusClient(load: { try await transport.load($0) }))
+        let clock = clock
+        let service = StatusService(spacePush: nil, direct: StatusClient(now: { clock.date }, load: { try await transport.load($0) }))
         store = StatusStore(service: service, defaults: defaults,
             reloadWidgets: { [weak self] in self?.reloads += 1 },
             waitForPoll: { [weak self] duration in

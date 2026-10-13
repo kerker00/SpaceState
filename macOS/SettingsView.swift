@@ -32,9 +32,17 @@ private struct SpacePicker: View {
 
             List(directory.entries(matching: query), selection: selection) { entry in
                 HStack {
-                    StatusDot(color: entry.info.status.color)
+                    StatusDot(color: directory.status(for: entry).color)
                     VStack(alignment: .leading) {
                         Text(entry.info.name)
+                        HStack {
+                            Text(directory.status(for: entry).title)
+                            if let observedAt = directory.timing(for: entry)?.observedAt {
+                                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+                            }
+                        }
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                         if let address = entry.info.location?.address {
                             Text(address)
                                 .font(.caption)
@@ -59,6 +67,13 @@ private struct SpacePicker: View {
             }
         }
         .padding()
+        .safeAreaInset(edge: .bottom) {
+            if directory.lastError != nil && !directory.entries.isEmpty {
+                Text("Directory unavailable; showing last known list")
+                    .font(.caption)
+                    .padding()
+            }
+        }
         .task {
             if directory.entries.isEmpty { await directory.load() }
         }

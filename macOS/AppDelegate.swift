@@ -100,7 +100,7 @@ private struct SpaceDetailsWindow: View {
     var body: some View {
         NavigationStack {
             if let info = store.info {
-                SpaceDetailsView(info: info)
+                SpaceDetailsView(info: info, timing: store.observationTiming, lastReadFailed: store.lastError != nil)
             }
         }
         .frame(minWidth: 440, minHeight: 500)
