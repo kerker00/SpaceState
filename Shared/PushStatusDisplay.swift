@@ -8,7 +8,7 @@ extension PushStore.Status {
         case .denied: "Notifications are turned off in System Settings."
         case .registering: "Registering…"
         case .registered: "You will be notified about the selected space."
-        case .failed(let message): "Registration failed: \(message)"
+        case .failed(let message): "Could not update notifications: \(message)"
         }
     }
 }

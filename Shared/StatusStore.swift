@@ -44,15 +44,24 @@ final class StatusStore {
     private let service: StatusService
     private let defaults: UserDefaults
     private var pollTask: Task<Void, Never>?
+    /// Desired room subscriptions survive failed/partial reads and cold starts.
+    private var pushRoomIDs: Set<String>
+    private let reloadWidgets: () -> Void
 
     private enum Keys {
         static let endpoint = "spaceEndpoint"
         static let refreshSeconds = "refreshSeconds"
+        static let pushRoomIDs = "mainframePushRoomIDs"
     }
 
-    init(service: StatusService = .configured, defaults: UserDefaults = .standard) {
+    init(
+        service: StatusService = .configured, defaults: UserDefaults = .standard,
+        reloadWidgets: @escaping () -> Void = { WidgetCenter.shared.reloadAllTimelines() }
+    ) {
         self.service = service
         self.defaults = defaults
+        self.reloadWidgets = reloadWidgets
+        pushRoomIDs = Self.validRoomIDs(defaults.stringArray(forKey: Keys.pushRoomIDs) ?? [])
         endpoint = defaults.string(forKey: Keys.endpoint).flatMap(URL.init(string:)) ?? Mainframe.spaceAPIEndpoint
         let seconds = defaults.integer(forKey: Keys.refreshSeconds)
         refreshInterval = seconds > 0 ? .seconds(seconds) : .seconds(120)
@@ -82,10 +91,15 @@ final class StatusStore {
             guard endpoint == self.endpoint else { return }
             // Widgets refresh only a few times an hour; tell them when the app sees a change.
             if fetchedInfo.status != self.info?.status || rooms.map(\.state) != self.rooms.map(\.state) {
-                WidgetCenter.shared.reloadAllTimelines()
+                reloadWidgets()
             }
             self.info = fetchedInfo
             self.rooms = rooms
+            if Mainframe.isMainframe(endpoint) {
+                let newIDs = Self.validRoomIDs(rooms.map(\.id)).subtracting(pushRoomIDs)
+                pushRoomIDs.formUnion(newIDs.sorted().prefix(max(0, 49 - pushRoomIDs.count)))
+                defaults.set(pushRoomIDs.sorted(), forKey: Keys.pushRoomIDs)
+            }
             lastError = nil
         } catch is CancellationError {
             return
@@ -101,6 +115,18 @@ extension StatusStore {
     /// What to be notified about: the selected space and, for Mainframe, each of its rooms.
     var pushSubscriptions: [PushSubscription] {
         [PushSubscription(endpoint: endpoint)]
-            + rooms.filter { $0.id != "space" }.map { PushSubscription(endpoint: endpoint, room: $0.id) }
+            + (Mainframe.isMainframe(endpoint) ? pushRoomIDs.sorted().map {
+                PushSubscription(endpoint: endpoint, room: $0)
+            } : [])
+    }
+
+    private static func validRoomIDs(_ ids: [String]) -> Set<String> {
+        let valid = Set(ids.filter {
+            $0 != "space" && (1...32).contains($0.utf8.count) && $0.utf8.allSatisfy {
+                (97...122).contains($0) || (48...57).contains($0) || $0 == 95
+            }
+        })
+        // The device API accepts at most 50 subscriptions, including the space.
+        return Set(valid.sorted().prefix(49))
     }
 }

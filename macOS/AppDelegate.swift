@@ -27,6 +27,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         push.didFailToRegister(error)
     }
 
+    func applicationDidBecomeActive(_ notification: Notification) {
+        push.start()
+    }
+
     /// Clicking the Dock icon shows the status window; otherwise macOS would
     /// bring up the settings window.
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {

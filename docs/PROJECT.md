@@ -1,6 +1,6 @@
 # SpaceState – architecture and build configuration
 
-SpaceState shows whether a hackerspace is open on macOS and iPhone, with widgets and notifications. This document describes the current Apple implementation and its place in the portfolio. Last updated 2026-10-11.
+SpaceState shows whether a hackerspace is open on macOS and iPhone, with widgets and notifications. This document describes the current Apple implementation and its place in the portfolio. Last updated 2026-10-13.
 
 The maintained roadmap, priorities and open decisions for all projects live in `Plan.md` in the parent workspace (`../../Plan.md` from this document in the shared checkout layout). That file is local and not tracked in this repository. Repository documentation describes how each component works and how to build it.
 
@@ -51,7 +51,7 @@ The macOS status panel opens details in a separate window; iPhone navigates to t
 
 The current iOS app and widget targets use `TARGETED_DEVICE_FAMILY = 1`: iPhone. The macOS app delegate owns the shared status store so the menu panel and regular windows stay synchronized. Clicking a notification or the Dock icon opens the regular status window.
 
-Widgets choose their own space through an App Intent; they do not follow the App's selection. Small and medium widgets are available on both platforms, with circular, rectangular and inline lock-screen families on iPhone. The medium widget also shows Mainframe's rooms. WidgetKit is asked for another refresh after 15 minutes; the apps request timeline reloads when they observe changes or receive notifications.
+Widgets choose their own space through an App Intent; they do not follow the App's selection. Small and medium widgets are available on both platforms, with circular, rectangular and inline lock-screen families on iPhone. The medium widget also shows Mainframe's rooms. WidgetKit is asked for another refresh after 15 minutes; the apps request timeline reloads when fetched state or rooms change.
 
 ## Notifications and identity
 
@@ -60,6 +60,22 @@ Widgets choose their own space through an App Intent; they do not follow the App
 The APNs environment comes from the signed entitlement: `development` means sandbox and `production` means production. macOS reads `com.apple.developer.aps-environment` from its signature; iPhone reads `aps-environment` from the embedded provisioning profile, with distribution builds without a profile using production. The simulator uses sandbox. If the signature/profile cannot be read, Debug/Release is only a fallback. A Release build signed for development therefore still uses sandbox.
 
 Both apps use bundle ID `net.grafixmafia.spacepush`, and widgets use `net.grafixmafia.spacepush.widget`. SpacePush's APNs topic must match the App bundle ID. The name remains SpaceState; the legacy bundle ID `net.grafixmafia.spacestate` could not be assigned to the current team.
+
+Push preference changes use one ordered stream of server writes. An in-flight
+request finishes before the latest desired registration or removal is sent;
+stale responses do not publish success for an obsolete preference. Errors remain
+visible and can retry automatically or from settings. Tokens which may have
+reached SpacePush are retained in local UserDefaults until deletion succeeds,
+so disabled apps can retry cleanup after reopening. Saved tokens are used for
+cleanup; registration after a cold start requires a fresh APNs callback.
+
+Launch and foreground checks read system authorization without showing a prompt.
+Explicit enabling may ask for permission. Revoked authorization removes the
+server registration while retaining the app's notification preference; returning
+with authorization restores registration. Permission results that predate a newer
+toggle are ignored. The selected Mainframe's known room IDs are retained locally,
+bounded to 49 rooms plus the space, so failed or partial reads do not remove its
+desired subscriptions. Selecting another space changes the subscription target.
 
 Requests describe App/widget version and OS version in the user agent. Apps use `ActivePeriods` to mark the first request of a day, week and month for aggregate statistics; widgets do not report periods. No installation identifier is sent. APNs keys and operational secrets remain outside the repositories.
 

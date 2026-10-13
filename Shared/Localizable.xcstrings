@@ -111,6 +111,16 @@
         }
       }
     },
+    "Could not update notifications: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benachrichtigungen konnten nicht aktualisiert werden: %@"
+          }
+        }
+      }
+    },
     "Done": {
       "localizations": {
         "de": {
@@ -439,6 +449,16 @@
         }
       }
     },
+    "Push service is not configured.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Push-Dienst ist nicht konfiguriert."
+          }
+        }
+      }
+    },
     "Quit": {
       "localizations": {
         "de": {
@@ -485,6 +505,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Problem melden"
+          }
+        }
+      }
+    },
+    "Retry": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut versuchen"
           }
         }
       }
