@@ -29,6 +29,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     func applicationDidBecomeActive(_ notification: Notification) {
         push.start()
+        Task { await store.refresh() }
     }
 
     /// Clicking the Dock icon shows the status window; otherwise macOS would
@@ -41,12 +42,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter, willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
-        [.banner, .list, .sound]
+        let endpoint = notification.request.content.userInfo["endpoint"] as? String
+        await store.notificationReceived(endpoint: endpoint)
+        return [.banner, .list, .sound]
     }
 
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse
     ) async {
+        let endpoint = response.notification.request.content.userInfo["endpoint"] as? String
+        await store.notificationReceived(endpoint: endpoint)
         await showStatusWindow()
     }
 

@@ -73,7 +73,8 @@ Open `SpaceState.xcodeproj` and run the `SpaceState-macOS` or `SpaceState-iOS` s
 Appearance roles and reusable SwiftUI components are documented in [docs/DESIGN.md](docs/DESIGN.md).
 
 The hostless macOS `SpaceState-PushTests` scheme compiles the production stores
-and tests ordering, retries, permission changes and retained room subscriptions:
+and tests push ordering, retries, permission changes, retained room subscriptions,
+coordinated status refreshes, polling and widget reload triggers:
 
 ```sh
 xcodebuild -project SpaceState.xcodeproj -scheme SpaceState-PushTests \
