@@ -21,8 +21,8 @@ struct StatusView: View {
                 Section {
                     SpaceStatusCard(
                         status: store.status,
-                        changedAt: store.lastError == nil ? store.info?.state?.lastChange : nil,
-                        message: store.lastError == nil ? store.info?.state?.message : nil
+                        changedAt: store.lastError == nil && store.freshness == .current ? store.info?.state?.lastChange : nil,
+                        message: store.lastError == nil && store.freshness == .current ? store.info?.state?.message : nil
                     )
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
@@ -31,11 +31,19 @@ struct StatusView: View {
 
                 if !store.rooms.isEmpty {
                     Section {
-                        SpaceRoomsCard(rooms: store.rooms)
+                        SpaceRoomsCard(rooms: store.displayRooms, observedAt: store.roomsTiming?.observedAt,
+                            unavailable: store.lastRoomsError != nil || store.roomsFreshness != .current)
                             .listRowInsets(EdgeInsets())
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
                     }
+                }
+
+                if store.info != nil && store.lastError == nil && store.freshness != .current {
+                    Section { Text("No current observation") }
+                }
+                if let error = store.lastRoomsError {
+                    Section { Label("Rooms unavailable: \(error.localizedDescription)", systemImage: "exclamationmark.triangle") }
                 }
 
                 if let error = store.lastError {
@@ -53,7 +61,7 @@ struct StatusView: View {
                 if let info = store.info {
                     Section {
                         NavigationLink {
-                            SpaceDetailsView(info: info)
+                            SpaceDetailsView(info: info, timing: store.observationTiming, lastReadFailed: store.lastError != nil)
                         } label: {
                             Label("Space details", systemImage: "info.circle")
                         }
@@ -82,9 +90,16 @@ struct StatusView: View {
                         showsSettings = true
                     }
                 }
-                if let lastUpdate = store.lastUpdate {
+                if store.observationTiming != nil || store.lastAttempt != nil {
                     ToolbarItem(placement: .status) {
-                        Text("Updated \(lastUpdate, format: .dateTime.hour().minute())")
+                        VStack(alignment: .leading) {
+                            if let observedAt = store.observationTiming?.observedAt {
+                                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+                            }
+                            if let attempt = store.lastAttempt {
+                                Text("Last checked \(attempt, format: .dateTime.hour().minute())")
+                            }
+                        }
                             .font(.caption)
                             .foregroundStyle(palette.secondaryText)
                     }

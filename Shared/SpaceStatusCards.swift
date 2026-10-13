@@ -50,6 +50,8 @@ struct SpaceStatusCard: View {
 
 struct SpaceRoomsCard: View {
     var rooms: [MainframeRoom]
+    var observedAt: Date? = nil
+    var unavailable = false
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -58,6 +60,16 @@ struct SpaceRoomsCard: View {
         let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast)
 
         SpaceCard("Rooms") {
+            if unavailable {
+                Text("No current room data")
+                    .font(SpaceTypography.label)
+                    .foregroundStyle(palette.secondaryText)
+            }
+            if let observedAt {
+                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+                    .font(SpaceTypography.label)
+                    .foregroundStyle(palette.secondaryText)
+            }
             VStack(alignment: .leading, spacing: SpaceLayout.compactSpacing) {
                 ForEach(Array(rooms.enumerated()), id: \.element.id) { index, room in
                     if index > 0 {

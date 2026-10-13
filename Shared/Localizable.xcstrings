@@ -121,6 +121,16 @@
         }
       }
     },
+    "Directory unavailable; showing last known list": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verzeichnis nicht erreichbar; letzte bekannte Liste"
+          }
+        }
+      }
+    },
     "Done": {
       "localizations": {
         "de": {
@@ -221,6 +231,16 @@
         }
       }
     },
+    "Last checked %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zuletzt geprüft %@"
+          }
+        }
+      }
+    },
     "Mailing list": {
       "localizations": {
         "de": {
@@ -271,6 +291,26 @@
         }
       }
     },
+    "No current observation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein aktueller Datenstand"
+          }
+        }
+      }
+    },
+    "No current room data": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine aktuellen Raumdaten"
+          }
+        }
+      }
+    },
     "Notifications are turned off in System Settings.": {
       "localizations": {
         "de": {
@@ -287,6 +327,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Benachrichtigen, wenn sich der Zustand ändert"
+          }
+        }
+      }
+    },
+    "Observation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datenstand"
+          }
+        }
+      }
+    },
+    "Observed %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stand %@"
           }
         }
       }
@@ -529,6 +589,16 @@
         }
       }
     },
+    "Rooms unavailable: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Räume nicht erreichbar: %@"
+          }
+        }
+      }
+    },
     "SIP": {
       "localizations": {
         "de": {
@@ -565,6 +635,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Im Dock anzeigen"
+          }
+        }
+      }
+    },
+    "Showing last known details": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte bekannte Details"
           }
         }
       }

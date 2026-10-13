@@ -16,6 +16,12 @@ final class StatusStore {
     private(set) var lastUpdate: Date?
     private(set) var lastAttempt: Date?
     private(set) var lastError: (any Error)?
+    private(set) var observationTiming: ObservationTiming?
+    private(set) var roomsTiming: ObservationTiming?
+    private(set) var lastRoomsError: (any Error)?
+    private(set) var lastRoomsUpdate: Date?
+    private(set) var lastRoomsAttempt: Date?
+    private var freshnessRevision = 0
     private(set) var isRefreshing = false
 
     var endpoint: URL {
@@ -27,6 +33,12 @@ final class StatusStore {
             lastError = nil
             lastUpdate = nil
             lastAttempt = nil
+            observationTiming = nil
+            roomsTiming = nil
+            lastRoomsError = nil
+            lastRoomsUpdate = nil
+            lastRoomsAttempt = nil
+            expiry.cancel()
             cancelRefresh()
             if pollingEnabled { startPolling() }
         }
@@ -42,7 +54,24 @@ final class StatusStore {
 
     /// Unknown while the last fetch failed, so a stale state is never shown as current.
     var status: SpaceStatus {
-        lastError == nil ? info?.status ?? .unknown : .unknown
+        _ = freshnessRevision
+        guard lastError == nil, let info, let observationTiming else { return .unknown }
+        return observationTiming.currentStatus(info.status, at: now())
+    }
+
+    var freshness: ObservationFreshness {
+        _ = freshnessRevision
+        return observationTiming?.freshness(at: now()) ?? .unknown
+    }
+
+    var displayRooms: [MainframeRoom] {
+        _ = freshnessRevision
+        return ObservationDisplay.rooms(rooms, timing: roomsTiming, failed: lastRoomsError != nil, at: now())
+    }
+
+    var roomsFreshness: ObservationFreshness {
+        _ = freshnessRevision
+        return roomsTiming?.freshness(at: now()) ?? .unknown
     }
 
     static let refreshIntervals: [Duration] = [.seconds(60), .seconds(120), .seconds(300), .seconds(600), .seconds(900)]
@@ -56,6 +85,7 @@ final class StatusStore {
     @ObservationIgnored private var refreshRevision = 0
     @ObservationIgnored private let waitForPoll: (Duration) async throws -> Void
     @ObservationIgnored private let now: () -> Date
+    @ObservationIgnored private let expiry: ObservationExpiry
     /// Desired room subscriptions survive failed/partial reads and cold starts.
     private var pushRoomIDs: Set<String>
     private let reloadWidgets: () -> Void
@@ -70,6 +100,7 @@ final class StatusStore {
         service: StatusService = .configured, defaults: UserDefaults = .standard,
         reloadWidgets: @escaping () -> Void = { WidgetCenter.shared.reloadAllTimelines() },
         waitForPoll: @escaping (Duration) async throws -> Void = { try await Task.sleep(for: $0) },
+        waitForExpiry: @escaping (Duration) async throws -> Void = { try await Task.sleep(for: $0) },
         now: @escaping () -> Date = { .now }
     ) {
         self.service = service
@@ -77,6 +108,7 @@ final class StatusStore {
         self.reloadWidgets = reloadWidgets
         self.waitForPoll = waitForPoll
         self.now = now
+        expiry = ObservationExpiry(now: now, wait: waitForExpiry)
         pushRoomIDs = Self.validRoomIDs(defaults.stringArray(forKey: Keys.pushRoomIDs) ?? [])
         endpoint = defaults.string(forKey: Keys.endpoint).flatMap(URL.init(string:)) ?? Mainframe.spaceAPIEndpoint
         let seconds = defaults.integer(forKey: Keys.refreshSeconds)
@@ -85,6 +117,8 @@ final class StatusStore {
 
     func startPolling() {
         pollingEnabled = true
+        freshnessRevision += 1
+        scheduleExpiry()
         pollTask?.cancel()
         pollTask = Task { [weak self] in
             while !Task.isCancelled {
@@ -106,6 +140,7 @@ final class StatusStore {
         pollTask?.cancel()
         pollTask = nil
         cancelRefresh()
+        expiry.cancel()
     }
 
     /// Notification handlers enqueue work and return promptly. The payload never
@@ -157,35 +192,66 @@ final class StatusStore {
             let revision = refreshRevision
             let endpoint = endpoint
             lastAttempt = now()
-            do {
-                async let info = service.space(at: endpoint)
-                // Room failures affect detail display, not the desired push subscriptions.
-                let rooms = Mainframe.isMainframe(endpoint) ? (try? await service.mainframeRooms()) ?? [] : []
-                let fetchedInfo = try await info
-                guard !Task.isCancelled, refreshID == id else { return }
-                guard revision == refreshRevision, endpoint == self.endpoint else { continue }
-                let previousStatus = status
-                let previousRooms = self.rooms.map(\.state)
-                self.info = fetchedInfo
-                self.rooms = rooms
+            let service = service
+            async let spaceResult = Self.result { try await service.spaceObservation(at: endpoint) }
+            let roomsResult: Result<StatusObservation<[MainframeRoom]>, any Error>?
+            if Mainframe.isMainframe(endpoint) {
+                lastRoomsAttempt = now()
+                roomsResult = await Self.result { try await service.mainframeRoomsObservation() }
+            } else {
+                roomsResult = nil
+            }
+            let fetchedSpace = await spaceResult
+            guard !Task.isCancelled, refreshID == id else { return }
+            guard revision == refreshRevision, endpoint == self.endpoint else { continue }
+            let previousStatus = status
+            let previousRooms = displayRooms.map(\.state)
+            switch fetchedSpace {
+            case .success(let observation):
+                info = observation.value
+                observationTiming = observation.timing
+                lastError = nil
+                lastUpdate = now()
+            case .failure(let error):
+                if !(error is CancellationError) { lastError = error }
+            }
+            switch roomsResult {
+            case .success(let observation):
+                rooms = observation.value
+                roomsTiming = observation.timing
+                lastRoomsError = nil
+                lastRoomsUpdate = now()
                 if Mainframe.isMainframe(endpoint) {
                     let newIDs = Self.validRoomIDs(rooms.map(\.id)).subtracting(pushRoomIDs)
                     pushRoomIDs.formUnion(newIDs.sorted().prefix(max(0, 49 - pushRoomIDs.count)))
                     defaults.set(pushRoomIDs.sorted(), forKey: Keys.pushRoomIDs)
                 }
-                lastError = nil
-                lastUpdate = now()
-                if previousStatus != status || previousRooms != rooms.map(\.state) { reloadWidgets() }
-            } catch is CancellationError {
-                guard !Task.isCancelled, refreshID == id else { return }
-            } catch {
-                guard !Task.isCancelled, refreshID == id else { return }
-                guard revision == refreshRevision, endpoint == self.endpoint else { continue }
-                let previousStatus = status
-                lastError = error
-                if previousStatus != status { reloadWidgets() }
+            case .failure(let error):
+                // Preserve names and last known values; only display state loses
+                // its current claim. Desired push rooms are unchanged.
+                if !(error is CancellationError) { lastRoomsError = error }
+            case nil:
+                rooms = []
+                roomsTiming = nil
+                lastRoomsError = nil
             }
+            scheduleExpiry()
+            if previousStatus != status || previousRooms != displayRooms.map(\.state) { reloadWidgets() }
             if revision == refreshRevision { return }
+        }
+    }
+
+    private nonisolated static func result<Value: Sendable>(
+        _ fetch: @Sendable () async throws -> Value
+    ) async -> Result<Value, any Error> {
+        do { return .success(try await fetch()) } catch { return .failure(error) }
+    }
+
+    private func scheduleExpiry() {
+        expiry.schedule([observationTiming, roomsTiming].compactMap { $0 }) { [weak self] in
+            guard let self else { return }
+            self.freshnessRevision += 1
+            self.reloadWidgets()
         }
     }
 
