@@ -106,6 +106,9 @@ private struct GeneralSettings: View {
 
             Section {
                 Toggle("Notify me when the state changes", isOn: notificationsEnabled)
+                if case .failed = push.status {
+                    Button("Retry") { push.retry() }
+                }
                 if let pushStatus = push.status.message {
                     Text(pushStatus)
                         .font(.caption)

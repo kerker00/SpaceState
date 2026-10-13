@@ -14,6 +14,7 @@ Architecture and build configuration: [docs/PROJECT.md](docs/PROJECT.md). The ma
 - Open, closed or unknown at a glance, with the time of the last change and the space's status message.
 - Mainframe's rooms (Space, Radstelle, 3D Lab, Machining) with their own states.
 - Push notifications when the selected space opens or closes, sent by [SpacePush](https://github.com/kerker00/SpacePush).
+- Push preferences reconcile through ordered server writes, with visible failures and retries. Permission is checked on launch and returning to the foreground; failed token cleanup is retained locally for a later attempt.
 - State is read through SpacePush, with direct SpaceAPI requests as fallback.
 - Space details with address, access instructions, contacts, keyholders and links to the space’s feeds, presented in the same card layout on macOS and iPhone.
 - English and German.
@@ -70,6 +71,19 @@ The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) re
 Open `SpaceState.xcodeproj` and run the `SpaceState-macOS` or `SpaceState-iOS` scheme.
 
 Appearance roles and reusable SwiftUI components are documented in [docs/DESIGN.md](docs/DESIGN.md).
+
+The hostless macOS `SpaceState-PushTests` scheme compiles the production stores
+and tests ordering, retries, permission changes and retained room subscriptions:
+
+```sh
+xcodebuild -project SpaceState.xcodeproj -scheme SpaceState-PushTests \
+  -destination 'platform=macOS' test CODE_SIGNING_ALLOWED=NO
+```
+
+These regressions use mocked HTTP and notification-system operations, controlled
+retry waits and isolated UserDefaults. They do not launch the app, request real
+notification permission, contact SpacePush/APNs or reload installed widgets.
+Signed app behavior and delivery on real iPhone/Mac devices need separate validation.
 
 The package sources are maintained separately. To run their tests in this workspace:
 

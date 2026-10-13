@@ -21,6 +21,15 @@
 		A10000000000000000000147 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000014A /* SpacePushClient */; };
 		A10000000000000000000154 /* SpaceStateWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000130 /* SpaceStateWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A10000000000000000000158 /* SpaceStateWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000140 /* SpaceStateWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B2000000000000000000000B /* PushStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* PushStore.swift */; };
+		B2000000000000000000000C /* StatusStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000002 /* StatusStore.swift */; };
+		B2000000000000000000000D /* ClientIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000003 /* ClientIdentity.swift */; };
+		B2000000000000000000000E /* StatusService+Configured.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000004 /* StatusService+Configured.swift */; };
+		B2000000000000000000000F /* PushStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000005 /* PushStoreTests.swift */; };
+		B20000000000000000000010 /* PushSubscriptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000006 /* PushSubscriptionsTests.swift */; };
+		B20000000000000000000033 /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = B20000000000000000000029 /* SpaceAPI */; };
+		B20000000000000000000034 /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = B2000000000000000000002A /* MainframeStatus */; };
+		B20000000000000000000035 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = B2000000000000000000002B /* SpacePushClient */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +79,13 @@
 		A10000000000000000000020 /* SpaceState.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceState.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000130 /* SpaceStateWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SpaceStateWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000140 /* SpaceStateWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SpaceStateWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B20000000000000000000001 /* PushStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/PushStore.swift"; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000002 /* StatusStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/StatusStore.swift"; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000003 /* ClientIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/ClientIdentity.swift"; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000004 /* StatusService+Configured.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/StatusService+Configured.swift"; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000005 /* PushStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/PushStoreTests.swift"; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000006 /* PushSubscriptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/PushSubscriptionsTests.swift"; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000020 /* SpaceStatePushTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpaceStatePushTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -169,6 +185,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B20000000000000000000023 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (B20000000000000000000033, B20000000000000000000034, B20000000000000000000035, ); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -176,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				A10000000000000000000005 /* Shared */,
+				B20000000000000000000021 /* Push Tests */,
 				A10000000000000000000006 /* macOS */,
 				A10000000000000000000021 /* iOS */,
 				A10000000000000000000150 /* Widget */,
@@ -190,10 +208,12 @@
 				A10000000000000000000020 /* SpaceState.app */,
 				A10000000000000000000130 /* SpaceStateWidget.appex */,
 				A10000000000000000000140 /* SpaceStateWidget.appex */,
+				B20000000000000000000020 /* SpaceStatePushTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
+		B20000000000000000000021 /* Push Tests */ = {isa = PBXGroup; children = (B20000000000000000000001, B20000000000000000000002, B20000000000000000000003, B20000000000000000000004, B20000000000000000000005, B20000000000000000000006, ); name = "Push Tests"; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -305,6 +325,18 @@
 			productReference = A10000000000000000000140 /* SpaceStateWidget.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		B20000000000000000000024 /* SpaceState-PushTests */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = B20000000000000000000025;
+            buildPhases = (B20000000000000000000022, B20000000000000000000023, );
+            buildRules = ();
+            dependencies = ();
+            name = "SpaceState-PushTests";
+            packageProductDependencies = (B20000000000000000000029, B2000000000000000000002A, B2000000000000000000002B, );
+            productName = SpaceStatePushTests;
+            productReference = B20000000000000000000020;
+            productType = "com.apple.product-type.bundle.unit-test";
+        };
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -351,6 +383,7 @@
 				A10000000000000000000022 /* SpaceState-iOS */,
 				A10000000000000000000131 /* SpaceStateWidget-iOS */,
 				A10000000000000000000141 /* SpaceStateWidget-macOS */,
+				B20000000000000000000024 /* SpaceState-PushTests */,
 			);
 		};
 /* End PBXProject section */
@@ -415,6 +448,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B20000000000000000000022 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B2000000000000000000000B, B2000000000000000000000C, B2000000000000000000000D, B2000000000000000000000E, B2000000000000000000000F, B20000000000000000000010, ); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -701,6 +735,32 @@
 			};
 			name = Release;
 		};
+		B20000000000000000000026 /* Debug */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                GENERATE_INFOPLIST_FILE = YES;
+                MACOSX_DEPLOYMENT_TARGET = 26.0;
+                PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.PushTests;
+                PRODUCT_NAME = SpaceStatePushTests;
+                SDKROOT = macosx;
+                SUPPORTED_PLATFORMS = macosx;
+                CODE_SIGNING_ALLOWED = NO;
+            };
+            name = Debug;
+        };
+		B20000000000000000000027 /* Release */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                GENERATE_INFOPLIST_FILE = YES;
+                MACOSX_DEPLOYMENT_TARGET = 26.0;
+                PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.PushTests;
+                PRODUCT_NAME = SpaceStatePushTests;
+                SDKROOT = macosx;
+                SUPPORTED_PLATFORMS = macosx;
+                CODE_SIGNING_ALLOWED = NO;
+            };
+            name = Release;
+        };
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -749,6 +809,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		B20000000000000000000025 /* Push Tests configuration */ = {isa = XCConfigurationList; buildConfigurations = (B20000000000000000000026, B20000000000000000000027, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -823,6 +884,9 @@
 			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpacePushClient;
 		};
+		B20000000000000000000029 /* SpaceAPI */ = {isa = XCSwiftPackageProductDependency; package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */; productName = SpaceAPI; };
+		B2000000000000000000002A /* MainframeStatus */ = {isa = XCSwiftPackageProductDependency; package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */; productName = MainframeStatus; };
+		B2000000000000000000002B /* SpacePushClient */ = {isa = XCSwiftPackageProductDependency; package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */; productName = SpacePushClient; };
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A10000000000000000000001 /* Project object */;

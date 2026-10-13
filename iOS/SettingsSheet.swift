@@ -26,6 +26,9 @@ struct SettingsSheet: View {
 
                 Section {
                     Toggle("Notify me when the state changes", isOn: notificationsEnabled)
+                    if case .failed = push.status {
+                        Button("Retry") { push.retry() }
+                    }
                 } footer: {
                     if let message = push.status.message {
                         Text(message)

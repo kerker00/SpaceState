@@ -18,7 +18,10 @@ struct SpaceStateApp: App {
         .onChange(of: scenePhase) { _, phase in
             // Polling pauses in the background; catch up when the app comes back.
             if phase == .active {
-                Task { await store.refresh() }
+                Task {
+                    await appDelegate.push.refreshAuthorization()
+                    await store.refresh()
+                }
             }
         }
     }
