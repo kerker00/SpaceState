@@ -21,9 +21,9 @@ final class ControlledTransport {
         return try await withCheckedThrowingContinuation { replies[index] = $0 }
     }
 
-    func respond(_ index: Int, status: Int = 204) {
+    func respond(_ index: Int, body: Data = Data(), status: Int = 204) {
         let response = HTTPURLResponse(url: requests[index].url!, statusCode: status, httpVersion: nil, headerFields: nil)!
-        replies.removeValue(forKey: index)?.resume(returning: (Data(), response))
+        replies.removeValue(forKey: index)?.resume(returning: (body, response))
     }
 
     func fail(_ index: Int) {

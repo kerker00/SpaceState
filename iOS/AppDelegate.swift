@@ -27,6 +27,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter, willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
-        [.banner, .list, .sound]
+        let endpoint = notification.request.content.userInfo["endpoint"] as? String
+        await store.notificationReceived(endpoint: endpoint)
+        return [.banner, .list, .sound]
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse
+    ) async {
+        let endpoint = response.notification.request.content.userInfo["endpoint"] as? String
+        await store.notificationReceived(endpoint: endpoint)
     }
 }

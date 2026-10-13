@@ -51,7 +51,24 @@ The macOS status panel opens details in a separate window; iPhone navigates to t
 
 The current iOS app and widget targets use `TARGETED_DEVICE_FAMILY = 1`: iPhone. The macOS app delegate owns the shared status store so the menu panel and regular windows stay synchronized. Clicking a notification or the Dock icon opens the regular status window.
 
-Widgets choose their own space through an App Intent; they do not follow the App's selection. Small and medium widgets are available on both platforms, with circular, rectangular and inline lock-screen families on iPhone. The medium widget also shows Mainframe's rooms. WidgetKit is asked for another refresh after 15 minutes; the apps request timeline reloads when fetched state or rooms change.
+Widgets choose their own space through an App Intent; they do not follow the App's selection. Small and medium widgets are available on both platforms, with circular, rectangular and inline lock-screen families on iPhone. The medium widget also shows Mainframe's rooms. WidgetKit is asked for another refresh after 15 minutes; the apps request timeline reloads when fetched state or rooms change, when the effective status becomes unknown or recovers, and from delivered notification callbacks.
+
+Status refreshes from polling, pull to refresh, foreground transitions and
+notifications share one current worker. New triggers invalidate its in-flight
+result and coalesce into one follow-up read. Changing selection cancels the old
+worker; its late results and cleanup cannot affect the new selection or refresh
+indicator. `lastUpdate` records the last successful space read; `lastAttempt`
+records a started attempt. These are client read times, not the source's data age.
+iPhone polling pauses in the background and resumes on activation; macOS keeps
+polling while its menu bar app runs.
+
+Notification presentation and response handlers enqueue refresh work promptly.
+They ask widgets to reload and refresh the selected space only when the payload
+endpoint matches it, or when a legacy notification lacks an endpoint. Payloads
+never replace the selection or supply display state. The service's current alert
+pushes do not guarantee waking an iPhone app for background work; no additional
+background execution capability is enabled here. Widget reloads remain subject
+to WidgetKit scheduling. Navigation to the notification's space has its own scope.
 
 ## Notifications and identity
 

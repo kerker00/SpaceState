@@ -6,12 +6,15 @@ import SpacePushClient
 import WidgetKit
 
 /// Keeps the status of the selected space current and remembers the user's choices.
+@MainActor
 @Observable
 final class StatusStore {
     private(set) var info: SpaceInfo?
     /// Only filled for Mainframe Oldenburg.
     private(set) var rooms: [MainframeRoom] = []
+    /// Time of the last successful space refresh.
     private(set) var lastUpdate: Date?
+    private(set) var lastAttempt: Date?
     private(set) var lastError: (any Error)?
     private(set) var isRefreshing = false
 
@@ -22,7 +25,10 @@ final class StatusStore {
             info = nil
             rooms = []
             lastError = nil
-            startPolling()
+            lastUpdate = nil
+            lastAttempt = nil
+            cancelRefresh()
+            if pollingEnabled { startPolling() }
         }
     }
 
@@ -30,7 +36,7 @@ final class StatusStore {
         didSet {
             guard refreshInterval != oldValue else { return }
             defaults.set(refreshInterval.components.seconds, forKey: Keys.refreshSeconds)
-            startPolling()
+            if pollingEnabled { startPolling() }
         }
     }
 
@@ -43,7 +49,13 @@ final class StatusStore {
 
     private let service: StatusService
     private let defaults: UserDefaults
-    private var pollTask: Task<Void, Never>?
+    @ObservationIgnored private var pollTask: Task<Void, Never>?
+    @ObservationIgnored private var pollingEnabled = false
+    @ObservationIgnored private var refreshTask: Task<Void, Never>?
+    @ObservationIgnored private var refreshID: UUID?
+    @ObservationIgnored private var refreshRevision = 0
+    @ObservationIgnored private let waitForPoll: (Duration) async throws -> Void
+    @ObservationIgnored private let now: () -> Date
     /// Desired room subscriptions survive failed/partial reads and cold starts.
     private var pushRoomIDs: Set<String>
     private let reloadWidgets: () -> Void
@@ -56,11 +68,15 @@ final class StatusStore {
 
     init(
         service: StatusService = .configured, defaults: UserDefaults = .standard,
-        reloadWidgets: @escaping () -> Void = { WidgetCenter.shared.reloadAllTimelines() }
+        reloadWidgets: @escaping () -> Void = { WidgetCenter.shared.reloadAllTimelines() },
+        waitForPoll: @escaping (Duration) async throws -> Void = { try await Task.sleep(for: $0) },
+        now: @escaping () -> Date = { .now }
     ) {
         self.service = service
         self.defaults = defaults
         self.reloadWidgets = reloadWidgets
+        self.waitForPoll = waitForPoll
+        self.now = now
         pushRoomIDs = Self.validRoomIDs(defaults.stringArray(forKey: Keys.pushRoomIDs) ?? [])
         endpoint = defaults.string(forKey: Keys.endpoint).flatMap(URL.init(string:)) ?? Mainframe.spaceAPIEndpoint
         let seconds = defaults.integer(forKey: Keys.refreshSeconds)
@@ -68,47 +84,111 @@ final class StatusStore {
     }
 
     func startPolling() {
+        pollingEnabled = true
         pollTask?.cancel()
         pollTask = Task { [weak self] in
             while !Task.isCancelled {
                 await self?.refresh()
-                guard let interval = self?.refreshInterval else { return }
-                try? await Task.sleep(for: interval)
+                guard !Task.isCancelled, let interval = self?.refreshInterval, let wait = self?.waitForPoll else { return }
+                do { try await wait(interval) } catch { return }
             }
         }
+    }
+
+    /// iOS resumes once on returning to the foreground; macOS keeps polling.
+    func resumePolling() {
+        guard !pollingEnabled else { return }
+        startPolling()
+    }
+
+    func pausePolling() {
+        pollingEnabled = false
+        pollTask?.cancel()
+        pollTask = nil
+        cancelRefresh()
+    }
+
+    /// Notification handlers enqueue work and return promptly. The payload never
+    /// changes the selection or supplies data to display. Widgets have their own selection.
+    func notificationReceived(endpoint notifiedEndpoint: String?) {
+        reloadWidgets()
+        guard notifiedEndpoint == nil || notifiedEndpoint.flatMap(URL.init(string:)) == endpoint else { return }
+        _ = requestRefresh()
     }
 
     func refresh() async {
-        let endpoint = endpoint
-        isRefreshing = true
-        defer { isRefreshing = false }
-
-        do {
-            async let info = service.space(at: endpoint)
-            // The rooms are extra detail; failing to load them must not hide the space's state.
-            let rooms = Mainframe.isMainframe(endpoint) ? (try? await service.mainframeRooms()) ?? [] : []
-            let fetchedInfo = try await info
-            guard endpoint == self.endpoint else { return }
-            // Widgets refresh only a few times an hour; tell them when the app sees a change.
-            if fetchedInfo.status != self.info?.status || rooms.map(\.state) != self.rooms.map(\.state) {
-                reloadWidgets()
-            }
-            self.info = fetchedInfo
-            self.rooms = rooms
-            if Mainframe.isMainframe(endpoint) {
-                let newIDs = Self.validRoomIDs(rooms.map(\.id)).subtracting(pushRoomIDs)
-                pushRoomIDs.formUnion(newIDs.sorted().prefix(max(0, 49 - pushRoomIDs.count)))
-                defaults.set(pushRoomIDs.sorted(), forKey: Keys.pushRoomIDs)
-            }
-            lastError = nil
-        } catch is CancellationError {
-            return
-        } catch {
-            guard endpoint == self.endpoint else { return }
-            lastError = error
-        }
-        lastUpdate = .now
+        guard !Task.isCancelled else { return }
+        await requestRefresh().value
     }
+
+    /// One current worker per selection. New triggers coalesce to one follow-up
+    /// fetch and invalidate the result that was already in progress.
+    private func requestRefresh() -> Task<Void, Never> {
+        refreshRevision += 1
+        if let refreshTask { return refreshTask }
+        let id = UUID()
+        refreshID = id
+        isRefreshing = true
+        let task = Task { [weak self] in
+            guard let self else { return }
+            await self.performRefresh(id: id)
+        }
+        refreshTask = task
+        return task
+    }
+
+    private func cancelRefresh() {
+        refreshRevision += 1
+        refreshTask?.cancel()
+        refreshTask = nil
+        refreshID = nil
+        isRefreshing = false
+    }
+
+    private func performRefresh(id: UUID) async {
+        defer {
+            if refreshID == id {
+                refreshTask = nil
+                refreshID = nil
+                isRefreshing = false
+            }
+        }
+        while !Task.isCancelled, refreshID == id {
+            let revision = refreshRevision
+            let endpoint = endpoint
+            lastAttempt = now()
+            do {
+                async let info = service.space(at: endpoint)
+                // Room failures affect detail display, not the desired push subscriptions.
+                let rooms = Mainframe.isMainframe(endpoint) ? (try? await service.mainframeRooms()) ?? [] : []
+                let fetchedInfo = try await info
+                guard !Task.isCancelled, refreshID == id else { return }
+                guard revision == refreshRevision, endpoint == self.endpoint else { continue }
+                let previousStatus = status
+                let previousRooms = self.rooms.map(\.state)
+                self.info = fetchedInfo
+                self.rooms = rooms
+                if Mainframe.isMainframe(endpoint) {
+                    let newIDs = Self.validRoomIDs(rooms.map(\.id)).subtracting(pushRoomIDs)
+                    pushRoomIDs.formUnion(newIDs.sorted().prefix(max(0, 49 - pushRoomIDs.count)))
+                    defaults.set(pushRoomIDs.sorted(), forKey: Keys.pushRoomIDs)
+                }
+                lastError = nil
+                lastUpdate = now()
+                if previousStatus != status || previousRooms != rooms.map(\.state) { reloadWidgets() }
+            } catch is CancellationError {
+                guard !Task.isCancelled, refreshID == id else { return }
+            } catch {
+                guard !Task.isCancelled, refreshID == id else { return }
+                guard revision == refreshRevision, endpoint == self.endpoint else { continue }
+                let previousStatus = status
+                lastError = error
+                if previousStatus != status { reloadWidgets() }
+            }
+            if revision == refreshRevision { return }
+        }
+    }
+
 }
 
 extension StatusStore {

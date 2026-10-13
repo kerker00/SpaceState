@@ -30,6 +30,7 @@
 		B20000000000000000000033 /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = B20000000000000000000029 /* SpaceAPI */; };
 		B20000000000000000000034 /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = B2000000000000000000002A /* MainframeStatus */; };
 		B20000000000000000000035 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = B2000000000000000000002B /* SpacePushClient */; };
+		B20000000000000000000011 /* StatusRefreshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000007 /* StatusRefreshTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 		B20000000000000000000005 /* PushStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/PushStoreTests.swift"; sourceTree = SOURCE_ROOT; };
 		B20000000000000000000006 /* PushSubscriptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/PushSubscriptionsTests.swift"; sourceTree = SOURCE_ROOT; };
 		B20000000000000000000020 /* SpaceStatePushTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpaceStatePushTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B20000000000000000000007 /* StatusRefreshTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/StatusRefreshTests.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -213,7 +215,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B20000000000000000000021 /* Push Tests */ = {isa = PBXGroup; children = (B20000000000000000000001, B20000000000000000000002, B20000000000000000000003, B20000000000000000000004, B20000000000000000000005, B20000000000000000000006, ); name = "Push Tests"; sourceTree = "<group>"; };
+		B20000000000000000000021 /* Push Tests */ = {isa = PBXGroup; children = (B20000000000000000000001, B20000000000000000000002, B20000000000000000000003, B20000000000000000000004, B20000000000000000000005, B20000000000000000000006, B20000000000000000000007, ); name = "Push Tests"; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -448,7 +450,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B20000000000000000000022 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B2000000000000000000000B, B2000000000000000000000C, B2000000000000000000000D, B2000000000000000000000E, B2000000000000000000000F, B20000000000000000000010, ); runOnlyForDeploymentPostprocessing = 0; };
+		B20000000000000000000022 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B2000000000000000000000B, B2000000000000000000000C, B2000000000000000000000D, B2000000000000000000000E, B2000000000000000000000F, B20000000000000000000010, B20000000000000000000011, ); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
