@@ -4,11 +4,13 @@ import UserNotifications
 
 /// Owns the app's state, receives the APNs device token, and shows the status
 /// window when the user clicks a notification.
-final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSWindowDelegate {
     let store = StatusStore()
     let push = PushStore()
+    let navigation = SpaceNavigation()
     private var statusWindow: NSWindow?
     private var detailsWindow: NSWindow?
+    private var targetWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         if DockIcon.isVisible {
@@ -50,9 +52,51 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse
     ) async {
+        guard response.actionIdentifier == UNNotificationDefaultActionIdentifier else { return }
         let endpoint = response.notification.request.content.userInfo["endpoint"] as? String
-        await store.notificationReceived(endpoint: endpoint)
-        await showStatusWindow()
+        let room = response.notification.request.content.userInfo["room"] as? String
+        await openNotification(endpoint: endpoint, room: room)
+    }
+
+    private func openNotification(endpoint: String?, room: String?) {
+        guard let target = SpaceDestination.notification(endpoint: endpoint, room: room, fallback: store.endpoint) else { return }
+        store.notificationReceived(endpoint: target.endpoint.absoluteString)
+        openTarget(target)
+    }
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        guard let target = urls.lazy.compactMap({ SpaceDestination(url: $0) }).first else { return }
+        openTarget(target)
+    }
+
+    private func openTarget(_ target: SpaceDestination) {
+        navigation.open(target)
+        guard let destination = navigation.destination else { return }
+        let root = SpaceTargetView(destination: destination) { [weak self] in self?.targetWindow?.performClose(nil) }
+            .id(destination.id)
+        let controller = NSHostingController(rootView: root)
+        let window: NSWindow
+        if let existing = targetWindow {
+            window = existing
+            window.contentViewController = controller
+        } else {
+            window = NSWindow(contentViewController: controller)
+        }
+        window.title = "SpaceState"
+        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+        window.isReleasedWhenClosed = false
+        window.delegate = self
+        if targetWindow == nil { window.center() }
+        targetWindow = window
+        NSApplication.shared.activate()
+        window.makeKeyAndOrderFront(nil)
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        if let window = notification.object as? NSWindow, window === targetWindow {
+            navigation.close()
+            targetWindow = nil
+        }
     }
 
     /// The menu bar panel cannot be opened from code, so a notification click

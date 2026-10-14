@@ -7,6 +7,7 @@ struct StatusView: View {
     var store: StatusStore
     var directory: DirectoryStore
     var push: PushStore
+    var navigation: SpaceNavigation
     @State private var showsSettings = false
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
@@ -105,8 +106,22 @@ struct StatusView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showsSettings) {
-                SettingsSheet(store: store, directory: directory, push: push)
+            .sheet(isPresented: Binding(
+                get: { showsSettings || navigation.destination != nil },
+                set: { if !$0 { showsSettings = false; navigation.close() } }
+            )) {
+                if let destination = navigation.destination {
+                    SpaceTargetView(destination: destination) {
+                        showsSettings = false
+                        navigation.close()
+                    }
+                    .id(destination.id)
+                } else {
+                    SettingsSheet(store: store, directory: directory, push: push)
+                }
+            }
+            .onChange(of: navigation.destination?.id) { _, id in
+                if id != nil { showsSettings = false }
             }
         }
     }

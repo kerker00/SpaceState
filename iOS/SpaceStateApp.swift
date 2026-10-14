@@ -10,7 +10,8 @@ struct SpaceStateApp: App {
 
     var body: some Scene {
         WindowGroup {
-            StatusView(store: store, directory: directory, push: appDelegate.push)
+            StatusView(store: store, directory: directory, push: appDelegate.push, navigation: appDelegate.navigation)
+                .onOpenURL { _ = appDelegate.navigation.open(url: $0) }
                 .onChange(of: store.pushSubscriptions, initial: true) { _, subscriptions in
                     appDelegate.push.update(subscriptions: subscriptions)
                 }
@@ -19,9 +20,11 @@ struct SpaceStateApp: App {
             // Polling pauses in the background; catch up when the app comes back.
             if phase == .active {
                 store.resumePolling()
+                appDelegate.navigation.resume()
                 Task { await appDelegate.push.refreshAuthorization() }
             } else if phase == .background {
                 store.pausePolling()
+                appDelegate.navigation.pause()
             }
         }
     }

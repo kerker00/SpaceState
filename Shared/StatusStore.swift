@@ -9,6 +9,10 @@ import WidgetKit
 @MainActor
 @Observable
 final class StatusStore {
+    enum Selection {
+        case saved
+        case temporary(URL)
+    }
     private(set) var info: SpaceInfo?
     /// Only filled for Mainframe Oldenburg.
     private(set) var rooms: [MainframeRoom] = []
@@ -27,7 +31,7 @@ final class StatusStore {
     var endpoint: URL {
         didSet {
             guard endpoint != oldValue else { return }
-            defaults.set(endpoint.absoluteString, forKey: Keys.endpoint)
+            if remembersPreferences { defaults.set(endpoint.absoluteString, forKey: Keys.endpoint) }
             info = nil
             rooms = []
             lastError = nil
@@ -47,7 +51,7 @@ final class StatusStore {
     var refreshInterval: Duration {
         didSet {
             guard refreshInterval != oldValue else { return }
-            defaults.set(refreshInterval.components.seconds, forKey: Keys.refreshSeconds)
+            if remembersPreferences { defaults.set(refreshInterval.components.seconds, forKey: Keys.refreshSeconds) }
             if pollingEnabled { startPolling() }
         }
     }
@@ -78,6 +82,7 @@ final class StatusStore {
 
     private let service: StatusService
     private let defaults: UserDefaults
+    private let remembersPreferences: Bool
     @ObservationIgnored private var pollTask: Task<Void, Never>?
     @ObservationIgnored private var pollingEnabled = false
     @ObservationIgnored private var refreshTask: Task<Void, Never>?
@@ -101,16 +106,24 @@ final class StatusStore {
         reloadWidgets: @escaping () -> Void = { WidgetCenter.shared.reloadAllTimelines() },
         waitForPoll: @escaping (Duration) async throws -> Void = { try await Task.sleep(for: $0) },
         waitForExpiry: @escaping (Duration) async throws -> Void = { try await Task.sleep(for: $0) },
-        now: @escaping () -> Date = { .now }
+        now: @escaping () -> Date = { .now },
+        selection: Selection = .saved
     ) {
         self.service = service
         self.defaults = defaults
-        self.reloadWidgets = reloadWidgets
+        if case .saved = selection { remembersPreferences = true }
+        else { remembersPreferences = false }
+        self.reloadWidgets = remembersPreferences ? reloadWidgets : {}
         self.waitForPoll = waitForPoll
         self.now = now
         expiry = ObservationExpiry(now: now, wait: waitForExpiry)
-        pushRoomIDs = Self.validRoomIDs(defaults.stringArray(forKey: Keys.pushRoomIDs) ?? [])
-        endpoint = defaults.string(forKey: Keys.endpoint).flatMap(URL.init(string:)) ?? Mainframe.spaceAPIEndpoint
+        pushRoomIDs = remembersPreferences ? Self.validRoomIDs(defaults.stringArray(forKey: Keys.pushRoomIDs) ?? []) : []
+        switch selection {
+        case .saved:
+            endpoint = defaults.string(forKey: Keys.endpoint).flatMap(URL.init(string:)) ?? Mainframe.spaceAPIEndpoint
+        case .temporary(let endpoint):
+            self.endpoint = endpoint
+        }
         let seconds = defaults.integer(forKey: Keys.refreshSeconds)
         refreshInterval = seconds > 0 ? .seconds(seconds) : .seconds(120)
     }
@@ -221,7 +234,7 @@ final class StatusStore {
                 roomsTiming = observation.timing
                 lastRoomsError = nil
                 lastRoomsUpdate = now()
-                if Mainframe.isMainframe(endpoint) {
+                if remembersPreferences && Mainframe.isMainframe(endpoint) {
                     let newIDs = Self.validRoomIDs(rooms.map(\.id)).subtracting(pushRoomIDs)
                     pushRoomIDs.formUnion(newIDs.sorted().prefix(max(0, 49 - pushRoomIDs.count)))
                     defaults.set(pushRoomIDs.sorted(), forKey: Keys.pushRoomIDs)

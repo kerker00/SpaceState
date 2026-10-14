@@ -54,3 +54,19 @@ Both pickers use `SpaceSelectionRow` on the shared card surface. The caller pass
 iPhone selection retains native list buttons, search and navigation/dismissal. Mac selection retains native list selection, endpoint tags and its keyboard path; its settings window has minimum dimensions and can grow. Empty searches use the system's no-results presentation. A retained directory failure has a visible retry action using the existing loader.
 
 `SpaceRefreshControl` and `SpaceNotificationControl` share native picker/toggle/retry presentation. Their owners provide the existing bindings and actions. iPhone settings keep a native form with paper/slate row surfaces; Mac settings use scrollable cards for refresh, login/Dock options and notification feedback. The underlying preferences, registration, permissions, polling and directory stores retain their behavior. Device keyboard/VoiceOver and actual iPhone Dynamic Type acceptance remain separate from builds and native layout samples.
+
+## Widget and notification destinations
+
+Opened spaces use the existing status/room cards in a temporary navigation view,
+with current observation/attempt times, errors, details, refresh and Done. A short
+hint explains that the selected space stays unchanged. The iPhone uses the same
+sheet presentation slot as settings, so an incoming target replaces an open
+settings sheet instead of competing for a second modal. Mac targets use their own
+resizable window; the menu bar and Dock reopen action keep the saved selection.
+
+A requested Mainframe room is outlined and marked selected for accessibility;
+when present after loading, the view scrolls to its room card. Data freshness and
+unknown handling still come from the store, including in the focused room. The
+window/sheet owns its temporary polling lifetime; closing or replacing a target
+cancels pending work. Real URL delivery, interaction, room focus and VoiceOver on
+installed apps remain part of platform acceptance.
