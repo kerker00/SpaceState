@@ -98,6 +98,12 @@
             "state": "translated",
             "value": "Schließt gleich"
           }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closing soon"
+          }
         }
       }
     },
@@ -226,7 +232,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nur Keyholder"
+            "value": "Nur Schlüsselträger"
           }
         }
       }
@@ -434,7 +440,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nur für Keyholder"
+            "value": "Nur Schlüsselträger"
           }
         },
         "en": {
@@ -452,7 +458,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nur für Mitglieder"
+            "value": "Nur Mitglieder"
           }
         },
         "en": {
@@ -470,7 +476,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jetzt geöffnet"
+            "value": "Jetzt offen"
           }
         },
         "en": {
