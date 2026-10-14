@@ -6,6 +6,9 @@ Any space listed in the [SpaceAPI directory](https://spaceapi.io) works. For [Ma
 
 Architecture and build configuration: [docs/PROJECT.md](docs/PROJECT.md). The maintained roadmap for all SpaceState projects is the local `../Plan.md` in the shared workspace; it is not part of this repository.
 
+Shared English/German status labels, room names, product names and time meanings:
+[docs/TERMINOLOGY.md](docs/TERMINOLOGY.md).
+
 ## Features
 
 ### Everywhere
