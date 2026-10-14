@@ -794,6 +794,16 @@
           }
         }
       }
+    },
+    "Your selected space stays unchanged.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein ausgewählter Space bleibt unverändert."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

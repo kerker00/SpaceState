@@ -24,7 +24,7 @@ struct Provider: AppIntentTimelineProvider {
 
     private func snapshot(for configuration: SelectSpaceIntent) async -> WidgetSnapshot {
         let space = configuration.space ?? .mainframe
-        guard let endpoint = URL(string: space.id) else {
+        guard let endpoint = SpaceDestination(endpoint: space.id)?.endpoint else {
             return WidgetSnapshot(fallbackName: space.name, space: nil, rooms: nil, expectsRooms: false)
         }
         let service = StatusService.configured
@@ -33,6 +33,7 @@ struct Provider: AppIntentTimelineProvider {
         let rooms: StatusObservation<[MainframeRoom]>?
         if expectsRooms { rooms = try? await service.mainframeRoomsObservation() }
         else { rooms = nil }
-        return WidgetSnapshot(fallbackName: space.name, space: await info, rooms: rooms, expectsRooms: expectsRooms)
+        return WidgetSnapshot(fallbackName: space.name, space: await info, rooms: rooms,
+            expectsRooms: expectsRooms, endpoint: endpoint)
     }
 }

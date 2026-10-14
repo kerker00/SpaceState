@@ -52,6 +52,7 @@ struct SpaceRoomsCard: View {
     var rooms: [MainframeRoom]
     var observedAt: Date? = nil
     var unavailable = false
+    var focusedRoomID: String? = nil
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -80,7 +81,14 @@ struct SpaceRoomsCard: View {
                     }
                     roomRow(room, palette: palette)
                         .padding(.vertical, 2)
+                        .padding(.horizontal, room.id == focusedRoomID ? 8 : 0)
+                        .overlay {
+                            if room.id == focusedRoomID {
+                                RoundedRectangle(cornerRadius: 6).strokeBorder(palette.accent, lineWidth: 1.5)
+                            }
+                        }
                         .accessibilityElement(children: .combine)
+                        .accessibilityAddTraits(room.id == focusedRoomID ? .isSelected : [])
                 }
             }
         }

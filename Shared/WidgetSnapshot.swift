@@ -11,6 +11,9 @@ struct SpaceEntry: TimelineEntry {
     let rooms: [MainframeRoom]
     let observedAt: Date?
     let roomsUnavailable: Bool
+    var endpoint: URL? = nil
+
+    var widgetURL: URL? { endpoint.flatMap { SpaceDestination(endpoint: $0.absoluteString)?.url } }
 
     static let placeholder = SpaceEntry(date: .now, name: "Mainframe", status: .open,
         since: .now.addingTimeInterval(-3600), rooms: [
@@ -28,6 +31,7 @@ struct WidgetSnapshot {
     let space: StatusObservation<SpaceInfo>?
     let rooms: StatusObservation<[MainframeRoom]>?
     let expectsRooms: Bool
+    var endpoint: URL? = nil
 
     func entry(at date: Date) -> SpaceEntry {
         let status = space.map { $0.timing.currentStatus($0.value.status, at: date) } ?? .unknown
@@ -35,7 +39,8 @@ struct WidgetSnapshot {
             since: status == .unknown ? nil : space?.value.state?.lastChange,
             rooms: ObservationDisplay.rooms(rooms?.value ?? [], timing: rooms?.timing, at: date),
             observedAt: space?.timing.observedAt,
-            roomsUnavailable: expectsRooms && rooms?.timing.freshness(at: date) != .current)
+            roomsUnavailable: expectsRooms && rooms?.timing.freshness(at: date) != .current,
+            endpoint: endpoint)
     }
 
     func entries(from date: Date) -> [SpaceEntry] {

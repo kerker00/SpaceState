@@ -64,6 +64,27 @@ and reloads are rendered; local tests and unsigned builds do not establish devic
 scheduling or push delivery. Widget selection and appearance behavior are otherwise
 unchanged.
 
+## Opening a space from a widget or notification
+
+A widget tap opens its configured SpaceAPI endpoint; a notification tap opens the
+payload's endpoint. The app loads that space's current observation in a temporary
+view (an iPhone sheet or a separate Mac window). Closing it returns to the saved
+space. The main selection, check interval and desired push subscriptions remain
+unchanged; a foreground notification refreshes data without navigating.
+
+Links use `spacestate://status?endpoint=<encoded SpaceAPI URL>` with an optional
+`room` for Mainframe. The app validates the link route, unique query items and
+endpoint using Kit's URL contract before opening a target. The generic APNs room
+`space` refers to the overall space. A valid Mainframe room is emphasized after
+fresh room data arrives; a missing room does not replace the space view. Legacy
+notifications without an endpoint open the current saved space. Notification
+state/name fields never supply the displayed status.
+
+Widget entries retain their configured endpoint across failed reads and expiry;
+preview placeholders have no opening target. Actual cold-start URL delivery,
+notification interaction and widget taps on each platform require device
+validation in addition to local builds and regression tests.
+
 ## Screenshots
 
 | macOS menu bar | macOS settings | macOS widget |

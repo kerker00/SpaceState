@@ -14,6 +14,7 @@ struct SpaceStatusWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: "SpaceStatus", intent: SelectSpaceIntent.self, provider: Provider()) { entry in
             SpaceStatusView(entry: entry)
+                .widgetURL(entry.widgetURL)
                 .containerBackground(for: .widget) { SpaceWidgetBackground() }
         }
         .configurationDisplayName("Space Status")
