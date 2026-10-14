@@ -14,7 +14,7 @@ struct SpaceStatusWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: "SpaceStatus", intent: SelectSpaceIntent.self, provider: Provider()) { entry in
             SpaceStatusView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+                .containerBackground(for: .widget) { SpaceWidgetBackground() }
         }
         .configurationDisplayName("Space Status")
         .description("Shows whether a hackerspace is open.")
@@ -27,100 +27,5 @@ struct SpaceStatusWidget: Widget {
         #else
         [.systemSmall, .systemMedium]
         #endif
-    }
-}
-
-struct SpaceStatusView: View {
-    @Environment(\.widgetFamily) private var family
-    let entry: SpaceEntry
-
-    var body: some View {
-        switch family {
-        #if os(iOS)
-        case .accessoryCircular:
-            ZStack {
-                AccessoryWidgetBackground()
-                Image(systemName: entry.status.symbolName)
-                    .font(.title2)
-            }
-            .widgetAccentable()
-        case .accessoryInline:
-            Label(entry.name, systemImage: entry.status.symbolName)
-        case .accessoryRectangular:
-            VStack(alignment: .leading) {
-                Text(entry.name)
-                    .font(.headline)
-                    .widgetAccentable()
-                Label {
-                    Text(entry.status.title)
-                } icon: {
-                    Image(systemName: entry.status.symbolName)
-                }
-                if let since = entry.since {
-                    Text("Changed \(since, format: .relative(presentation: .named))")
-                        .foregroundStyle(.secondary)
-                }
-            }
-        #endif
-        case .systemMedium:
-            HStack(alignment: .top, spacing: 16) {
-                summary
-                if !entry.rooms.isEmpty || entry.roomsUnavailable {
-                    Divider()
-                    rooms
-                }
-            }
-        default:
-            summary
-        }
-    }
-
-    private var summary: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Image(systemName: entry.status.symbolName)
-                .font(.title)
-                .foregroundStyle(entry.status.color)
-            Spacer(minLength: 0)
-            Text(entry.name)
-                .font(.headline)
-                .lineLimit(2)
-            Text(entry.status.title)
-                .font(.subheadline.bold())
-                .foregroundStyle(entry.status.color)
-            if let since = entry.since {
-                Text("Changed \(since, format: .relative(presentation: .named))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            if let observedAt = entry.observedAt {
-                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private var rooms: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if entry.roomsUnavailable {
-                Text("No current room data")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            ForEach(entry.rooms.prefix(5)) { room in
-                HStack(spacing: 6) {
-                    StatusDot(color: room.state.color)
-                    Text(room.name)
-                        .lineLimit(1)
-                    Spacer(minLength: 4)
-                    Text(room.state.title)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
-                .font(.caption)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

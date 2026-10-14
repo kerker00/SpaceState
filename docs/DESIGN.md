@@ -35,4 +35,14 @@ SpaceCard("Address") {
 
 The detail view, iPhone status screen, Mac menu bar panel and regular Mac status window use these components. `SpaceStatusCard` combines the status symbol/title, change time and message. `SpaceRoomsCard` keeps room names and localized state labels together; rows stack vertically at accessibility text sizes. Restricted room states use amber, while open, closed and unknown keep their own color roles.
 
-The iPhone screen keeps its native list, pull-to-refresh, navigation links and settings sheet. Both Mac status surfaces keep their existing actions. WidgetKit rendering and space/settings pickers still use their existing presentation; each consumer adopts the appropriate roles explicitly.
+The iPhone screen keeps its native list, pull-to-refresh, navigation links and settings sheet. Both Mac status surfaces keep their existing actions. Space/settings pickers adopt the appropriate roles in their own step.
+
+## Widgets
+
+Widgets use the same localized status titles, symbols and semantic colors as the app. In full-color presentation, their removable container surface uses paper/slate and the app's contrast-aware foreground roles. In accented or vibrant presentation, foreground roles and accent groups defer to WidgetKit; the custom background is clear. The system still owns container margins, corners and rendering.
+
+Small widgets prioritize the space name and status word/symbol. Observation time has priority over the optional state-change time when space is tight; unknown states do not show a change time. Medium widgets add room names and localized state words with distinct symbols, and fit up to five, three or one room according to available height. Missing room data stays visibly separate from the space's state. Long names may truncate visually but retain their complete accessibility labels; supporting metadata yields space before the main status does.
+
+Lock Screen layouts are separate: circular widgets show a status symbol and short status word, inline widgets put the status before the space name, and rectangular widgets include the name, status and observation. Circular/inline accessibility labels contain the complete space name and a localized status value; other layouts combine related labels and hide decorative symbols from VoiceOver.
+
+`SpaceStatusView` reads the actual WidgetKit environment and passes its presentation inputs to `SpaceWidgetContent`. The provider and C-01 observation/expiry timeline remain responsible for deciding the effective states. Native layout samples can verify appearance and fitting; actual WidgetKit tinting, accessibility font scaling and VoiceOver on devices require platform acceptance. Widget/notification navigation is tracked separately from appearance.
