@@ -46,3 +46,11 @@ Small widgets prioritize the space name and status word/symbol. Observation time
 Lock Screen layouts are separate: circular widgets show a status symbol and short status word, inline widgets put the status before the space name, and rectangular widgets include the name, status and observation. Circular/inline accessibility labels contain the complete space name and a localized status value; other layouts combine related labels and hide decorative symbols from VoiceOver.
 
 `SpaceStatusView` reads the actual WidgetKit environment and passes its presentation inputs to `SpaceWidgetContent`. The provider and C-01 observation/expiry timeline remain responsible for deciding the effective states. Native layout samples can verify appearance and fitting; actual WidgetKit tinting, accessibility font scaling and VoiceOver on devices require platform acceptance. Widget/notification navigation is tracked separately from appearance.
+
+## Space selection and settings
+
+Both pickers use `SpaceSelectionRow` on the shared card surface. The caller passes the directory's effective status and original observation time; retained raw flags do not select the displayed color. Names and addresses wrap, each status has a localized word and symbol, and selection has a checkmark, outline and accessibility selection trait. Related text is combined for VoiceOver. At accessibility text sizes, the decorative leading symbol yields width to the labels.
+
+iPhone selection retains native list buttons, search and navigation/dismissal. Mac selection retains native list selection, endpoint tags and its keyboard path; its settings window has minimum dimensions and can grow. Empty searches use the system's no-results presentation. A retained directory failure has a visible retry action using the existing loader.
+
+`SpaceRefreshControl` and `SpaceNotificationControl` share native picker/toggle/retry presentation. Their owners provide the existing bindings and actions. iPhone settings keep a native form with paper/slate row surfaces; Mac settings use scrollable cards for refresh, login/Dock options and notification feedback. The underlying preferences, registration, permissions, polling and directory stores retain their behavior. Device keyboard/VoiceOver and actual iPhone Dynamic Type acceptance remain separate from builds and native layout samples.
