@@ -2,13 +2,42 @@ import Foundation
 import SpaceAPI
 import SwiftUI
 
-/// Shared contact and feed rows for the iOS and macOS detail views.
+/// Shared external links and contact rows for the iOS and macOS detail views.
 nonisolated struct SpaceDetailLink: Identifiable, Sendable {
     let id: String
     let title: LocalizedStringResource
     let value: String
     let destination: URL?
     let symbolName: String
+    var description: String? = nil
+    var name: String? = nil
+
+    static func projects(for projects: [URL]) -> [SpaceDetailLink] {
+        projects.enumerated().map { index, url in
+            SpaceDetailLink(id: "project-\(index)", title: "Project", value: url.absoluteString,
+                            destination: validatedWebURL(url), symbolName: "hammer")
+        }
+    }
+
+    static func links(for links: [SpaceInfo.Link]) -> [SpaceDetailLink] {
+        links.enumerated().map { index, link in
+            SpaceDetailLink(id: "link-\(index)", title: "Link", value: link.url.absoluteString,
+                destination: validatedWebURL(link.url), symbolName: "link",
+                description: plainText(link.description), name: plainText(link.name))
+        }
+    }
+
+    /// Provider names are plain text, never localization keys or Markdown.
+    static func plainText(_ value: String?) -> String? {
+        guard let value else { return nil }
+        let cleaned = value.components(separatedBy: .controlCharacters).joined(separator: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return cleaned.isEmpty ? nil : cleaned
+    }
+
+    static func validatedWebURL(_ url: URL) -> URL? {
+        (try? SpaceEndpoint.validate(url)) != nil ? url : nil
+    }
 
     static func contacts(for contact: SpaceInfo.Contact) -> [SpaceDetailLink] {
         [
@@ -166,5 +195,30 @@ nonisolated struct SpaceDetailLink: Identifiable, Sendable {
 
     private static func removingPrefix(_ prefix: String, from value: String) -> String {
         value.lowercased().hasPrefix(prefix) ? String(value.dropFirst(prefix.count)) : value
+    }
+}
+
+/// An endpoint opens a temporary status view; a website remains an external link.
+nonisolated struct SpaceLinkedSpace: Identifiable, Sendable {
+    let id: String
+    let endpoint: SpaceDetailLink?
+    let target: SpaceDestination?
+    let website: SpaceDetailLink?
+
+    static func rows(for spaces: [SpaceInfo.LinkedSpace]) -> [Self] {
+        spaces.enumerated().compactMap { index, space in
+            guard space.endpoint != nil || space.website != nil else { return nil }
+            let target = space.endpoint.flatMap { url in
+                // Check the URL itself before using its string; a relative URL can have a base.
+                SpaceDetailLink.validatedWebURL(url).flatMap { SpaceDestination(endpoint: $0.absoluteString) }
+            }
+            return Self(id: "linked-space-\(index)", endpoint: space.endpoint.map {
+                SpaceDetailLink(id: "endpoint-\(index)", title: "Space status", value: $0.absoluteString,
+                    destination: nil, symbolName: "network")
+            }, target: target, website: space.website.map {
+                SpaceDetailLink(id: "website-\(index)", title: "Website", value: $0.absoluteString,
+                    destination: SpaceDetailLink.validatedWebURL($0), symbolName: "safari")
+            })
+        }
     }
 }

@@ -95,3 +95,9 @@ unknown handling still come from the store, including in the focused room. The
 window/sheet owns its temporary polling lifetime; closing or replacing a target
 cancels pending work. Real URL delivery, interaction, room focus and VoiceOver on
 installed apps remain part of platform acceptance.
+
+## Projects, links and linked spaces
+
+Details omit empty project/link/linked-space cards. Provider names, descriptions and complete URLs remain plain, wrapping text with the shared card typography. Duplicate provider entries retain distinct stable row identities. Projects and named links use native external links only after HTTP(S) endpoint validation; unsupported or invalid values remain selectable text.
+
+Linked spaces distinguish an internal “Space status” button from their external website link. Only a valid API endpoint can open a status view; a website is never substituted. Each detail view owns its temporary navigation sheet, preserving the source view and saved selection/subscriptions. The shared target view cancels work on dismissal and suspends iPhone polling outside the active scene, including targets opened from another target. Installed-device sheet, keyboard, VoiceOver and long-text acceptance remains separate from compilation and model/store regression coverage.

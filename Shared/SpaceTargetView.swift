@@ -8,6 +8,7 @@ struct SpaceTargetView: View {
     var close: () -> Void
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.scenePhase) private var scenePhase
 
     private var store: StatusStore { destination.store }
     private var palette: SpacePalette { SpacePalette(colorScheme: colorScheme, contrast: contrast) }
@@ -87,7 +88,19 @@ struct SpaceTargetView: View {
                 }
             }
         }
-        .task { store.resumePolling() }
+        .task {
+            #if os(iOS)
+            if scenePhase == .active { store.resumePolling() }
+            #else
+            store.resumePolling()
+            #endif
+        }
+        #if os(iOS)
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { store.resumePolling() }
+            else { store.pausePolling() }
+        }
+        #endif
         .onDisappear { store.pausePolling() }
         #if os(macOS)
         .frame(minWidth: 440, minHeight: 500)

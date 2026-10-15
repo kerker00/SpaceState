@@ -6,6 +6,7 @@ struct SpaceDetailsView: View {
     var info: SpaceInfo
     var timing: ObservationTiming? = nil
     var lastReadFailed = false
+    @State private var linkedNavigation = SpaceNavigation()
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
 
@@ -83,11 +84,45 @@ struct SpaceDetailsView: View {
                     }
                 }
 
+                let projects = SpaceDetailLink.projects(for: info.projects)
+                if !projects.isEmpty {
+                    SpaceCard("Projects") { linkRows(projects) }
+                }
+
+                let links = SpaceDetailLink.links(for: info.links)
+                if !links.isEmpty {
+                    SpaceCard("Links") { linkRows(links) }
+                }
+
+                let linkedSpaces = SpaceLinkedSpace.rows(for: info.linkedSpaces)
+                if !linkedSpaces.isEmpty {
+                    SpaceCard("Linked spaces") {
+                        ForEach(Array(linkedSpaces.enumerated()), id: \.element.id) { index, space in
+                            if index > 0 { rowDivider }
+                            if let endpoint = space.endpoint {
+                                if let target = space.target {
+                                    SpaceDetailLinkRow(link: endpoint, palette: palette) {
+                                        linkedNavigation.open(target)
+                                    }
+                                } else {
+                                    SpaceDetailLinkRow(link: endpoint, palette: palette)
+                                }
+                            }
+                            if let website = space.website {
+                                SpaceDetailLinkRow(link: website, palette: palette)
+                            }
+                        }
+                        Text("Your selected space stays unchanged.")
+                            .font(SpaceTypography.label)
+                            .foregroundStyle(palette.secondaryText)
+                    }
+                }
+
                 if let website = info.website {
                     SpaceCard("Website") {
                         SpaceDetailLinkRow(link: SpaceDetailLink(
                             id: "website", title: "Website", value: website.absoluteString,
-                            destination: website, symbolName: "safari"
+                            destination: SpaceDetailLink.validatedWebURL(website), symbolName: "safari"
                         ), palette: palette)
                     }
                 }
@@ -100,19 +135,29 @@ struct SpaceDetailsView: View {
         }
         .background(palette.background)
         .navigationTitle(info.name)
+        .sheet(isPresented: Binding(
+            get: { linkedNavigation.destination != nil },
+            set: { if !$0 { linkedNavigation.close() } }
+        )) {
+            if let destination = linkedNavigation.destination {
+                SpaceTargetView(destination: destination) { linkedNavigation.close() }
+                    .id(destination.id)
+            }
+        }
     }
 
     @ViewBuilder
     private func linkRows(_ links: [SpaceDetailLink]) -> some View {
         ForEach(Array(links.enumerated()), id: \.element.id) { index, link in
             if index > 0 {
-                Rectangle()
-                    .fill(palette.border)
-                    .frame(height: 1)
-                    .accessibilityHidden(true)
+                rowDivider
             }
             SpaceDetailLinkRow(link: link, palette: palette)
         }
+    }
+
+    private var rowDivider: some View {
+        Rectangle().fill(palette.border).frame(height: 1).accessibilityHidden(true)
     }
 
     private var keymasters: [SpaceInfo.Keymaster] {
@@ -131,9 +176,14 @@ struct SpaceDetailsView: View {
 private struct SpaceDetailLinkRow: View {
     var link: SpaceDetailLink
     var palette: SpacePalette
+    var action: (() -> Void)? = nil
 
     var body: some View {
-        if let destination = link.destination {
+        if let action {
+            Button(action: action) { label }
+                .buttonStyle(.plain)
+                .accessibilityHint(Text("Open this space without changing your selection"))
+        } else if let destination = link.destination {
             Link(destination: destination) {
                 label
             }
@@ -153,17 +203,26 @@ private struct SpaceDetailLinkRow: View {
                 .padding(.top, 2)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 5) {
-                Text(link.title)
-                    .font(SpaceTypography.label)
-                    .foregroundStyle(palette.secondaryText)
+                Group {
+                    if let name = link.name { Text(name) }
+                    else { Text(link.title) }
+                }
+                .font(SpaceTypography.label)
+                .foregroundStyle(palette.secondaryText)
                 Text(link.value)
                     .font(SpaceTypography.body.weight(.medium))
                     .foregroundStyle(palette.text)
                     .fixedSize(horizontal: false, vertical: true)
+                if let description = link.description {
+                    Text(description)
+                        .font(SpaceTypography.body)
+                        .foregroundStyle(palette.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            if link.destination != nil {
-                Image(systemName: "arrow.up.right")
+            if link.destination != nil || action != nil {
+                Image(systemName: action != nil ? "arrow.right" : "arrow.up.right")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(palette.accent)
                     .accessibilityHidden(true)
