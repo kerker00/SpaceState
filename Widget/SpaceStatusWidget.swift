@@ -24,9 +24,9 @@ struct SpaceStatusWidget: Widget {
 
     private static var families: [WidgetFamily] {
         #if os(iOS)
-        [.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular, .accessoryInline]
+        [.systemSmall, .systemMedium, .systemLarge, .accessoryCircular, .accessoryRectangular, .accessoryInline]
         #else
-        [.systemSmall, .systemMedium]
+        [.systemSmall, .systemMedium, .systemLarge]
         #endif
     }
 }

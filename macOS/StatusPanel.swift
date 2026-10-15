@@ -15,6 +15,16 @@ struct StatusPanel: View {
     }
 
     var body: some View {
+        ViewThatFits(in: .vertical) {
+            content.fixedSize(horizontal: false, vertical: true)
+            ScrollView { content }
+        }
+        .frame(width: 360)
+        .frame(maxHeight: 700)
+        .background(palette.background)
+    }
+
+    private var content: some View {
         VStack(alignment: .leading, spacing: SpaceLayout.sectionSpacing) {
             SpaceStatusCard(
                 status: store.status,
@@ -26,6 +36,11 @@ struct StatusPanel: View {
             if !store.rooms.isEmpty {
                 SpaceRoomsCard(rooms: store.displayRooms, observedAt: store.roomsTiming?.observedAt,
                     unavailable: store.lastRoomsError != nil || store.roomsFreshness != .current)
+            }
+
+            if let info = store.info, !SpaceSensorPresentation(info.sensors).summary.isEmpty {
+                SpaceSensorsCard(sensors: info.sensors, timing: store.observationTiming,
+                    failed: store.lastError != nil)
             }
 
             if store.info != nil && store.lastError == nil && store.freshness != .current {
@@ -51,7 +66,6 @@ struct StatusPanel: View {
         .foregroundStyle(palette.text)
         .tint(palette.accent)
         .padding(SpaceLayout.pagePadding)
-        .frame(width: 360)
         .background(palette.background)
     }
 

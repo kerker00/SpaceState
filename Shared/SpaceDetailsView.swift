@@ -30,6 +30,9 @@ struct SpaceDetailsView: View {
                         }
                     }
                 }
+                SpaceSensorsCard(sensors: info.sensors, timing: timing,
+                    failed: lastReadFailed, mode: .details)
+
                 if let address = text(info.location?.address) {
                     SpaceCard("Address") {
                         Text(address)

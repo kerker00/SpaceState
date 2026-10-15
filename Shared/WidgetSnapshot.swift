@@ -12,6 +12,7 @@ struct SpaceEntry: TimelineEntry {
     let observedAt: Date?
     let roomsUnavailable: Bool
     var endpoint: URL? = nil
+    var sensors: [WidgetSensorReading] = []
 
     var widgetURL: URL? { endpoint.flatMap { SpaceDestination(endpoint: $0.absoluteString)?.url } }
 
@@ -40,7 +41,8 @@ struct WidgetSnapshot {
             rooms: ObservationDisplay.rooms(rooms?.value ?? [], timing: rooms?.timing, at: date),
             observedAt: space?.timing.observedAt,
             roomsUnavailable: expectsRooms && rooms?.timing.freshness(at: date) != .current,
-            endpoint: endpoint)
+            endpoint: endpoint,
+            sensors: SpaceSensorPresentation.widget(info: space?.value, timing: space?.timing, at: date))
     }
 
     func entries(from date: Date) -> [SpaceEntry] {

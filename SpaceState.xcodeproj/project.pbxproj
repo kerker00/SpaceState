@@ -39,6 +39,8 @@
 		C40000000000000000000011 /* Shared/SpaceDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40000000000000000000001 /* Shared/SpaceDestination.swift */; };
 		C40000000000000000000012 /* Shared/SpaceNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40000000000000000000002 /* Shared/SpaceNavigation.swift */; };
 		C40000000000000000000013 /* Tests/SpaceNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40000000000000000000003 /* Tests/SpaceNavigationTests.swift */; };
+		D60000000000000000000011 /* Shared/SpaceSensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000000000000000000001 /* Shared/SpaceSensors.swift */; };
+		D60000000000000000000012 /* Tests/SensorPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000000000000000000002 /* Tests/SensorPresentationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +106,8 @@
 		C40000000000000000000001 /* Shared/SpaceDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceDestination.swift; sourceTree = SOURCE_ROOT; };
 		C40000000000000000000002 /* Shared/SpaceNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceNavigation.swift; sourceTree = SOURCE_ROOT; };
 		C40000000000000000000003 /* Tests/SpaceNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SpaceNavigationTests.swift; sourceTree = SOURCE_ROOT; };
+		D60000000000000000000001 /* Shared/SpaceSensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceSensors.swift; sourceTree = SOURCE_ROOT; };
+		D60000000000000000000002 /* Tests/SensorPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SensorPresentationTests.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -118,6 +122,7 @@
 				SpaceTargetView.swift,
 				StatusStore.swift,
 				SpaceDetailsView.swift,
+				SpaceSensorsView.swift,
 				SpaceDetailLinks.swift,
 			);
 			target = A10000000000000000000131 /* SpaceStateWidget-iOS */;
@@ -133,6 +138,7 @@
 				SpaceTargetView.swift,
 				StatusStore.swift,
 				SpaceDetailsView.swift,
+				SpaceSensorsView.swift,
 				SpaceDetailLinks.swift,
 			);
 			target = A10000000000000000000141 /* SpaceStateWidget-macOS */;
@@ -235,7 +241,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B20000000000000000000021 /* Push Tests */ = {isa = PBXGroup; children = (B20000000000000000000001, B20000000000000000000002, B20000000000000000000003, B20000000000000000000004, B20000000000000000000005, B20000000000000000000006, B20000000000000000000007, B30000000000000000000001, B30000000000000000000002, B30000000000000000000003, B30000000000000000000004, B30000000000000000000005, C40000000000000000000001, C40000000000000000000002, C40000000000000000000003, ); name = "Push Tests"; sourceTree = "<group>"; };
+		B20000000000000000000021 /* Push Tests */ = {isa = PBXGroup; children = (B20000000000000000000001, B20000000000000000000002, B20000000000000000000003, B20000000000000000000004, B20000000000000000000005, B20000000000000000000006, B20000000000000000000007, B30000000000000000000001, B30000000000000000000002, B30000000000000000000003, B30000000000000000000004, B30000000000000000000005, C40000000000000000000001, C40000000000000000000002, C40000000000000000000003, D60000000000000000000001, D60000000000000000000002, ); name = "Push Tests"; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -470,7 +476,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B20000000000000000000022 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B2000000000000000000000B, B2000000000000000000000C, B2000000000000000000000D, B2000000000000000000000E, B2000000000000000000000F, B20000000000000000000010, B20000000000000000000011, B30000000000000000000011, B30000000000000000000012, B30000000000000000000013, B30000000000000000000014, B30000000000000000000015, C40000000000000000000011, C40000000000000000000012, C40000000000000000000013, ); runOnlyForDeploymentPostprocessing = 0; };
+		B20000000000000000000022 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B2000000000000000000000B, B2000000000000000000000C, B2000000000000000000000D, B2000000000000000000000E, B2000000000000000000000F, B20000000000000000000010, B20000000000000000000011, B30000000000000000000011, B30000000000000000000012, B30000000000000000000013, B30000000000000000000014, B30000000000000000000015, C40000000000000000000011, C40000000000000000000012, C40000000000000000000013, D60000000000000000000011, D60000000000000000000012, ); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -840,7 +846,7 @@
 			repositoryURL = "https://github.com/kerker00/SpaceStateKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.3.2;
+				version = 0.3.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
