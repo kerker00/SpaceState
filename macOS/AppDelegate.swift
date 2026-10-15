@@ -86,7 +86,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
         window.isReleasedWhenClosed = false
         window.delegate = self
-        if targetWindow == nil { window.center() }
+        window.contentMinSize = NSSize(width: 480, height: 500)
+        if targetWindow == nil {
+            window.setContentSize(NSSize(width: 600, height: 700))
+            window.center()
+        }
+        repairContentSize(window, minimum: NSSize(width: 480, height: 500))
         targetWindow = window
         NSApplication.shared.activate()
         window.makeKeyAndOrderFront(nil)
@@ -113,8 +118,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         window.title = "SpaceState"
         window.styleMask = [.titled, .closable, .miniaturizable]
         window.isReleasedWhenClosed = false
+        window.setContentSize(NSSize(width: 380, height: 640))
+        window.contentMinSize = NSSize(width: 380, height: 640)
         window.center()
         window.setFrameAutosaveName("StatusWindow")
+        repairContentSize(window, minimum: NSSize(width: 380, height: 640))
         return window
     }
 
@@ -132,9 +140,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         window.title = String(localized: "Space details")
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
         window.isReleasedWhenClosed = false
+        window.contentMinSize = NSSize(width: 480, height: 500)
+        window.setContentSize(NSSize(width: 600, height: 700))
         window.center()
         window.setFrameAutosaveName("SpaceDetailsWindow")
+        repairContentSize(window, minimum: NSSize(width: 480, height: 500))
         return window
+    }
+
+    /// Also recover if a previous version saved a collapsed window frame.
+    private func repairContentSize(_ window: NSWindow, minimum: NSSize) {
+        let size = window.contentRect(forFrameRect: window.frame).size
+        if size.width < minimum.width || size.height < minimum.height {
+            window.setContentSize(NSSize(width: max(size.width, minimum.width),
+                                         height: max(size.height, minimum.height)))
+        }
     }
 }
 
@@ -147,6 +167,7 @@ private struct SpaceDetailsWindow: View {
                 SpaceDetailsView(info: info, timing: store.observationTiming, lastReadFailed: store.lastError != nil)
             }
         }
-        .frame(minWidth: 440, minHeight: 500)
+        .frame(minWidth: 480, idealWidth: 600, maxWidth: .infinity,
+               minHeight: 500, idealHeight: 700, maxHeight: .infinity)
     }
 }

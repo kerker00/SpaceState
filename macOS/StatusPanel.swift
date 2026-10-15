@@ -15,12 +15,12 @@ struct StatusPanel: View {
     }
 
     var body: some View {
-        ViewThatFits(in: .vertical) {
-            content.fixedSize(horizontal: false, vertical: true)
-            ScrollView { content }
+        ScrollView {
+            content
         }
-        .frame(width: 360)
-        .frame(maxHeight: 700)
+        // A menu-bar window needs a concrete size: a maximum height alone can
+        // collapse the scroll view during the hosting window's initial sizing.
+        .frame(width: 380, height: 640)
         .background(palette.background)
     }
 
