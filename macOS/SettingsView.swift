@@ -21,7 +21,8 @@ struct SettingsView: View {
             }
         }
         .tint(palette.accent)
-        .frame(minWidth: 480, idealWidth: 560, minHeight: 440, idealHeight: 540)
+        .frame(minWidth: 480, idealWidth: 560, maxWidth: .infinity,
+               minHeight: 440, idealHeight: 540, maxHeight: .infinity)
     }
 }
 
