@@ -26,7 +26,7 @@ struct SpaceStateApp: App {
         Settings {
             SettingsView(store: store, directory: directory, push: appDelegate.push)
         }
-        .defaultSize(width: 560, height: 540)
+        .defaultSize(width: 520, height: 480)
         .windowResizability(.contentMinSize)
     }
 }
