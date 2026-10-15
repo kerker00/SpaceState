@@ -9,7 +9,7 @@ The maintained roadmap, priorities and open decisions for all projects live in `
 | Repository | Responsibility |
 | --- | --- |
 | [SpaceState](https://github.com/kerker00/SpaceState) | SwiftUI apps for macOS 26 and iPhone with iOS 26; WidgetKit extensions and APNs device integration |
-| [SpaceStateKit](https://github.com/kerker00/SpaceStateKit) | Shared Swift clients, models, tests and versioned releases; the Apple project pins exact version `0.2.0` |
+| [SpaceStateKit](https://github.com/kerker00/SpaceStateKit) | Shared Swift clients, models, tests and versioned releases; the Apple project pins exact version `0.3.3` |
 | [SpaceStateCLI](https://github.com/kerker00/SpaceStateCLI) | Linux/macOS command line client; version `0.3.0` provides `show`, `info`, `search`, `watch` and saved spaces |
 | [SpaceState-Android](https://github.com/kerker00/SpaceState-Android) | Android app developed separately on Linux, with a Swift-to-Kotlin bridge; in development |
 | [SpacePush](https://github.com/kerker00/SpacePush) | Erlang/OTP service for shared status reads and APNs notifications |
@@ -29,7 +29,7 @@ SpaceStateKit provides three products:
 - `MainframeStatus`: Mainframe Oldenburg's rooms and finer states, obtained from its `openState` API.
 - `SpacePushClient`: device registration, status reads and the shared `StatusService` fallback.
 
-Xcode resolves the external package at exact version `0.2.0`; `Package.resolved` records the matching revision. Package sources, tests and releases belong to SpaceStateKit, not this repository.
+Xcode resolves the external package at exact version `0.3.3`; `Package.resolved` records the matching revision. Package sources, tests and releases belong to SpaceStateKit, not this repository.
 
 `SPACEPUSH_URL` supplies the Info.plist key `SpacePushURL`, currently `https://push.grafixmafia.net` in both Debug and Release. The apps have no App Transport Security exception. Direct fallback promotes directory endpoints from HTTP to HTTPS; SpacePush can also fetch spaces that only serve HTTP. Server deployment and configuration instructions belong to the [SpacePush README](https://github.com/kerker00/SpacePush#readme), rather than an App-side deployment snapshot.
 
@@ -51,7 +51,7 @@ The macOS status panel opens details in a separate window; iPhone navigates to t
 
 The current iOS app and widget targets use `TARGETED_DEVICE_FAMILY = 1`: iPhone. The macOS app delegate owns the shared status store so the menu panel and regular windows stay synchronized. Clicking a notification or the Dock icon opens the regular status window.
 
-Widgets choose their own space through an App Intent; they do not follow the App's selection. Small and medium widgets are available on both platforms, with circular, rectangular and inline lock-screen families on iPhone. The medium widget also shows Mainframe's rooms. WidgetKit is asked for another refresh after 15 minutes; the apps request timeline reloads when fetched state or rooms change, when the effective status becomes unknown or recovers, and from delivered notification callbacks.
+Widgets choose their own space through an App Intent; they do not follow the App's selection. Small, medium and large widgets are available on both platforms, with circular, rectangular and inline lock-screen families on iPhone. Medium/large widgets also show Mainframe's rooms and may fit current visitors/temperature; small and Lock Screen content is unchanged. WidgetKit is asked for another refresh after 15 minutes; the apps request timeline reloads when fetched state, rooms or displayed widget sensor values change, when the effective status becomes unknown or recovers, and from delivered notification callbacks.
 
 Status refreshes from polling, pull to refresh, foreground transitions and
 notifications share one current worker. New triggers invalidate its in-flight

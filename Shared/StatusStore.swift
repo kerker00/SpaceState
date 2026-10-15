@@ -78,6 +78,12 @@ final class StatusStore {
         return roomsTiming?.freshness(at: now()) ?? .unknown
     }
 
+    var widgetSensorValues: [WidgetSensorReading] {
+        _ = freshnessRevision
+        return SpaceSensorPresentation.widget(info: info, timing: observationTiming,
+            failed: lastError != nil, at: now())
+    }
+
     static let refreshIntervals: [Duration] = [.seconds(60), .seconds(120), .seconds(300), .seconds(600), .seconds(900)]
 
     private let service: StatusService
@@ -219,6 +225,7 @@ final class StatusStore {
             guard revision == refreshRevision, endpoint == self.endpoint else { continue }
             let previousStatus = status
             let previousRooms = displayRooms.map(\.state)
+            let previousSensors = widgetSensorValues
             switch fetchedSpace {
             case .success(let observation):
                 info = observation.value
@@ -249,7 +256,8 @@ final class StatusStore {
                 lastRoomsError = nil
             }
             scheduleExpiry()
-            if previousStatus != status || previousRooms != displayRooms.map(\.state) { reloadWidgets() }
+            if previousStatus != status || previousRooms != displayRooms.map(\.state)
+                || previousSensors != widgetSensorValues { reloadWidgets() }
             if revision == refreshRevision { return }
         }
     }

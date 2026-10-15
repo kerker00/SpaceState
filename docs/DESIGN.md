@@ -47,6 +47,31 @@ Lock Screen layouts are separate: circular widgets show a status symbol and shor
 
 `SpaceStatusView` reads the actual WidgetKit environment and passes its presentation inputs to `SpaceWidgetContent`. The provider and C-01 observation/expiry timeline remain responsible for deciding the effective states. Native layout samples can verify appearance and fitting; actual WidgetKit tinting, accessibility font scaling and VoiceOver on devices require platform acceptance. Widget/notification navigation is tracked separately from appearance.
 
+## Sensors
+
+The shared `SpaceSensorPresentation` selects one reading per climate/visitor kind
+for the status card beneath the rooms. Details show every supported typed reading,
+including location, sensor name, description and original value-change time.
+Provider metadata remains plain text; numeric formatting follows the view locale
+and units are preserved without inference or conversion. Missing/invalid rows are
+hidden, visitor counters are never summed, and visitor-name lists are not shown.
+Generic sensor JSON is not interpreted as app measurements.
+
+The card uses the shared surface/palette, labelled symbols, wrapping metadata and
+stacked labels/values when a horizontal row does not fit. Related values combine
+for accessibility; icons are decorative. Retained rows are labelled and dimmed
+when document evidence is stale, missing or failed. An explicit timeline updates
+this label at document expiry without changing observation or sensor times. The
+Mac panel can scroll when its cards exceed the available capped height.
+
+Medium/large widgets use first-fit footers with at most visitors and temperature,
+including their location/name. Observation time is retained before optional
+sensor rows; small and Lock Screen layouts do not add sensors. Sensor data is
+removed in the existing space-expiry entry, independently of room expiry. App
+reloads compare only displayed widget values/unit/place, not hidden metadata or
+value-change dates. Real Dynamic Type, VoiceOver, tinting and widget fitting are
+separate platform acceptance.
+
 ## Space selection and settings
 
 Both pickers use `SpaceSelectionRow` on the shared card surface. The caller passes the directory's effective status and original observation time; retained raw flags do not select the displayed color. Names and addresses wrap, each status has a localized word and symbol, and selection has a checkmark, outline and accessibility selection trait. Related text is combined for VoiceOver. At accessibility text sizes, the decorative leading symbol yields width to the labels.

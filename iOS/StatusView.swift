@@ -40,6 +40,16 @@ struct StatusView: View {
                     }
                 }
 
+                if let info = store.info, !SpaceSensorPresentation(info.sensors).summary.isEmpty {
+                    Section {
+                        SpaceSensorsCard(sensors: info.sensors, timing: store.observationTiming,
+                            failed: store.lastError != nil)
+                            .listRowInsets(EdgeInsets())
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                    }
+                }
+
                 if store.info != nil && store.lastError == nil && store.freshness != .current {
                     Section { Text("No current observation") }
                 }

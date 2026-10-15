@@ -33,6 +33,13 @@ struct SpaceTargetView: View {
                             .listRowBackground(Color.clear)
                             .id("target-rooms")
                     }
+                    if let info = store.info, !SpaceSensorPresentation(info.sensors).summary.isEmpty {
+                        SpaceSensorsCard(sensors: info.sensors, timing: store.observationTiming,
+                            failed: store.lastError != nil)
+                            .listRowInsets(EdgeInsets())
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                    }
                     if let error = store.lastError {
                         Text(error.localizedDescription).foregroundStyle(palette.secondaryText)
                     } else if store.freshness != .current {

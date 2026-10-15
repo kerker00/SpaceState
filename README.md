@@ -85,7 +85,28 @@ preview placeholders have no opening target. Actual cold-start URL delivery,
 notification interaction and widget taps on each platform require device
 validation in addition to local builds and regression tests.
 
+## Sensors
+
+The current source adds a climate/visitors card beneath the rooms on iPhone,
+the Mac status panel and temporary opened-space views. It shows the first valid
+visitor counter, temperature, humidity and CO₂ reading with the provider's unit
+and location/name, without adding overlapping counts or converting units. Details
+list all eleven supported sensor kinds and their optional metadata/value-change
+time. Empty sections are hidden; visitor names are not included. Other sensor
+kinds retained as generic JSON by Kit are not interpreted by the app.
+
+Retained readings are explicitly labelled as last known after failure or when
+document observation evidence is stale or missing. Sensor change times do not
+refresh that evidence. Medium and large widgets may add current visitors and
+temperature when space allows, while keeping the status and observation time;
+the existing expiry timeline removes these values at space expiry. Small and
+Lock Screen layouts keep their existing content. Changed visible widget readings
+also request a reload, subject to WidgetKit scheduling. Real widget fitting,
+tinting, VoiceOver, device lifecycle and signed builds remain platform acceptance.
+
 ## Screenshots
+
+The screenshots below predate the sensor display.
 
 | macOS menu bar | macOS settings | macOS widget |
 | --- | --- | --- |
@@ -102,7 +123,7 @@ For the Apple apps:
 - macOS 26 / iOS 26 (iPhone)
 - Xcode 26 or later
 
-The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) requires Swift 6.2 or later. Xcode resolves the independently maintained package at the exact version `0.3.2`. The Kit repository owns its tests, Linux/macOS CI and releases.
+The shared [SpaceStateKit package](https://github.com/kerker00/SpaceStateKit) requires Swift 6.2 or later. Xcode resolves the independently maintained package at the exact version `0.3.3`. The Kit repository owns its tests, Linux/macOS CI and releases.
 
 ## Structure
 

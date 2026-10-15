@@ -20,7 +20,7 @@ struct SpaceStatusView: View {
 
 /// Separates the supported WidgetKit family from the layout's presentation inputs.
 enum SpaceWidgetLayout {
-    case small, medium, circular, inline, rectangular
+    case small, medium, large, circular, inline, rectangular
 
     init(family: WidgetFamily) {
         switch family {
@@ -30,6 +30,7 @@ enum SpaceWidgetLayout {
         case .accessoryRectangular: self = .rectangular
         #endif
         case .systemMedium: self = .medium
+        case .systemLarge: self = .large
         default: self = .small
         }
     }
@@ -41,6 +42,7 @@ struct SpaceWidgetContent: View {
     let renderingMode: WidgetRenderingMode
     let palette: SpacePalette
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.locale) private var locale
 
     private var foreground: Color { renderingMode == .fullColor ? palette.text : .primary }
     private var secondary: Color { renderingMode == .fullColor ? palette.secondaryText : .secondary }
@@ -88,9 +90,9 @@ struct SpaceWidgetContent: View {
                 observation.font(.caption2)
             }
             .accessibilityElement(children: .combine)
-        case .medium:
+        case .medium, .large:
             HStack(alignment: .top, spacing: SpaceLayout.rowSpacing) {
-                summary
+                summary(includeSensors: true)
                 if !entry.rooms.isEmpty || entry.roomsUnavailable {
                     Rectangle()
                         .fill(renderingMode == .fullColor ? palette.border : .secondary)
@@ -100,7 +102,7 @@ struct SpaceWidgetContent: View {
                 }
             }
         case .small:
-            summary
+            summary(includeSensors: false)
         }
     }
 
@@ -125,12 +127,17 @@ struct SpaceWidgetContent: View {
         .widgetAccentable()
     }
 
-    private var summary: some View {
+    private func summary(includeSensors: Bool) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             name
             statusLabel.font(.title3.weight(.semibold))
             Spacer(minLength: 0)
             ViewThatFits(in: .vertical) {
+                if includeSensors && !entry.sensors.isEmpty {
+                    sensorFooter(limit: 2, includeChange: true)
+                    sensorFooter(limit: 2, includeChange: false)
+                    sensorFooter(limit: 1, includeChange: false)
+                }
                 VStack(alignment: .leading, spacing: 3) {
                     if let since = entry.since, entry.status != .unknown, since <= entry.date {
                         Text("Changed \(since, format: .relative(presentation: .named))")
@@ -147,6 +154,33 @@ struct SpaceWidgetContent: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .accessibilityElement(children: .combine)
+    }
+
+    private func sensorFooter(limit: Int, includeChange: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            if includeChange, let since = entry.since, entry.status != .unknown, since <= entry.date {
+                Text("Changed \(since, format: .relative(presentation: .named))")
+                    .font(.caption)
+                    .foregroundStyle(secondary)
+            }
+            ForEach(entry.sensors.prefix(limit)) { sensor in
+                VStack(alignment: .leading, spacing: 1) {
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text(sensor.kind.title)
+                        Text(verbatim: sensor.valueText(locale: locale)).fontWeight(.semibold)
+                    }
+                    .lineLimit(2)
+                    if let place = sensor.place {
+                        Text(verbatim: place).foregroundStyle(secondary).lineLimit(1)
+                    }
+                }
+                .font(.caption2)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityElement(children: .combine)
+            }
+            observation.font(.caption2)
+        }
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     @ViewBuilder
