@@ -19,7 +19,7 @@ Shared English/German status labels, room names, product names and time meanings
 - Push notifications when the selected space opens or closes, sent by [SpacePush](https://github.com/kerker00/SpacePush).
 - Push preferences reconcile through ordered server writes, with visible failures and retries. Permission is checked on launch and returning to the foreground; failed token cleanup is retained locally for a later attempt.
 - State is read through SpacePush, with direct SpaceAPI requests as fallback.
-- Space details with address, access instructions, contacts, keyholders and links to the space’s feeds, presented in the same card layout on macOS and iPhone.
+- Space details with address, access instructions, contacts, keyholders, feeds, projects, named links and linked spaces, presented in the same card layout on macOS and iPhone.
 - English and German.
 - Usage statistics for SpacePush without an identifier: the apps send their version and OS version, and mark the first request of each day, week and month (`X-SpaceState-First`); SpacePush only adds these up. See [SpacePush's statistics](https://github.com/kerker00/SpacePush#statistics).
 
@@ -103,6 +103,10 @@ the existing expiry timeline removes these values at space expiry. Small and
 Lock Screen layouts keep their existing content. Changed visible widget readings
 also request a reload, subject to WidgetKit scheduling. Real widget fitting,
 tinting, VoiceOver, device lifecycle and signed builds remain platform acceptance.
+
+## Projects and linked spaces
+
+Linked spaces in the details view open their SpaceAPI endpoint in a temporary status sheet on either platform. The saved space and notification subscriptions stay unchanged. A separate website link opens externally; a website alone is never treated as an API endpoint. Project and named links open only after HTTP(S) URL validation; invalid values remain readable without an action. Empty sections are hidden.
 
 ## Screenshots
 

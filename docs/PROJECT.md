@@ -39,7 +39,7 @@ Xcode resolves the external package at exact version `0.3.3`; `Package.resolved`
 | --- | --- |
 | `Shared/StatusStore.swift` | Selected space, persisted check interval, polling and widget reloads when state or rooms change |
 | `Shared/DirectoryStore.swift` | Space directory and search |
-| `Shared/SpaceDetailsView.swift`, `Shared/SpaceDetailLinks.swift` | Address, access hints, contacts, keyholders and feed links in a shared card layout |
+| `Shared/SpaceDetailsView.swift`, `Shared/SpaceDetailLinks.swift` | Address, access hints, contacts, keyholders, feeds, projects, named links and linked-space destinations in a shared card layout |
 | `Shared/PushStore.swift`, `Shared/ClientIdentity.swift` | Notification permission, device registration and request metadata |
 | `Shared/Localizable.xcstrings` | English and German App, widget and notification strings |
 | `macOS/` | Menu bar panel, regular status/detail windows, settings and optional Dock icon |
@@ -47,7 +47,7 @@ Xcode resolves the external package at exact version `0.3.3`; `Package.resolved`
 | `Widget/` | WidgetKit provider and views for both platforms |
 | `Config/` | Info.plist additions and entitlements |
 
-The macOS status panel opens details in a separate window; iPhone navigates to the same view. The card layout and contrast improvements landed in [#29](https://github.com/kerker00/SpaceState/pull/29) for macOS and [#30](https://github.com/kerker00/SpaceState/pull/30) for iPhone. Empty sections are omitted, and malformed contact values remain readable text. Contact links use a fixed scheme allowlist. The view follows system appearance and increased contrast, with Dynamic Type on iPhone.
+The macOS status panel opens details in a separate window; iPhone navigates to the same view. The card layout and contrast improvements landed in [#29](https://github.com/kerker00/SpaceState/pull/29) for macOS and [#30](https://github.com/kerker00/SpaceState/pull/30) for iPhone. Empty sections are omitted, and malformed contact values remain readable text. Contact links use a fixed scheme allowlist. Project/named/website links use the Kit HTTP(S) validation contract before opening. Linked-space endpoints open a locally owned temporary status sheet, including from another temporary target; they do not persist selection or change push subscriptions. Each target owns its polling lifecycle, with iPhone background suspension. Website-only linked spaces remain external website links. The view follows system appearance and increased contrast, with Dynamic Type on iPhone.
 
 The current iOS app and widget targets use `TARGETED_DEVICE_FAMILY = 1`: iPhone. The macOS app delegate owns the shared status store so the menu panel and regular windows stay synchronized. Clicking a notification or the Dock icon opens the regular status window.
 
