@@ -94,25 +94,23 @@ struct StatusView: View {
             .refreshable {
                 await store.refresh()
             }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if let observedAt = store.observationTiming?.observedAt {
+                    Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+                        .font(.subheadline)
+                        .foregroundStyle(palette.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, SpaceLayout.pagePadding)
+                        .padding(.vertical, SpaceLayout.compactSpacing)
+                        .background(palette.background)
+                }
+            }
             .navigationTitle(store.info?.name ?? store.endpoint.host() ?? "")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Settings", systemImage: "gearshape") {
                         showsSettings = true
-                    }
-                }
-                if store.observationTiming != nil || store.lastAttempt != nil {
-                    ToolbarItem(placement: .status) {
-                        VStack(alignment: .leading) {
-                            if let observedAt = store.observationTiming?.observedAt {
-                                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
-                            }
-                            if let attempt = store.lastAttempt {
-                                Text("Last checked \(attempt, format: .dateTime.hour().minute())")
-                            }
-                        }
-                            .font(.caption)
-                            .foregroundStyle(palette.secondaryText)
                     }
                 }
             }
