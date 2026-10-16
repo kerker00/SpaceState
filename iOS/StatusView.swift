@@ -137,6 +137,5 @@ struct StatusView: View {
             .frame(maxWidth: .infinity)
             .padding(.horizontal, SpaceLayout.pagePadding)
             .padding(.top, 4)
-            .padding(.bottom, 4)
     }
 }
