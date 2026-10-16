@@ -39,7 +39,7 @@ The iPhone screen keeps its native list, pull-to-refresh, navigation links and s
 
 The prominent iPhone status card uses the filled surface without an extra outline inside the grouped list's rounded clipping. Its status word, symbol, spacing and semantic colors remain the same for open, closed and unknown states. Mac status cards and other card types retain their outlines.
 
-The main iPhone status screen shows one observation date in a full-width bottom inset with wrapping, Dynamic Type subheadline text. It uses the displayed data's original observation time, omits the separate client-attempt date, and does not place either date inside the toolbar's compact status control. Missing observation evidence does not produce a substitute date.
+The main iPhone status screen shows one observation date as a centered closing row with a small decorative clock, wrapping Dynamic Type subheadline text and stable numeral widths. An inset hairline and the card surface separate this quiet footer from the list, without a button shape or outline. It uses the displayed data's original observation time and omits the separate client-attempt date. Missing observation evidence does not produce a substitute date.
 
 ## Widgets
 

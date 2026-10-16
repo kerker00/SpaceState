@@ -96,14 +96,7 @@ struct StatusView: View {
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 if let observedAt = store.observationTiming?.observedAt {
-                    Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
-                        .font(.subheadline)
-                        .foregroundStyle(palette.secondaryText)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, SpaceLayout.pagePadding)
-                        .padding(.vertical, SpaceLayout.compactSpacing)
-                        .background(palette.background)
+                    observationFooter(observedAt)
                 }
             }
             .navigationTitle(store.info?.name ?? store.endpoint.host() ?? "")
@@ -132,5 +125,31 @@ struct StatusView: View {
                 if id != nil { showsSettings = false }
             }
         }
+    }
+
+    private func observationFooter(_ observedAt: Date) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: "clock")
+                .imageScale(.small)
+                .accessibilityHidden(true)
+            Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+                .multilineTextAlignment(.center)
+                .monospacedDigit()
+        }
+        .font(.subheadline.weight(.medium))
+        .foregroundStyle(palette.secondaryText)
+        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, SpaceLayout.pagePadding)
+        .padding(.vertical, 14)
+        .background(palette.surface)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(palette.border)
+                .frame(height: 0.5)
+                .padding(.horizontal, SpaceLayout.pagePadding)
+                .accessibilityHidden(true)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
