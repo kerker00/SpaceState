@@ -10,9 +10,10 @@ struct SpaceStatusCard: View {
     var message: String? = nil
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.spaceAppearance) private var appearance
 
     var body: some View {
-        let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast)
+        let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast, appearance: appearance)
         let statusColor = status.color(in: palette)
 
         SpaceCard(showsBorder: showsBorder) {
@@ -28,7 +29,7 @@ struct SpaceStatusCard: View {
                             .foregroundStyle(palette.secondaryText)
                     }
                     Text(status.title)
-                        .font(SpaceTypography.status)
+                        .font(appearance == .menuBar ? .title2.bold() : SpaceTypography.status)
                         .foregroundStyle(statusColor)
                         .accessibilityAddTraits(.isHeader)
                     if let changedAt {
@@ -65,10 +66,11 @@ struct SpaceRoomsCard: View {
     var focusedRoomID: String? = nil
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.spaceAppearance) private var appearance
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast)
+        let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast, appearance: appearance)
 
         SpaceCard("Rooms") {
             if unavailable {

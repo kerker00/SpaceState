@@ -11,6 +11,8 @@ struct SpaceStateApp: App {
     var body: some Scene {
         MenuBarExtra {
             StatusPanel(store: store, showDetails: appDelegate.showDetailsWindow)
+                .environment(\.spaceAppearance, .menuBar)
+                .containerBackground(.regularMaterial, for: .window)
         } label: {
             Label {
                 Text(store.status.title)

@@ -9,9 +9,12 @@ struct SpaceSensorsCard: View {
     var mode: Mode = .summary
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.spaceAppearance) private var appearance
     @Environment(\.locale) private var locale
 
-    private var palette: SpacePalette { SpacePalette(colorScheme: colorScheme, contrast: contrast) }
+    private var palette: SpacePalette {
+        SpacePalette(colorScheme: colorScheme, contrast: contrast, appearance: appearance)
+    }
 
     var body: some View {
         let presentation = SpaceSensorPresentation(sensors)

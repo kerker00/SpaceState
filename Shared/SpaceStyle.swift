@@ -1,5 +1,20 @@
 import SwiftUI
 
+/// Only the menu bar popup opts into native colors and unboxed sections.
+/// Ordinary windows and iPhone views retain the app's established appearance.
+enum SpaceAppearance { case app, menuBar }
+
+private struct SpaceAppearanceKey: EnvironmentKey {
+    static let defaultValue = SpaceAppearance.app
+}
+
+extension EnvironmentValues {
+    var spaceAppearance: SpaceAppearance {
+        get { self[SpaceAppearanceKey.self] }
+        set { self[SpaceAppearanceKey.self] = newValue }
+    }
+}
+
 /// Shared app colors, aligned with the website's paper, slate and amber palette.
 /// Opaque surfaces keep text readable even when a Mac window is inactive.
 struct SpacePalette {
@@ -13,7 +28,19 @@ struct SpacePalette {
     let statusClosed: Color
     let statusUnknown: Color
 
-    init(colorScheme: ColorScheme, contrast: ColorSchemeContrast) {
+    init(colorScheme: ColorScheme, contrast: ColorSchemeContrast, appearance: SpaceAppearance = .app) {
+        if appearance == .menuBar {
+            background = .clear
+            surface = .clear
+            text = .primary
+            secondaryText = contrast == .increased ? .primary : .secondary
+            border = .secondary.opacity(contrast == .increased ? 0.6 : 0.2)
+            accent = .accentColor
+            statusOpen = .green
+            statusClosed = .red
+            statusUnknown = secondaryText
+            return
+        }
         let dark = colorScheme == .dark
         let increasedContrast = contrast == .increased
 
@@ -70,6 +97,7 @@ struct SpaceCard<Content: View>: View {
     let content: Content
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.spaceAppearance) private var appearance
 
     init(_ title: LocalizedStringResource? = nil, showsBorder: Bool = true, @ViewBuilder content: () -> Content) {
         self.title = title
@@ -78,24 +106,24 @@ struct SpaceCard<Content: View>: View {
     }
 
     var body: some View {
-        let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast)
+        let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast, appearance: appearance)
         let shape = RoundedRectangle(cornerRadius: SpaceLayout.cardCornerRadius)
 
         VStack(alignment: .leading, spacing: SpaceLayout.cardSpacing) {
             if let title {
                 Text(title)
-                    .font(SpaceTypography.heading)
+                    .font(appearance == .menuBar ? .headline : SpaceTypography.heading)
                     .accessibilityAddTraits(.isHeader)
             }
             content
         }
-        .font(SpaceTypography.body)
+        .font(appearance == .menuBar ? .body : SpaceTypography.body)
         .foregroundStyle(palette.text)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(SpaceLayout.cardPadding)
+        .padding(appearance == .menuBar ? 0 : SpaceLayout.cardPadding)
         .background(palette.surface, in: shape)
         .overlay {
-            if showsBorder {
+            if showsBorder && appearance != .menuBar {
                 shape.strokeBorder(palette.border, lineWidth: 1)
             }
         }

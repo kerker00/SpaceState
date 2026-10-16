@@ -13,9 +13,10 @@ struct StatusPanel: View {
     @Environment(\.openSettings) private var openSettings
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.spaceAppearance) private var appearance
 
     private var palette: SpacePalette {
-        SpacePalette(colorScheme: colorScheme, contrast: contrast)
+        SpacePalette(colorScheme: colorScheme, contrast: contrast, appearance: appearance)
     }
 
     var body: some View {
@@ -63,11 +64,13 @@ struct StatusPanel: View {
             )
 
             if !store.rooms.isEmpty {
+                if appearance == .menuBar { Divider() }
                 SpaceRoomsCard(rooms: store.displayRooms, observedAt: store.roomsTiming?.observedAt,
                     unavailable: store.lastRoomsError != nil || store.roomsFreshness != .current)
             }
 
             if let info = store.info, !SpaceSensorPresentation(info.sensors).summary.isEmpty {
+                if appearance == .menuBar { Divider() }
                 SpaceSensorsCard(sensors: info.sensors, timing: store.observationTiming,
                     failed: store.lastError != nil)
             }
@@ -90,7 +93,7 @@ struct StatusPanel: View {
             }
 
         }
-        .font(SpaceTypography.body)
+        .font(appearance == .menuBar ? .body : SpaceTypography.body)
         .foregroundStyle(palette.text)
         .tint(palette.accent)
         .padding(SpaceLayout.pagePadding)
@@ -141,6 +144,6 @@ struct StatusPanel: View {
         }
         .labelStyle(.iconOnly)
         .buttonStyle(.borderless)
-        .foregroundStyle(palette.accent)
+        .foregroundStyle(appearance == .menuBar ? Color.primary : palette.accent)
     }
 }

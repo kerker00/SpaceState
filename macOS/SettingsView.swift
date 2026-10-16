@@ -17,12 +17,18 @@ struct SettingsView: View {
         TabView(selection: $selectedTab) {
             Tab("Space", systemImage: "building.2", value: SettingsTab.space) {
                 SpacePicker(store: store, directory: directory)
+                    .toolbarBackground(palette.background, for: .windowToolbar)
+                    .toolbarBackgroundVisibility(.visible, for: .windowToolbar)
             }
             Tab("General", systemImage: "gearshape", value: SettingsTab.general) {
                 GeneralSettings(store: store, push: push, heightChanged: { generalHeight = $0 })
+                    .toolbarBackground(palette.background, for: .windowToolbar)
+                    .toolbarBackgroundVisibility(.visible, for: .windowToolbar)
             }
         }
         .tint(palette.accent)
+        .background(palette.background)
+        .containerBackground(palette.background, for: .window)
         .frame(minWidth: 480, idealWidth: 520, maxWidth: .infinity,
                minHeight: 320, idealHeight: 480, maxHeight: .infinity)
         .background(MacWindowSizing(preferredHeight: selectedTab == .general ? generalHeight + 60 : 480,
