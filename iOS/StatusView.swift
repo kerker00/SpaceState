@@ -128,7 +128,7 @@ struct StatusView: View {
     }
 
     private func observationFooter(_ observedAt: Date) -> some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             Image(systemName: "clock")
                 .imageScale(.small)
                 .accessibilityHidden(true)
@@ -136,12 +136,13 @@ struct StatusView: View {
                 .multilineTextAlignment(.center)
                 .monospacedDigit()
         }
-        .font(.subheadline.weight(.medium))
+        .font(.footnote.weight(.medium))
         .foregroundStyle(palette.secondaryText)
         .fixedSize(horizontal: false, vertical: true)
         .frame(maxWidth: .infinity)
         .padding(.horizontal, SpaceLayout.pagePadding)
-        .padding(.vertical, 14)
+        .padding(.top, 12)
+        .padding(.bottom, 4)
         .background(palette.surface)
         .overlay(alignment: .top) {
             Rectangle()
