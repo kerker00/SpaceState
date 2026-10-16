@@ -98,6 +98,7 @@ struct SpaceCard<Content: View>: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.spaceAppearance) private var appearance
+    @Environment(\.displayScale) private var displayScale
 
     init(_ title: LocalizedStringResource? = nil, showsBorder: Bool = true, @ViewBuilder content: () -> Content) {
         self.title = title
@@ -124,8 +125,17 @@ struct SpaceCard<Content: View>: View {
         .background(palette.surface, in: shape)
         .overlay {
             if showsBorder && appearance != .menuBar {
-                shape.strokeBorder(palette.border, lineWidth: 1)
+                shape.strokeBorder(palette.border, lineWidth: borderWidth)
             }
         }
+    }
+
+    private var borderWidth: CGFloat {
+        #if os(iOS)
+        // A point spans multiple pixels on iPhone; keep section outlines subtle.
+        1 / displayScale
+        #else
+        1
+        #endif
     }
 }
