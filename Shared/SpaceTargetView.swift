@@ -103,7 +103,7 @@ struct SpaceTargetView: View {
         #endif
         .onDisappear { store.pausePolling() }
         #if os(macOS)
-        .frame(minWidth: 440, minHeight: 500)
+        .frame(minWidth: 440, idealWidth: 520, minHeight: 320, idealHeight: 480)
         #endif
     }
 }

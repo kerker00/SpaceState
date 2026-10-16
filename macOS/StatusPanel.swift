@@ -6,6 +6,10 @@ import SwiftUI
 struct StatusPanel: View {
     var store: StatusStore
     var showDetails: () -> Void
+    var heightChanged: ((CGFloat) -> Void)? = nil
+    @State private var contentHeight: CGFloat = 160
+    @State private var footerHeight: CGFloat = 64
+    @State private var availableHeight: CGFloat = 620
     @Environment(\.openSettings) private var openSettings
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
@@ -15,13 +19,38 @@ struct StatusPanel: View {
     }
 
     var body: some View {
-        ScrollView {
-            content
+        VStack(spacing: 0) {
+            ScrollView {
+                content
+                    .fixedSize(horizontal: false, vertical: true)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
+                        contentHeight = max(1, ceil($0))
+                    }
+            }
+            .frame(height: min(contentHeight, max(80, availableHeight - footerHeight)))
+            .scrollBounceBehavior(.basedOnSize)
+
+            Divider()
+            footer
+                .padding(.horizontal, SpaceLayout.pagePadding)
+                .padding(.vertical, 12)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height + 1 } action: {
+                    footerHeight = ceil($0)
+                }
         }
-        // A menu-bar window needs a concrete size: a maximum height alone can
-        // collapse the scroll view during the hosting window's initial sizing.
-        .frame(width: 380, height: 640)
+        .frame(width: 380)
+        .fixedSize(horizontal: false, vertical: true)
         .background(palette.background)
+        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heightChanged?($0) }
+        .onAppear(perform: updateAvailableHeight)
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)) { _ in
+            updateAvailableHeight()
+        }
+    }
+
+    private func updateAvailableHeight() {
+        let screen = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) } ?? NSScreen.main
+        availableHeight = min(620, max(200, (screen?.visibleFrame.height ?? 800) - 40))
     }
 
     private var content: some View {
@@ -60,7 +89,6 @@ struct StatusPanel: View {
                 }
             }
 
-            footer
         }
         .font(SpaceTypography.body)
         .foregroundStyle(palette.text)
