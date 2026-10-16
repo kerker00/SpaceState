@@ -13,7 +13,7 @@ Shared English/German status labels, room names, product names and time meanings
 
 ### Everywhere
 
-- Any space from the SpaceAPI directory, searchable by name and address; Mainframe Oldenburg is the default.
+- Any space from the SpaceAPI directory, searchable by name, address and other loaded details; Mainframe Oldenburg is the default.
 - Open, closed or unknown at a glance, with the time of the last change and the space's status message.
 - Mainframe's rooms (Space, Radstelle, 3D Lab, Machining) with their own states.
 - Push notifications when the selected space opens or closes, sent by [SpacePush](https://github.com/kerker00/SpacePush).

@@ -88,15 +88,15 @@ private struct SpacePicker: View {
                 store.endpoint = entry.endpoint
                 dismiss()
             } label: {
-                SpaceSelectionRow(name: entry.info.name, status: directory.status(for: entry),
+                SpaceSelectionRow(name: entry.info.name,
                     isSelected: entry.endpoint == store.endpoint)
             }
             .buttonStyle(.plain)
             .listRowInsets(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
-            .listRowSeparator(.hidden)
+            .listRowSeparator(.visible)
             .listRowBackground(Color.clear)
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(palette.background)
         .tint(palette.accent)

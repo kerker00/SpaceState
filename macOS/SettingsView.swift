@@ -55,14 +55,14 @@ private struct SpacePicker: View {
                 .font(SpaceTypography.body)
 
             List(entries, selection: selection) { entry in
-                SpaceSelectionRow(name: entry.info.name, status: directory.status(for: entry),
+                SpaceSelectionRow(name: entry.info.name,
                     isSelected: entry.endpoint == store.endpoint)
                     .tag(entry.endpoint)
                     .listRowInsets(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
-                    .listRowSeparator(.hidden)
+                    .listRowSeparator(.visible)
                     .listRowBackground(Color.clear)
             }
-            .listStyle(.inset)
+            .listStyle(.plain)
             .scrollContentBackground(.hidden)
             .overlay {
                 if directory.isLoading && directory.entries.isEmpty {

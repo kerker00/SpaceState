@@ -15,6 +15,7 @@ final class DirectoryStore {
     private let now: () -> Date
     @ObservationIgnored private let expiry: ObservationExpiry
     private var timings: [URL: ObservationTiming] = [:]
+    private var searchTextByEndpoint: [URL: String] = [:]
     private var freshnessRevision = 0
 
     init(service: StatusService = .configured, now: @escaping () -> Date = { Date() },
@@ -33,6 +34,9 @@ final class DirectoryStore {
             let observations = try await service.directoryObservations()
             try Task.checkCancellation()
             entries = observations.map(\.value)
+            searchTextByEndpoint = Dictionary(entries.map { entry in
+                (entry.endpoint, Self.searchableValues(in: entry).joined(separator: "\n"))
+            }, uniquingKeysWith: { $0 + "\n" + $1 })
             timings = Dictionary(observations.map { ($0.value.endpoint, $0.timing) }, uniquingKeysWith: { first, _ in first })
             lastError = nil
             expiry.schedule(Array(timings.values)) { [weak self] in self?.freshnessRevision += 1 }
@@ -52,11 +56,25 @@ final class DirectoryStore {
     func timing(for entry: DirectoryEntry) -> ObservationTiming? { timings[entry.endpoint] }
 
     func entries(matching query: String) -> [DirectoryEntry] {
-        let query = query.trimmingCharacters(in: .whitespaces)
-        guard !query.isEmpty else { return entries }
-        return entries.filter {
-            $0.info.name.localizedStandardContains(query)
-                || ($0.info.location?.address?.localizedStandardContains(query) ?? false)
+        let terms = query.split(whereSeparator: \.isWhitespace).map(String.init)
+        guard !terms.isEmpty else { return entries }
+        return entries.filter { entry in
+            let text = searchTextByEndpoint[entry.endpoint] ?? entry.info.name
+            return terms.allSatisfy { text.localizedStandardContains($0) }
         }
+    }
+
+    /// Index the loaded values once, including hidden addresses and nested data.
+    /// Traversing values keeps model/schema field names out of search results and
+    /// includes newly supported fields without a second hand-maintained field list.
+    private static func searchableValues(in value: Any) -> [String] {
+        if let text = value as? String { return [text] }
+        if let url = value as? URL {
+            let text = url.absoluteString
+            return [text.removingPercentEncoding ?? text]
+        }
+        if let date = value as? Date { return [date.formatted(.iso8601)] }
+        if let scalar = value as? any LosslessStringConvertible { return [scalar.description] }
+        return Mirror(reflecting: value).children.flatMap { searchableValues(in: $0.value) }
     }
 }
