@@ -5,9 +5,7 @@ import SwiftUI
 /// the effective C-01 state; raw last-known flags never determine the color.
 struct SpaceSelectionRow: View {
     let name: String
-    let address: String?
     let status: SpaceStatus
-    let observedAt: Date?
     let isSelected: Bool
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
@@ -16,59 +14,45 @@ struct SpaceSelectionRow: View {
     var body: some View {
         let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast)
 
-        SpaceCard {
-            HStack(alignment: .top, spacing: SpaceLayout.rowSpacing) {
-                if !dynamicTypeSize.isAccessibilitySize {
-                    Image(systemName: status.symbolName)
-                        .font(.title3)
-                        .foregroundStyle(status.color(in: palette))
-                        .frame(width: 24)
-                        .accessibilityHidden(true)
-                }
-                VStack(alignment: .leading, spacing: 5) {
-                    Text(verbatim: name)
-                        .font(SpaceTypography.body.weight(.semibold))
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(status.title)
-                        .font(SpaceTypography.label)
-                        .foregroundStyle(status.color(in: palette))
-                        .fixedSize(horizontal: false, vertical: true)
-                    if let observedAt {
-                        Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
-                            .font(.caption)
-                            .foregroundStyle(palette.secondaryText)
-                            .fixedSize(horizontal: false, vertical: true)
-                    } else {
-                        Text("No current observation")
-                            .font(.caption)
-                            .foregroundStyle(palette.secondaryText)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    if let address, !address.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        Text(verbatim: address)
-                            .font(.caption)
-                            .foregroundStyle(palette.secondaryText)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title3)
-                        .foregroundStyle(palette.accent)
-                        .accessibilityHidden(true)
+        HStack(spacing: SpaceLayout.compactSpacing) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(verbatim: name)
+                    .font(SpaceTypography.body.weight(.medium))
+                    .foregroundStyle(palette.text)
+                    .fixedSize(horizontal: false, vertical: true)
+                if dynamicTypeSize.isAccessibilitySize {
+                    statusLabel(palette: palette)
                 }
             }
-            .frame(minHeight: SpaceLayout.minimumControlHeight, alignment: .leading)
-        }
-        .overlay {
-            if isSelected {
-                RoundedRectangle(cornerRadius: SpaceLayout.cardCornerRadius)
-                    .strokeBorder(palette.accent, lineWidth: 2)
-                    .accessibilityHidden(true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            if !dynamicTypeSize.isAccessibilitySize {
+                statusLabel(palette: palette)
+                    .fixedSize()
             }
+            Image(systemName: "checkmark")
+                .font(.body.weight(.semibold))
+                .foregroundStyle(palette.accent)
+                .frame(width: 18)
+                .opacity(isSelected ? 1 : 0)
+                .accessibilityHidden(true)
         }
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .frame(minHeight: SpaceLayout.minimumControlHeight)
+        .background(palette.surface, in: RoundedRectangle(cornerRadius: 8))
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    private func statusLabel(palette: SpacePalette) -> some View {
+        HStack(spacing: 5) {
+            StatusDot(color: status.color(in: palette))
+            Text(status.title)
+                .foregroundStyle(status.color(in: palette))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .font(SpaceTypography.label)
     }
 }

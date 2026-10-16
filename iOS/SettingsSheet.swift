@@ -88,12 +88,11 @@ private struct SpacePicker: View {
                 store.endpoint = entry.endpoint
                 dismiss()
             } label: {
-                SpaceSelectionRow(name: entry.info.name, address: entry.info.location?.address,
-                    status: directory.status(for: entry), observedAt: directory.timing(for: entry)?.observedAt,
+                SpaceSelectionRow(name: entry.info.name, status: directory.status(for: entry),
                     isSelected: entry.endpoint == store.endpoint)
             }
             .buttonStyle(.plain)
-            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+            .listRowInsets(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
         }
@@ -126,7 +125,7 @@ private struct SpacePicker: View {
             }
         }
         .task {
-            if directory.entries.isEmpty { await directory.load() }
+            await directory.load()
         }
     }
 }

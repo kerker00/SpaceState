@@ -55,11 +55,10 @@ private struct SpacePicker: View {
                 .font(SpaceTypography.body)
 
             List(entries, selection: selection) { entry in
-                SpaceSelectionRow(name: entry.info.name, address: entry.info.location?.address,
-                    status: directory.status(for: entry), observedAt: directory.timing(for: entry)?.observedAt,
+                SpaceSelectionRow(name: entry.info.name, status: directory.status(for: entry),
                     isSelected: entry.endpoint == store.endpoint)
                     .tag(entry.endpoint)
-                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                    .listRowInsets(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
             }
@@ -89,7 +88,7 @@ private struct SpacePicker: View {
         .tint(palette.accent)
         .background(palette.background)
         .task {
-            if directory.entries.isEmpty { await directory.load() }
+            await directory.load()
         }
     }
 

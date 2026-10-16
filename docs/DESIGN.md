@@ -39,7 +39,9 @@ The iPhone screen keeps its native list, pull-to-refresh, navigation links and s
 
 The prominent iPhone status card uses the filled surface without an extra outline inside the grouped list's rounded clipping. Its status word, symbol, spacing and semantic colors remain the same for open, closed and unknown states. Mac status cards and other card types retain their outlines.
 
-The main iPhone status screen shows one observation date as a centered closing row with a small decorative clock, wrapping Dynamic Type footnote text and stable numeral widths. The compact row has more space above than below it, placing the date closer to the lower safe area. An inset hairline and the card surface separate this quiet footer from the list, without a button shape or outline. It uses the displayed data's original observation time and omits the separate client-attempt date. Missing observation evidence does not produce a substitute date.
+The main iPhone status screen shows one observation date as small, centered text near the lower safe area, on the same background as the page. It has no icon, separate surface, separator or frame, and retains Dynamic Type wrapping and stable numeral widths. Both Mac status footers also show only the observation date. Missing observation evidence does not produce a substitute date.
+
+Section cards use a single physical pixel for their outlines on iPhone; Mac outlines retain their one-point width. The menu bar popup uses native macOS material, system colors and unboxed sections. Ordinary Mac windows keep the app palette and card surfaces.
 
 ## Widgets
 
@@ -78,9 +80,9 @@ separate platform acceptance.
 
 ## Space selection and settings
 
-Both pickers use `SpaceSelectionRow` on the shared card surface. The caller passes the directory's effective status and original observation time; retained raw flags do not select the displayed color. Names and addresses wrap, each status has a localized word and symbol, and selection has a checkmark, outline and accessibility selection trait. Related text is combined for VoiceOver. At accessibility text sizes, the decorative leading symbol yields width to the labels.
+Both pickers use compact `SpaceSelectionRow` rows containing only the space name, a colored status dot with a localized word, and a selection checkmark. Addresses and observation times are omitted from these rows. The caller supplies the directory's effective status; stale, failed or unproven data stays unknown. Long names wrap and rows grow to fit; at accessibility text sizes the status moves below the name. Related text is combined for VoiceOver, with an accessibility selection trait. Rows keep at least a 44-point target without the full section-card padding or selection outline.
 
-iPhone selection retains native list buttons, search and navigation/dismissal. Mac selection retains native list selection, endpoint tags and its keyboard path; its settings window has minimum dimensions and can grow. Empty searches use the system's no-results presentation. A retained directory failure has a visible retry action using the existing loader.
+iPhone selection retains native list buttons, search and navigation/dismissal. Mac selection retains native list selection, endpoint tags and its keyboard path; its settings window has minimum dimensions and can grow. Both pickers refresh the directory whenever opened while preserving the searchable cached list. Search still matches names and addresses. Empty searches use the system's no-results presentation. A retained directory failure has a visible retry action using the existing loader.
 
 `SpaceRefreshControl` and `SpaceNotificationControl` share native picker/toggle/retry presentation. Their owners provide the existing bindings and actions. iPhone settings keep a native form with paper/slate row surfaces; Mac settings use scrollable cards for refresh, login/Dock options and notification feedback. The underlying preferences, registration, permissions, polling and directory stores retain their behavior. Device keyboard/VoiceOver and actual iPhone Dynamic Type acceptance remain separate from builds and native layout samples.
 
