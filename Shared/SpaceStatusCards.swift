@@ -15,7 +15,7 @@ struct SpaceStatusCard: View {
         let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast)
         let statusColor = status.color(in: palette)
 
-        SpaceCard {
+        SpaceCard(showsBorder: showsBorder) {
             HStack(alignment: .top, spacing: SpaceLayout.rowSpacing) {
                 Image(systemName: status.symbolName)
                     .font(.largeTitle)
@@ -45,6 +45,16 @@ struct SpaceStatusCard: View {
                     .textSelection(.enabled)
             }
         }
+    }
+
+    private var showsBorder: Bool {
+        #if os(iOS)
+        // The grouped list already clips this prominent surface to its corners.
+        // A second outline can be clipped into an uneven edge on iPhone.
+        false
+        #else
+        true
+        #endif
     }
 }
 

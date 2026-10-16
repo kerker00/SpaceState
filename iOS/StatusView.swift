@@ -94,25 +94,16 @@ struct StatusView: View {
             .refreshable {
                 await store.refresh()
             }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if let observedAt = store.observationTiming?.observedAt {
+                    observationFooter(observedAt)
+                }
+            }
             .navigationTitle(store.info?.name ?? store.endpoint.host() ?? "")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Settings", systemImage: "gearshape") {
                         showsSettings = true
-                    }
-                }
-                if store.observationTiming != nil || store.lastAttempt != nil {
-                    ToolbarItem(placement: .status) {
-                        VStack(alignment: .leading) {
-                            if let observedAt = store.observationTiming?.observedAt {
-                                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
-                            }
-                            if let attempt = store.lastAttempt {
-                                Text("Last checked \(attempt, format: .dateTime.hour().minute())")
-                            }
-                        }
-                            .font(.caption)
-                            .foregroundStyle(palette.secondaryText)
                     }
                 }
             }
@@ -134,5 +125,32 @@ struct StatusView: View {
                 if id != nil { showsSettings = false }
             }
         }
+    }
+
+    private func observationFooter(_ observedAt: Date) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: "clock")
+                .imageScale(.small)
+                .accessibilityHidden(true)
+            Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+                .multilineTextAlignment(.center)
+                .monospacedDigit()
+        }
+        .font(.footnote.weight(.medium))
+        .foregroundStyle(palette.secondaryText)
+        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, SpaceLayout.pagePadding)
+        .padding(.top, 12)
+        .padding(.bottom, 4)
+        .background(palette.surface)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(palette.border)
+                .frame(height: 0.5)
+                .padding(.horizontal, SpaceLayout.pagePadding)
+                .accessibilityHidden(true)
+        }
+        .accessibilityElement(children: .combine)
     }
 }

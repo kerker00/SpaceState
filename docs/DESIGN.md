@@ -37,6 +37,10 @@ The detail view, iPhone status screen, Mac menu bar panel and regular Mac status
 
 The iPhone screen keeps its native list, pull-to-refresh, navigation links and settings sheet. Both Mac status surfaces keep their existing actions. Space/settings pickers adopt the appropriate roles in their own step.
 
+The prominent iPhone status card uses the filled surface without an extra outline inside the grouped list's rounded clipping. Its status word, symbol, spacing and semantic colors remain the same for open, closed and unknown states. Mac status cards and other card types retain their outlines.
+
+The main iPhone status screen shows one observation date as a centered closing row with a small decorative clock, wrapping Dynamic Type footnote text and stable numeral widths. The compact row has more space above than below it, placing the date closer to the lower safe area. An inset hairline and the card surface separate this quiet footer from the list, without a button shape or outline. It uses the displayed data's original observation time and omits the separate client-attempt date. Missing observation evidence does not produce a substitute date.
+
 ## Widgets
 
 Widgets use the same localized status titles, symbols and semantic colors as the app. In full-color presentation, their removable container surface uses paper/slate and the app's contrast-aware foreground roles. In accented or vibrant presentation, foreground roles and accent groups defer to WidgetKit; the custom background is clear. The system still owns container margins, corners and rendering.
@@ -101,3 +105,9 @@ installed apps remain part of platform acceptance.
 Details omit empty project/link/linked-space cards. Provider names, descriptions and complete URLs remain plain, wrapping text with the shared card typography. Duplicate provider entries retain distinct stable row identities. Projects and named links use native external links only after HTTP(S) endpoint validation; unsupported or invalid values remain selectable text.
 
 Linked spaces distinguish an internal “Space status” button from their external website link. Only a valid API endpoint can open a status view; a website is never substituted. Each detail view owns its temporary navigation sheet, preserving the source view and saved selection/subscriptions. The shared target view cancels work on dismissal and suspends iPhone polling outside the active scene, including targets opened from another target. Installed-device sheet, keyboard, VoiceOver and long-text acceptance remains separate from compilation and model/store regression coverage.
+
+## Mac window sizing
+
+The menu-bar panel measures its cards at a consistent 380-point width. Short content uses its natural height; long content scrolls within a viewport bounded by the current display. The action bar remains below the scroll area so refresh, details, settings and quit stay reachable.
+
+Regular detail windows initially fit the measured content, with a smaller minimum height and a screen-bounded maximum. Settings fit the general tab's cards; the searchable space list keeps a useful viewport. Automatic fitting stops after a manual window resize, preserving the user's chosen size. Temporary-target windows start compact and remain resizable. No saved preferences are deleted to adjust window geometry.

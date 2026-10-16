@@ -6,6 +6,7 @@ struct SpaceDetailsView: View {
     var info: SpaceInfo
     var timing: ObservationTiming? = nil
     var lastReadFailed = false
+    var contentHeightChanged: ((CGFloat) -> Void)? = nil
     @State private var linkedNavigation = SpaceNavigation()
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
@@ -132,6 +133,7 @@ struct SpaceDetailsView: View {
             .frame(maxWidth: SpaceLayout.readableWidth, alignment: .leading)
             .padding(SpaceLayout.pagePadding)
             .frame(maxWidth: .infinity, alignment: .center)
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { contentHeightChanged?($0) }
         }
         .background(palette.background)
         .navigationTitle(info.name)

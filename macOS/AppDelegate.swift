@@ -74,6 +74,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         guard let destination = navigation.destination else { return }
         let root = SpaceTargetView(destination: destination) { [weak self] in self?.targetWindow?.performClose(nil) }
             .id(destination.id)
+            .background(MacWindowSizing(preferredHeight: nil, minimum: NSSize(width: 440, height: 320)))
         let controller = NSHostingController(rootView: root)
         let window: NSWindow
         if let existing = targetWindow {
@@ -86,12 +87,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
         window.isReleasedWhenClosed = false
         window.delegate = self
-        window.contentMinSize = NSSize(width: 480, height: 500)
+        window.contentMinSize = NSSize(width: 440, height: 320)
         if targetWindow == nil {
-            window.setContentSize(NSSize(width: 600, height: 700))
+            window.setContentSize(NSSize(width: 520, height: 480))
             window.center()
         }
-        repairContentSize(window, minimum: NSSize(width: 480, height: 500))
+        repairContentSize(window, minimum: NSSize(width: 440, height: 320))
         targetWindow = window
         NSApplication.shared.activate()
         window.makeKeyAndOrderFront(nil)
@@ -114,16 +115,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     }
 
     private func makeStatusWindow() -> NSWindow {
-        let window = NSWindow(contentViewController: NSHostingController(rootView: StatusPanel(store: store, showDetails: showDetailsWindow)))
+        let root = StatusPanel(store: store, showDetails: showDetailsWindow, heightChanged: { [weak self] height in
+            self?.resizeStatusWindow(height: height)
+        })
+        let window = NSWindow(contentViewController: NSHostingController(rootView: root))
         window.title = "SpaceState"
         window.styleMask = [.titled, .closable, .miniaturizable]
         window.isReleasedWhenClosed = false
-        window.setContentSize(NSSize(width: 380, height: 640))
-        window.contentMinSize = NSSize(width: 380, height: 640)
+        window.setContentSize(NSSize(width: 380, height: 220))
+        window.contentMinSize = NSSize(width: 380, height: 160)
         window.center()
         window.setFrameAutosaveName("StatusWindow")
-        repairContentSize(window, minimum: NSSize(width: 380, height: 640))
+        repairContentSize(window, minimum: NSSize(width: 380, height: 160))
         return window
+    }
+
+    private func resizeStatusWindow(height: CGFloat) {
+        guard let window = statusWindow, height.isFinite, height > 0 else { return }
+        let current = window.contentRect(forFrameRect: window.frame).size
+        guard abs(current.height - height) > 1 else { return }
+        let top = window.frame.maxY
+        window.setContentSize(NSSize(width: 380, height: ceil(height)))
+        window.setFrameOrigin(NSPoint(x: window.frame.minX, y: top - window.frame.height))
     }
 
     /// A regular window keeps contacts and feeds available after the menu bar closes.
@@ -140,11 +153,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         window.title = String(localized: "Space details")
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
         window.isReleasedWhenClosed = false
-        window.contentMinSize = NSSize(width: 480, height: 500)
-        window.setContentSize(NSSize(width: 600, height: 700))
+        window.contentMinSize = NSSize(width: 440, height: 280)
+        window.setContentSize(NSSize(width: 520, height: 480))
         window.center()
         window.setFrameAutosaveName("SpaceDetailsWindow")
-        repairContentSize(window, minimum: NSSize(width: 480, height: 500))
+        repairContentSize(window, minimum: NSSize(width: 440, height: 280))
         return window
     }
 
@@ -160,14 +173,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
 private struct SpaceDetailsWindow: View {
     var store: StatusStore
+    @State private var contentHeight: CGFloat?
 
     var body: some View {
         NavigationStack {
             if let info = store.info {
-                SpaceDetailsView(info: info, timing: store.observationTiming, lastReadFailed: store.lastError != nil)
+                SpaceDetailsView(info: info, timing: store.observationTiming, lastReadFailed: store.lastError != nil,
+                                 contentHeightChanged: { contentHeight = $0 })
             }
         }
-        .frame(minWidth: 480, idealWidth: 600, maxWidth: .infinity,
-               minHeight: 500, idealHeight: 700, maxHeight: .infinity)
+        .frame(minWidth: 440, idealWidth: 520, maxWidth: .infinity,
+               minHeight: 280, idealHeight: 480, maxHeight: .infinity)
+        .background(MacWindowSizing(preferredHeight: contentHeight.map { $0 + 44 },
+                                    minimum: NSSize(width: 440, height: 280)))
     }
 }

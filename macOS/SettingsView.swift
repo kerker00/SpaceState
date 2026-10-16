@@ -6,24 +6,30 @@ struct SettingsView: View {
     var store: StatusStore
     var directory: DirectoryStore
     var push: PushStore
+    @State private var selectedTab: SettingsTab = .space
+    @State private var generalHeight: CGFloat = 360
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
 
     var body: some View {
         let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast)
 
-        TabView {
-            Tab("Space", systemImage: "building.2") {
+        TabView(selection: $selectedTab) {
+            Tab("Space", systemImage: "building.2", value: SettingsTab.space) {
                 SpacePicker(store: store, directory: directory)
             }
-            Tab("General", systemImage: "gearshape") {
-                GeneralSettings(store: store, push: push)
+            Tab("General", systemImage: "gearshape", value: SettingsTab.general) {
+                GeneralSettings(store: store, push: push, heightChanged: { generalHeight = $0 })
             }
         }
         .tint(palette.accent)
-        .frame(minWidth: 480, idealWidth: 560, maxWidth: .infinity,
-               minHeight: 440, idealHeight: 540, maxHeight: .infinity)
+        .frame(minWidth: 480, idealWidth: 520, maxWidth: .infinity,
+               minHeight: 320, idealHeight: 480, maxHeight: .infinity)
+        .background(MacWindowSizing(preferredHeight: selectedTab == .general ? generalHeight + 60 : 480,
+                                    minimum: NSSize(width: 480, height: 320)))
     }
+
+    private enum SettingsTab: Hashable { case space, general }
 }
 
 private struct SpacePicker: View {
@@ -92,6 +98,7 @@ private struct SpacePicker: View {
 private struct GeneralSettings: View {
     @Bindable var store: StatusStore
     var push: PushStore
+    var heightChanged: ((CGFloat) -> Void)? = nil
     @AppStorage(DockIcon.defaultsKey) private var showDockIcon = false
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var loginItemError: String?
@@ -128,6 +135,7 @@ private struct GeneralSettings: View {
                 }
             }
             .padding(SpaceLayout.pagePadding)
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heightChanged?($0) }
         }
         .foregroundStyle(palette.text)
         .tint(palette.accent)

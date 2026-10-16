@@ -66,12 +66,14 @@ enum SpaceTypography {
 /// A section surface usable by both detail and status views.
 struct SpaceCard<Content: View>: View {
     let title: LocalizedStringResource?
+    let showsBorder: Bool
     let content: Content
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
 
-    init(_ title: LocalizedStringResource? = nil, @ViewBuilder content: () -> Content) {
+    init(_ title: LocalizedStringResource? = nil, showsBorder: Bool = true, @ViewBuilder content: () -> Content) {
         self.title = title
+        self.showsBorder = showsBorder
         self.content = content()
     }
 
@@ -93,7 +95,9 @@ struct SpaceCard<Content: View>: View {
         .padding(SpaceLayout.cardPadding)
         .background(palette.surface, in: shape)
         .overlay {
-            shape.strokeBorder(palette.border, lineWidth: 1)
+            if showsBorder {
+                shape.strokeBorder(palette.border, lineWidth: 1)
+            }
         }
     }
 }
