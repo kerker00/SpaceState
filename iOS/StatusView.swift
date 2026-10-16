@@ -88,7 +88,6 @@ struct StatusView: View {
             .listStyle(.insetGrouped)
             .listSectionSpacing(SpaceLayout.sectionSpacing)
             .scrollContentBackground(.hidden)
-            .background(palette.background)
             .foregroundStyle(palette.text)
             .tint(palette.accent)
             .refreshable {
@@ -99,6 +98,7 @@ struct StatusView: View {
                     observationFooter(observedAt)
                 }
             }
+            .background(palette.background)
             .navigationTitle(store.info?.name ?? store.endpoint.host() ?? "")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -128,29 +128,15 @@ struct StatusView: View {
     }
 
     private func observationFooter(_ observedAt: Date) -> some View {
-        HStack(spacing: 6) {
-            Image(systemName: "clock")
-                .imageScale(.small)
-                .accessibilityHidden(true)
-            Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
-                .multilineTextAlignment(.center)
-                .monospacedDigit()
-        }
-        .font(.footnote.weight(.medium))
-        .foregroundStyle(palette.secondaryText)
-        .fixedSize(horizontal: false, vertical: true)
-        .frame(maxWidth: .infinity)
-        .padding(.horizontal, SpaceLayout.pagePadding)
-        .padding(.top, 12)
-        .padding(.bottom, 4)
-        .background(palette.surface)
-        .overlay(alignment: .top) {
-            Rectangle()
-                .fill(palette.border)
-                .frame(height: 0.5)
-                .padding(.horizontal, SpaceLayout.pagePadding)
-                .accessibilityHidden(true)
-        }
-        .accessibilityElement(children: .combine)
+        Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
+            .font(.caption2)
+            .foregroundStyle(palette.secondaryText)
+            .multilineTextAlignment(.center)
+            .monospacedDigit()
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, SpaceLayout.pagePadding)
+            .padding(.top, 4)
+            .padding(.bottom, 8)
     }
 }

@@ -102,17 +102,12 @@ struct StatusPanel: View {
 
     private var footer: some View {
         HStack {
-            if store.observationTiming != nil || store.lastAttempt != nil {
-                VStack(alignment: .leading) {
-                    if let observedAt = store.observationTiming?.observedAt {
-                        Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
-                    }
-                    if let attempt = store.lastAttempt {
-                        Text("Last checked \(attempt, format: .dateTime.hour().minute())")
-                    }
-                }
+            if let observedAt = store.observationTiming?.observedAt {
+                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
                     .font(.caption)
+                    .monospacedDigit()
                     .foregroundStyle(palette.secondaryText)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Spacer()
             Button("Refresh", systemImage: "arrow.clockwise") {
