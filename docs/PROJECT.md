@@ -101,7 +101,7 @@ Requests describe App/widget version and OS version in the user agent. Apps use 
 
 Open `SpaceState.xcodeproj` in Xcode 26 or later and run `SpaceState-macOS` or `SpaceState-iOS`. Deployment targets are macOS 26 and iOS 26; SpaceStateKit requires Swift 6.2 or later. The widget targets are embedded in their respective App builds. Package verification commands are in the [README](../README.md#build).
 
-The App integration branch is `dev`; feature branches start from it and pull requests target it. Package upgrades deliberately change the exact version in Xcode rather than copying package sources into `Shared/`.
+Feature branches start from `main` and pull requests target `main`; there is no separate integration branch. Releases are tagged on `main`. Package upgrades deliberately change the exact version in Xcode rather than copying package sources into `Shared/`.
 
 | Decision | Reason |
 | --- | --- |
