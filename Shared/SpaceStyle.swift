@@ -94,23 +94,25 @@ enum SpaceTypography {
 struct SpaceCard<Content: View>: View {
     let title: LocalizedStringResource?
     let showsBorder: Bool
+    let compact: Bool
     let content: Content
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.spaceAppearance) private var appearance
     @Environment(\.displayScale) private var displayScale
 
-    init(_ title: LocalizedStringResource? = nil, showsBorder: Bool = true, @ViewBuilder content: () -> Content) {
+    init(_ title: LocalizedStringResource? = nil, showsBorder: Bool = true, compact: Bool = false, @ViewBuilder content: () -> Content) {
         self.title = title
         self.showsBorder = showsBorder
+        self.compact = compact
         self.content = content()
     }
 
     var body: some View {
         let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast, appearance: appearance)
-        let shape = RoundedRectangle(cornerRadius: SpaceLayout.cardCornerRadius)
+        let shape = RoundedRectangle(cornerRadius: SpaceLayout.cardCornerRadius, style: .continuous)
 
-        VStack(alignment: .leading, spacing: SpaceLayout.cardSpacing) {
+        VStack(alignment: .leading, spacing: compact ? SpaceLayout.compactSpacing : SpaceLayout.cardSpacing) {
             if let title {
                 Text(title)
                     .font(appearance == .menuBar ? .headline : SpaceTypography.heading)
@@ -121,7 +123,7 @@ struct SpaceCard<Content: View>: View {
         .font(appearance == .menuBar ? .body : SpaceTypography.body)
         .foregroundStyle(palette.text)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(appearance == .menuBar ? 0 : SpaceLayout.cardPadding)
+        .padding(appearance == .menuBar ? 0 : (compact ? SpaceLayout.rowSpacing : SpaceLayout.cardPadding))
         .background(palette.surface, in: shape)
         .overlay {
             if showsBorder && appearance != .menuBar {
@@ -137,5 +139,37 @@ struct SpaceCard<Content: View>: View {
         #else
         1
         #endif
+    }
+}
+
+/// Explicit foreground/background pairs keep onboarding actions legible in
+/// either appearance without relying on translucent system button materials.
+struct SpaceActionButtonStyle: ButtonStyle {
+    var prominent = false
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.displayScale) private var displayScale
+
+    func makeBody(configuration: Configuration) -> some View {
+        let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast)
+        let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
+        let filled = prominent && isEnabled
+
+        configuration.label
+            .font(SpaceTypography.body.weight(.semibold))
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .frame(minHeight: SpaceLayout.minimumControlHeight)
+            .foregroundStyle(isEnabled ? (filled ? palette.background : palette.accent) : palette.secondaryText)
+            .background(filled ? palette.accent : palette.surface, in: shape)
+            .overlay {
+                shape.strokeBorder(isEnabled ? palette.accent : palette.border,
+                                   lineWidth: contrast == .increased ? 2 : max(1 / displayScale, 0.5))
+            }
+            .contentShape(shape)
+            .scaleEffect(configuration.isPressed && isEnabled ? 0.98 : 1)
     }
 }

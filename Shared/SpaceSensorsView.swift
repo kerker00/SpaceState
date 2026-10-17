@@ -11,6 +11,7 @@ struct SpaceSensorsCard: View {
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.spaceAppearance) private var appearance
     @Environment(\.locale) private var locale
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var palette: SpacePalette {
         SpacePalette(colorScheme: colorScheme, contrast: contrast, appearance: appearance)
@@ -20,12 +21,14 @@ struct SpaceSensorsCard: View {
         let presentation = SpaceSensorPresentation(sensors)
         let readings = mode == .details ? presentation.readings : presentation.summary
         if !readings.isEmpty {
-            SpaceCard(mode == .details ? "Sensors" : "Climate and visitors") {
-                let date = Date()
-                let dates = [date] + [timing?.expiresAt].compactMap { $0 }.filter { $0 > date }
-                TimelineView(.explicit(dates)) { context in
-                    let current = SpaceSensorPresentation.isCurrent(timing: timing, failed: failed, at: context.date)
-                    VStack(alignment: .leading, spacing: SpaceLayout.cardSpacing) {
+            let date = Date()
+            let dates = [date] + [timing?.expiresAt].compactMap { $0 }.filter { $0 > date }
+            // The timeline only triggers updates. The card itself measures the
+            // text rows, without a scheduling container inside its background.
+            TimelineView(.explicit(dates)) { context in
+                let current = SpaceSensorPresentation.isCurrent(timing: timing, failed: failed, at: context.date)
+                SpaceCard(mode == .details ? "Sensors" : "Climate and visitors", compact: mode == .summary) {
+                    VStack(alignment: .leading, spacing: mode == .summary ? SpaceLayout.compactSpacing : SpaceLayout.cardSpacing) {
                         if !current {
                             Text("Showing last known sensor values")
                                 .font(SpaceTypography.label)
@@ -40,21 +43,27 @@ struct SpaceSensorsCard: View {
                         }
                     }
                 }
+                .fixedSize(horizontal: false, vertical: true)
             }
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 
     private func row(_ reading: SpaceSensorReading) -> some View {
         VStack(alignment: .leading, spacing: 5) {
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .firstTextBaseline, spacing: SpaceLayout.rowSpacing) {
-                    title(reading).fixedSize()
-                    Spacer(minLength: 0)
-                    value(reading).fixedSize()
-                }
+            if dynamicTypeSize.isAccessibilitySize {
                 VStack(alignment: .leading, spacing: 5) {
                     title(reading)
                     value(reading)
+                }
+            } else {
+                HStack(alignment: .firstTextBaseline, spacing: SpaceLayout.rowSpacing) {
+                    title(reading)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 0)
+                    value(reading)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.trailing)
                 }
             }
             if mode == .details {

@@ -50,8 +50,8 @@ struct SpaceStatusCard: View {
 
     private var showsBorder: Bool {
         #if os(iOS)
-        // The grouped list already clips this prominent surface to its corners.
-        // A second outline can be clipped into an uneven edge on iPhone.
+        // Keep the prominent iPhone status surface unoutlined. Section cards
+        // below it retain their own fine borders.
         false
         #else
         true

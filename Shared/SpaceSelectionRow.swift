@@ -1,8 +1,10 @@
+import SpaceAPI
 import SwiftUI
 
-/// A plain selection row; directory evidence is not presented as a live status.
+/// A flat selection row with the effective status from directory observations.
 struct SpaceSelectionRow: View {
     let name: String
+    let status: SpaceStatus
     let isSelected: Bool
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
@@ -11,6 +13,7 @@ struct SpaceSelectionRow: View {
         let palette = SpacePalette(colorScheme: colorScheme, contrast: contrast)
 
         HStack(spacing: SpaceLayout.compactSpacing) {
+            StatusDot(color: status == .unknown ? unknownDot(in: palette) : status.color(in: palette))
             Text(verbatim: name)
                 .font(SpaceTypography.body)
                 .fixedSize(horizontal: false, vertical: true)
@@ -28,7 +31,14 @@ struct SpaceSelectionRow: View {
         .frame(minHeight: SpaceLayout.minimumControlHeight)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+        .accessibilityValue(Text(status.title))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .help(Text(status.title))
     }
 
+    private func unknownDot(in palette: SpacePalette) -> Color {
+        // Use an existing light neutral for the dot, while status text elsewhere
+        // retains its stronger contrast. Increased contrast follows the palette.
+        colorScheme == .dark || contrast == .increased ? palette.statusUnknown : palette.border
+    }
 }

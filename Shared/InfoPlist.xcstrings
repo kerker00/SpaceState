@@ -1,0 +1,76 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SpaceState"
+          }
+        }
+      }
+    },
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SpaceState"
+          }
+        }
+      }
+    },
+    "NSHumanReadableCopyright" : {
+      "comment" : "Copyright (human-readable)",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "© 2014–2026 Markus Müller"
+          }
+        }
+      }
+    },
+    "NSLocationUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SpaceState nutzt deinen Standort einmalig, um einen Hackspace in der Nähe vorzuschlagen. Dein Standort bleibt auf diesem Gerät und wird nicht gespeichert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved."
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SpaceState nutzt deinen Standort einmalig, um einen Hackspace in der Nähe vorzuschlagen. Dein Standort bleibt auf diesem Gerät und wird nicht gespeichert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

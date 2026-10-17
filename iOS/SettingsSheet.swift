@@ -39,7 +39,8 @@ struct SettingsSheet: View {
 
                 Section {
                     SpaceNotificationControl(isEnabled: notificationsEnabled, message: push.status.message,
-                        canRetry: canRetryNotifications, retry: { push.retry() })
+                        canRetry: canRetryNotifications, retry: { push.retry() },
+                        canOpenSettings: push.status == .denied, openSettings: { push.openSystemSettings() })
                 }
                 .listRowBackground(palette.surface)
             }
@@ -66,7 +67,10 @@ struct SettingsSheet: View {
     private var notificationsEnabled: Binding<Bool> {
         Binding(
             get: { push.isEnabled },
-            set: { enabled in Task { await push.setEnabled(enabled) } }
+            set: { enabled in Task {
+                await push.setEnabled(enabled)
+                if enabled && push.status == .denied { push.openSystemSettings() }
+            } }
         )
     }
 }
@@ -89,6 +93,7 @@ private struct SpacePicker: View {
                 dismiss()
             } label: {
                 SpaceSelectionRow(name: entry.info.name,
+                    status: directory.status(for: entry),
                     isSelected: entry.endpoint == store.endpoint)
             }
             .buttonStyle(.plain)
@@ -101,6 +106,7 @@ private struct SpacePicker: View {
         .background(palette.background)
         .tint(palette.accent)
         .searchable(text: $query, prompt: "Search spaces")
+        .searchPresentationToolbarBehavior(.avoidHidingContent)
         .overlay {
             if directory.isLoading && directory.entries.isEmpty {
                 ProgressView().accessibilityLabel(Text("Space"))
@@ -117,6 +123,7 @@ private struct SpacePicker: View {
             }
         }
         .navigationTitle("Space")
+        .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
             if directory.lastError != nil && !directory.entries.isEmpty {
                 SpaceDirectoryNotice(isLoading: directory.isLoading, retry: { Task { await directory.load() } })

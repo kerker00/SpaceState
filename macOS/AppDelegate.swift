@@ -5,20 +5,24 @@ import UserNotifications
 /// Owns the app's state, receives the APNs device token, and shows the status
 /// window when the user clicks a notification.
 final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSWindowDelegate {
+    let onboarding = OnboardingStore()
+    let directory = DirectoryStore()
     let store = StatusStore()
     let push = PushStore()
     let navigation = SpaceNavigation()
     private var statusWindow: NSWindow?
     private var detailsWindow: NSWindow?
     private var targetWindow: NSWindow?
+    private var onboardingWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         if DockIcon.isVisible {
             NSApplication.shared.setActivationPolicy(.regular)
         }
         UNUserNotificationCenter.current().delegate = self
-        store.startPolling()
+        if onboarding.hasSelectedSpace { store.startPolling() }
         push.start()
+        if !onboarding.isComplete { showOnboardingWindow() }
     }
 
     func application(_ application: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -31,13 +35,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     func applicationDidBecomeActive(_ notification: Notification) {
         push.start()
-        Task { await store.refresh() }
+        if onboarding.hasSelectedSpace { Task { await store.refresh() } }
     }
 
     /// Clicking the Dock icon shows the status window; otherwise macOS would
     /// bring up the settings window.
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        showStatusWindow()
+        if onboarding.isComplete { showStatusWindow() }
+        else { showOnboardingWindow() }
         return false
     }
 
@@ -108,10 +113,35 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     /// The menu bar panel cannot be opened from code, so a notification click
     /// opens the same view in a regular window.
     func showStatusWindow() {
+        guard onboarding.isComplete else { showOnboardingWindow(); return }
         let window = statusWindow ?? makeStatusWindow()
         statusWindow = window
         NSApplication.shared.activate()
         window.makeKeyAndOrderFront(nil)
+    }
+
+    func showOnboardingWindow() {
+        guard !onboarding.isComplete else { return }
+        if onboardingWindow == nil {
+            let root = OnboardingView(onboarding: onboarding, store: store, directory: directory, push: push)
+                .frame(minWidth: 480, minHeight: 560)
+                .onChange(of: onboarding.isComplete) { [weak self] _, complete in
+                    guard complete, let self else { return }
+                    self.onboardingWindow?.close()
+                    self.onboardingWindow = nil
+                    self.showStatusWindow()
+                }
+            let window = NSWindow(contentViewController: NSHostingController(rootView: root))
+            window.title = String(localized: "Set up SpaceState")
+            window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+            window.isReleasedWhenClosed = false
+            window.contentMinSize = NSSize(width: 480, height: 560)
+            window.setContentSize(NSSize(width: 520, height: 680))
+            window.center()
+            onboardingWindow = window
+        }
+        NSApplication.shared.activate()
+        onboardingWindow?.makeKeyAndOrderFront(nil)
     }
 
     private func makeStatusWindow() -> NSWindow {

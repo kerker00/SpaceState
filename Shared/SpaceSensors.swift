@@ -1,7 +1,7 @@
 import Foundation
 import SpaceAPI
 
-enum SpaceSensorKind: String, Sendable, CaseIterable {
+enum SpaceSensorKind: String, Codable, Sendable, CaseIterable {
     case visitors, temperature, humidity, carbonDioxide, pressure, doorLocked
     case members, networkConnections, beverages, powerConsumption, powerGeneration
 

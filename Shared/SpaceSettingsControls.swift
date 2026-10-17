@@ -40,6 +40,8 @@ struct SpaceNotificationControl: View {
     let message: LocalizedStringKey?
     let canRetry: Bool
     let retry: () -> Void
+    var canOpenSettings = false
+    var openSettings: () -> Void = {}
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
 
@@ -59,6 +61,10 @@ struct SpaceNotificationControl: View {
             }
             if canRetry {
                 Button("Retry", action: retry)
+                    .buttonStyle(.bordered)
+            }
+            if canOpenSettings {
+                Button("Open notification settings", action: openSettings)
                     .buttonStyle(.bordered)
             }
         }

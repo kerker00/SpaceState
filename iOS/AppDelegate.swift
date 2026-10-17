@@ -4,6 +4,7 @@ import UserNotifications
 /// Owns the app's state, receives the APNs device token and shows
 /// notifications while the app is in the foreground.
 final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    let onboarding = OnboardingStore()
     let store = StatusStore()
     let push = PushStore()
     let navigation = SpaceNavigation()
@@ -12,7 +13,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         _ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = self
-        store.startPolling()
+        if onboarding.hasSelectedSpace { store.startPolling() }
         push.start()
         return true
     }

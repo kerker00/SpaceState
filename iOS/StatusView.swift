@@ -19,74 +19,73 @@ struct StatusView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section {
+                VStack(alignment: .leading, spacing: SpaceLayout.sectionSpacing) {
                     SpaceStatusCard(
                         status: store.status,
                         changedAt: store.lastError == nil && store.freshness == .current ? store.info?.state?.lastChange : nil,
                         message: store.lastError == nil && store.freshness == .current ? store.info?.state?.message : nil
                     )
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-                }
 
-                if !store.rooms.isEmpty {
-                    Section {
+                    if !store.rooms.isEmpty {
                         SpaceRoomsCard(rooms: store.displayRooms, observedAt: store.roomsTiming?.observedAt,
                             unavailable: store.lastRoomsError != nil || store.roomsFreshness != .current)
-                            .listRowInsets(EdgeInsets())
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(Color.clear)
                     }
-                }
 
-                if let info = store.info, !SpaceSensorPresentation(info.sensors).summary.isEmpty {
-                    Section {
+                    if let info = store.info, !SpaceSensorPresentation(info.sensors).summary.isEmpty {
                         SpaceSensorsCard(sensors: info.sensors, timing: store.observationTiming,
                             failed: store.lastError != nil)
-                            .listRowInsets(EdgeInsets())
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(Color.clear)
                     }
-                }
 
-                if store.info != nil && store.lastError == nil && store.freshness != .current {
-                    Section { Text("No current observation") }
-                }
-                if let error = store.lastRoomsError {
-                    Section { Label("Rooms unavailable: \(error.localizedDescription)", systemImage: "exclamationmark.triangle") }
-                }
-
-                if let error = store.lastError {
-                    Section {
+                    if store.info != nil && store.lastError == nil && store.freshness != .current {
+                        Text("No current observation")
+                    }
+                    if let error = store.lastRoomsError {
+                        Label("Rooms unavailable: \(error.localizedDescription)", systemImage: "exclamationmark.triangle")
+                    }
+                    if let error = store.lastError {
                         SpaceCard {
                             Label(error.localizedDescription, systemImage: "exclamationmark.triangle")
                                 .foregroundStyle(palette.secondaryText)
                         }
-                        .listRowInsets(EdgeInsets())
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.clear)
                     }
-                }
 
-                if let info = store.info {
-                    Section {
-                        NavigationLink {
-                            SpaceDetailsView(info: info, timing: store.observationTiming, lastReadFailed: store.lastError != nil)
-                        } label: {
-                            Label("Space details", systemImage: "info.circle")
-                        }
-                        if let website = info.website {
-                            Link(destination: website) {
-                                Label("Website", systemImage: "safari")
+                    if let info = store.info {
+                        SpaceCard {
+                            NavigationLink {
+                                SpaceDetailsView(info: info, timing: store.observationTiming, lastReadFailed: store.lastError != nil)
+                            } label: {
+                                HStack {
+                                    Label("Space details", systemImage: "info.circle")
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundStyle(palette.secondaryText)
+                                        .accessibilityHidden(true)
+                                }
+                                .frame(minHeight: SpaceLayout.minimumControlHeight)
+                                .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            if let website = info.website {
+                                Divider()
+                                Link(destination: website) {
+                                    Label("Website", systemImage: "safari")
+                                        .frame(maxWidth: .infinity, minHeight: SpaceLayout.minimumControlHeight, alignment: .leading)
+                                        .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                     }
-                    .listRowBackground(palette.surface)
                 }
+                .padding(.horizontal, SpaceLayout.pagePadding)
+                .padding(.vertical, SpaceLayout.sectionSpacing)
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
             }
-            .listStyle(.insetGrouped)
-            .listSectionSpacing(SpaceLayout.sectionSpacing)
+            .listStyle(.plain)
+            .navigationLinkIndicatorVisibility(.hidden)
             .scrollContentBackground(.hidden)
             .foregroundStyle(palette.text)
             .tint(palette.accent)
