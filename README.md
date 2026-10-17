@@ -13,7 +13,8 @@ Shared English/German status labels, room names, product names and time meanings
 
 ### Everywhere
 
-- Any space from the SpaceAPI directory, searchable by name and address; Mainframe Oldenburg is the default.
+- First-run setup for choosing a space, with manual search or an optional nearby suggestion that you confirm. Existing installations retain their selection and notification preferences.
+- Any space from the SpaceAPI directory, searchable by name, address and other loaded details. Selection lists show a small green/red dot for current open/closed observations and a light-grey dot for unknown or outdated status.
 - Open, closed or unknown at a glance, with the time of the last change and the space's status message.
 - Mainframe's rooms (Space, Radstelle, 3D Lab, Machining) with their own states.
 - Push notifications when the selected space opens or closes, sent by [SpacePush](https://github.com/kerker00/SpacePush).
@@ -21,6 +22,7 @@ Shared English/German status labels, room names, product names and time meanings
 - State is read through SpacePush, with direct SpaceAPI requests as fallback.
 - Space details with address, access instructions, contacts, keyholders, feeds, projects, named links and linked spaces, presented in the same card layout on macOS and iPhone.
 - English and German.
+- An optional notification permission step explains opening/closing alerts. Declining or skipping keeps the app usable; settings link to system notification settings after a denial.
 - Usage statistics for SpacePush without an identifier: the apps send their version and OS version, and mark the first request of each day, week and month (`X-SpaceState-First`); SpacePush only adds these up. See [SpacePush's statistics](https://github.com/kerker00/SpacePush#statistics).
 
 ### macOS
@@ -37,6 +39,28 @@ Shared English/German status labels, room names, product names and time meanings
 - Home screen widgets (small and medium) and lock screen widgets (circular, rectangular, inline).
 
 Each widget chooses its own space, so several widgets can show different spaces.
+
+## First-run setup
+
+On iPhone, setup appears before the status screen. On Mac, a regular setup window
+opens on first launch; the menu bar and Dock can reopen it after closing it.
+Progress is saved, so an interrupted setup resumes without replacing a confirmed
+space. Setup does not run again after completion or for recognized existing
+installations. The app waits for a confirmed selection before polling a space.
+
+Location access is requested only after “Find a nearby space”. The app requests one
+recent fix at kilometre accuracy and compares it locally with valid coordinates
+already loaded from the directory. The suggestion is the nearest listed space
+with coordinates, not necessarily every space in the world. The user confirms it
+or chooses another entry. Denial, an unavailable fix, missing coordinates or a
+timeout leave manual search available. No device coordinates are saved or sent
+to SpacePush, geocoding or map services. Location requests stop on selection,
+cancellation or dismissal; widgets do not request location.
+
+Choosing a space opens an explanation of optional notifications. Enabling uses
+the existing PushStore registration flow; skipping never requests permission.
+An OS denial also completes setup. A later explicit enable in settings opens
+system notification settings when permission was previously denied.
 
 ## Observation times
 

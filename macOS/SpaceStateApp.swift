@@ -3,16 +3,20 @@ import SwiftUI
 @main
 struct SpaceStateApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    @State private var directory = DirectoryStore()
 
     /// Shared with the status window the app delegate opens for notification clicks.
     private var store: StatusStore { appDelegate.store }
 
     var body: some Scene {
         MenuBarExtra {
-            StatusPanel(store: store, showDetails: appDelegate.showDetailsWindow)
-                .environment(\.spaceAppearance, .menuBar)
-                .containerBackground(.regularMaterial, for: .window)
+            if appDelegate.onboarding.isComplete {
+                StatusPanel(store: store, showDetails: appDelegate.showDetailsWindow)
+                    .environment(\.spaceAppearance, .menuBar)
+                    .containerBackground(.regularMaterial, for: .window)
+            } else {
+                Button("Set up SpaceState") { appDelegate.showOnboardingWindow() }
+                    .padding()
+            }
         } label: {
             Label {
                 Text(store.status.title)
@@ -26,7 +30,13 @@ struct SpaceStateApp: App {
         }
 
         Settings {
-            SettingsView(store: store, directory: directory, push: appDelegate.push)
+            if appDelegate.onboarding.isComplete {
+                SettingsView(store: store, directory: appDelegate.directory, push: appDelegate.push)
+            } else {
+                OnboardingView(onboarding: appDelegate.onboarding, store: store,
+                               directory: appDelegate.directory, push: appDelegate.push)
+                    .frame(minWidth: 480, minHeight: 560)
+            }
         }
         .defaultSize(width: 520, height: 480)
         .windowResizability(.contentMinSize)

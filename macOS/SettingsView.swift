@@ -7,7 +7,8 @@ struct SettingsView: View {
     var directory: DirectoryStore
     var push: PushStore
     @State private var selectedTab: SettingsTab = .space
-    @State private var generalHeight: CGFloat = 360
+    @State private var generalHeight: CGFloat = 0
+    @State private var generalViewportHeight: CGFloat = 0
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
 
@@ -21,7 +22,10 @@ struct SettingsView: View {
                     .toolbarBackgroundVisibility(.visible, for: .windowToolbar)
             }
             Tab("General", systemImage: "gearshape", value: SettingsTab.general) {
-                GeneralSettings(store: store, push: push, heightChanged: { generalHeight = $0 })
+                GeneralSettings(store: store, push: push,
+                    showsScrollIndicator: generalHeight > generalViewportHeight + 0.5,
+                    heightChanged: { generalHeight = $0 },
+                    viewportHeightChanged: { generalViewportHeight = $0 })
                     .toolbarBackground(palette.background, for: .windowToolbar)
                     .toolbarBackgroundVisibility(.visible, for: .windowToolbar)
             }
@@ -31,8 +35,10 @@ struct SettingsView: View {
         .containerBackground(palette.background, for: .window)
         .frame(minWidth: 480, idealWidth: 520, maxWidth: .infinity,
                minHeight: 320, idealHeight: 480, maxHeight: .infinity)
-        .background(MacWindowSizing(preferredHeight: selectedTab == .general ? generalHeight + 60 : 480,
-                                    minimum: NSSize(width: 480, height: 320)))
+        .background(MacWindowSizing(preferredHeight: 480,
+            minimum: NSSize(width: 480, height: 320),
+            contentFit: selectedTab == .general ? .init(contentHeight: generalHeight, viewportHeight: generalViewportHeight) : nil,
+            maximumHeight: selectedTab == .general ? nil : 680))
     }
 
     private enum SettingsTab: Hashable { case space, general }
@@ -55,15 +61,15 @@ private struct SpacePicker: View {
                 .font(SpaceTypography.body)
 
             List(entries, selection: selection) { entry in
-                SpaceSelectionRow(name: entry.info.name, address: entry.info.location?.address,
-                    status: directory.status(for: entry), observedAt: directory.timing(for: entry)?.observedAt,
+                SpaceSelectionRow(name: entry.info.name,
+                    status: directory.status(for: entry),
                     isSelected: entry.endpoint == store.endpoint)
                     .tag(entry.endpoint)
-                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
+                    .listRowSeparator(.visible)
                     .listRowBackground(Color.clear)
             }
-            .listStyle(.inset)
+            .listStyle(.plain)
             .scrollContentBackground(.hidden)
             .overlay {
                 if directory.isLoading && directory.entries.isEmpty {
@@ -89,7 +95,7 @@ private struct SpacePicker: View {
         .tint(palette.accent)
         .background(palette.background)
         .task {
-            if directory.entries.isEmpty { await directory.load() }
+            await directory.load()
         }
     }
 
@@ -104,7 +110,9 @@ private struct SpacePicker: View {
 private struct GeneralSettings: View {
     @Bindable var store: StatusStore
     var push: PushStore
+    var showsScrollIndicator = true
     var heightChanged: ((CGFloat) -> Void)? = nil
+    var viewportHeightChanged: ((CGFloat) -> Void)? = nil
     @AppStorage(DockIcon.defaultsKey) private var showDockIcon = false
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var loginItemError: String?
@@ -137,12 +145,17 @@ private struct GeneralSettings: View {
                 }
                 SpaceCard {
                     SpaceNotificationControl(isEnabled: notificationsEnabled, message: push.status.message,
-                        canRetry: canRetryNotifications, retry: { push.retry() })
+                        canRetry: canRetryNotifications, retry: { push.retry() },
+                        canOpenSettings: push.status == .denied, openSettings: { push.openSystemSettings() })
                 }
             }
             .padding(SpaceLayout.pagePadding)
+            .fixedSize(horizontal: false, vertical: true)
             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heightChanged?($0) }
         }
+        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { viewportHeightChanged?($0) }
+        .scrollBounceBehavior(.basedOnSize)
+        .scrollIndicators(showsScrollIndicator ? .automatic : .hidden)
         .foregroundStyle(palette.text)
         .tint(palette.accent)
         .background(palette.background)
@@ -155,7 +168,10 @@ private struct GeneralSettings: View {
     private var notificationsEnabled: Binding<Bool> {
         Binding(
             get: { push.isEnabled },
-            set: { enabled in Task { await push.setEnabled(enabled) } }
+            set: { enabled in Task {
+                await push.setEnabled(enabled)
+                if enabled && push.status == .denied { push.openSystemSettings() }
+            } }
         )
     }
 

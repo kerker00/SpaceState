@@ -21,28 +21,30 @@
 		A10000000000000000000147 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000014A /* SpacePushClient */; };
 		A10000000000000000000154 /* SpaceStateWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000130 /* SpaceStateWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A10000000000000000000158 /* SpaceStateWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000140 /* SpaceStateWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		B2000000000000000000000B /* PushStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* PushStore.swift */; };
-		B2000000000000000000000C /* StatusStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000002 /* StatusStore.swift */; };
-		B2000000000000000000000D /* ClientIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000003 /* ClientIdentity.swift */; };
-		B2000000000000000000000E /* StatusService+Configured.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000004 /* StatusService+Configured.swift */; };
-		B2000000000000000000000F /* PushStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000005 /* PushStoreTests.swift */; };
-		B20000000000000000000010 /* PushSubscriptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000006 /* PushSubscriptionsTests.swift */; };
+		B2000000000000000000000B /* Shared/PushStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* Shared/PushStore.swift */; };
+		B2000000000000000000000C /* Shared/StatusStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000002 /* Shared/StatusStore.swift */; };
+		B2000000000000000000000D /* Shared/ClientIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000003 /* Shared/ClientIdentity.swift */; };
+		B2000000000000000000000E /* Shared/StatusService+Configured.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000004 /* Shared/StatusService+Configured.swift */; };
+		B2000000000000000000000F /* Tests/PushStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000005 /* Tests/PushStoreTests.swift */; };
+		B20000000000000000000010 /* Tests/PushSubscriptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000006 /* Tests/PushSubscriptionsTests.swift */; };
+		B20000000000000000000011 /* Tests/StatusRefreshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000007 /* Tests/StatusRefreshTests.swift */; };
 		B20000000000000000000033 /* SpaceAPI in Frameworks */ = {isa = PBXBuildFile; productRef = B20000000000000000000029 /* SpaceAPI */; };
 		B20000000000000000000034 /* MainframeStatus in Frameworks */ = {isa = PBXBuildFile; productRef = B2000000000000000000002A /* MainframeStatus */; };
 		B20000000000000000000035 /* SpacePushClient in Frameworks */ = {isa = PBXBuildFile; productRef = B2000000000000000000002B /* SpacePushClient */; };
-		B20000000000000000000011 /* StatusRefreshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000007 /* StatusRefreshTests.swift */; };
-		B30000000000000000000011 /* ObservationDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000001 /* ObservationDisplay.swift */; };
-		B30000000000000000000012 /* DirectoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000002 /* DirectoryStore.swift */; };
-		B30000000000000000000013 /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000003 /* WidgetSnapshot.swift */; };
-		B30000000000000000000014 /* ObservationStatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000004 /* ObservationStatusTests.swift */; };
-		B30000000000000000000015 /* WidgetObservationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000005 /* WidgetObservationTests.swift */; };
+		B30000000000000000000011 /* Shared/ObservationDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000001 /* Shared/ObservationDisplay.swift */; };
+		B30000000000000000000012 /* Shared/DirectoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000002 /* Shared/DirectoryStore.swift */; };
+		B30000000000000000000013 /* Shared/WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000003 /* Shared/WidgetSnapshot.swift */; };
+		B30000000000000000000014 /* Tests/ObservationStatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000004 /* Tests/ObservationStatusTests.swift */; };
+		B30000000000000000000015 /* Tests/WidgetObservationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30000000000000000000005 /* Tests/WidgetObservationTests.swift */; };
 		C40000000000000000000011 /* Shared/SpaceDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40000000000000000000001 /* Shared/SpaceDestination.swift */; };
 		C40000000000000000000012 /* Shared/SpaceNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40000000000000000000002 /* Shared/SpaceNavigation.swift */; };
 		C40000000000000000000013 /* Tests/SpaceNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40000000000000000000003 /* Tests/SpaceNavigationTests.swift */; };
-		D60000000000000000000011 /* Shared/SpaceSensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000000000000000000001 /* Shared/SpaceSensors.swift */; };
-		D60000000000000000000012 /* Tests/SensorPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000000000000000000002 /* Tests/SensorPresentationTests.swift */; };
 		D10000000000000000000011 /* Shared/SpaceDetailLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000001 /* Shared/SpaceDetailLinks.swift */; };
 		D10000000000000000000012 /* Tests/SpaceDetailLinksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000002 /* Tests/SpaceDetailLinksTests.swift */; };
+		D60000000000000000000011 /* Shared/SpaceSensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000000000000000000001 /* Shared/SpaceSensors.swift */; };
+		D60000000000000000000012 /* Tests/SensorPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000000000000000000002 /* Tests/SensorPresentationTests.swift */; };
+		E70000000000000000000011 /* Shared/OnboardingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70000000000000000000001 /* Shared/OnboardingStore.swift */; };
+		E70000000000000000000012 /* Tests/OnboardingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70000000000000000000002 /* Tests/OnboardingTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,26 +94,28 @@
 		A10000000000000000000020 /* SpaceState.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceState.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000130 /* SpaceStateWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SpaceStateWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000140 /* SpaceStateWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SpaceStateWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		B20000000000000000000001 /* PushStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/PushStore.swift"; sourceTree = SOURCE_ROOT; };
-		B20000000000000000000002 /* StatusStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/StatusStore.swift"; sourceTree = SOURCE_ROOT; };
-		B20000000000000000000003 /* ClientIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/ClientIdentity.swift"; sourceTree = SOURCE_ROOT; };
-		B20000000000000000000004 /* StatusService+Configured.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/StatusService+Configured.swift"; sourceTree = SOURCE_ROOT; };
-		B20000000000000000000005 /* PushStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/PushStoreTests.swift"; sourceTree = SOURCE_ROOT; };
-		B20000000000000000000006 /* PushSubscriptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/PushSubscriptionsTests.swift"; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000001 /* Shared/PushStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/PushStore.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000002 /* Shared/StatusStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/StatusStore.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000003 /* Shared/ClientIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/ClientIdentity.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000004 /* Shared/StatusService+Configured.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/StatusService+Configured.swift"; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000005 /* Tests/PushStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/PushStoreTests.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000006 /* Tests/PushSubscriptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/PushSubscriptionsTests.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000007 /* Tests/StatusRefreshTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/StatusRefreshTests.swift; sourceTree = SOURCE_ROOT; };
 		B20000000000000000000020 /* SpaceStatePushTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpaceStatePushTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B20000000000000000000007 /* StatusRefreshTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/StatusRefreshTests.swift"; sourceTree = SOURCE_ROOT; };
-		B30000000000000000000001 /* ObservationDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/ObservationDisplay.swift"; sourceTree = SOURCE_ROOT; };
-		B30000000000000000000002 /* DirectoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/DirectoryStore.swift"; sourceTree = SOURCE_ROOT; };
-		B30000000000000000000003 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared/WidgetSnapshot.swift"; sourceTree = SOURCE_ROOT; };
-		B30000000000000000000004 /* ObservationStatusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/ObservationStatusTests.swift"; sourceTree = SOURCE_ROOT; };
-		B30000000000000000000005 /* WidgetObservationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tests/WidgetObservationTests.swift"; sourceTree = SOURCE_ROOT; };
+		B30000000000000000000001 /* Shared/ObservationDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/ObservationDisplay.swift; sourceTree = SOURCE_ROOT; };
+		B30000000000000000000002 /* Shared/DirectoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/DirectoryStore.swift; sourceTree = SOURCE_ROOT; };
+		B30000000000000000000003 /* Shared/WidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/WidgetSnapshot.swift; sourceTree = SOURCE_ROOT; };
+		B30000000000000000000004 /* Tests/ObservationStatusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/ObservationStatusTests.swift; sourceTree = SOURCE_ROOT; };
+		B30000000000000000000005 /* Tests/WidgetObservationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/WidgetObservationTests.swift; sourceTree = SOURCE_ROOT; };
 		C40000000000000000000001 /* Shared/SpaceDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceDestination.swift; sourceTree = SOURCE_ROOT; };
 		C40000000000000000000002 /* Shared/SpaceNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceNavigation.swift; sourceTree = SOURCE_ROOT; };
 		C40000000000000000000003 /* Tests/SpaceNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SpaceNavigationTests.swift; sourceTree = SOURCE_ROOT; };
-		D60000000000000000000001 /* Shared/SpaceSensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceSensors.swift; sourceTree = SOURCE_ROOT; };
-		D60000000000000000000002 /* Tests/SensorPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SensorPresentationTests.swift; sourceTree = SOURCE_ROOT; };
 		D10000000000000000000001 /* Shared/SpaceDetailLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceDetailLinks.swift; sourceTree = SOURCE_ROOT; };
 		D10000000000000000000002 /* Tests/SpaceDetailLinksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SpaceDetailLinksTests.swift; sourceTree = SOURCE_ROOT; };
+		D60000000000000000000001 /* Shared/SpaceSensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceSensors.swift; sourceTree = SOURCE_ROOT; };
+		D60000000000000000000002 /* Tests/SensorPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SensorPresentationTests.swift; sourceTree = SOURCE_ROOT; };
+		E70000000000000000000001 /* Shared/OnboardingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/OnboardingStore.swift; sourceTree = SOURCE_ROOT; };
+		E70000000000000000000002 /* Tests/OnboardingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/OnboardingTests.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -120,14 +124,18 @@
 			membershipExceptions = (
 				AppIcon.icon,
 				DirectoryStore.swift,
+				InfoPlist.xcstrings,
+				OnboardingLocation.swift,
+				OnboardingStore.swift,
+				OnboardingView.swift,
 				PushStatusDisplay.swift,
 				PushStore.swift,
+				SpaceDetailLinks.swift,
+				SpaceDetailsView.swift,
 				SpaceNavigation.swift,
+				SpaceSensorsView.swift,
 				SpaceTargetView.swift,
 				StatusStore.swift,
-				SpaceDetailsView.swift,
-				SpaceSensorsView.swift,
-				SpaceDetailLinks.swift,
 			);
 			target = A10000000000000000000131 /* SpaceStateWidget-iOS */;
 		};
@@ -136,14 +144,18 @@
 			membershipExceptions = (
 				AppIcon.icon,
 				DirectoryStore.swift,
+				InfoPlist.xcstrings,
+				OnboardingLocation.swift,
+				OnboardingStore.swift,
+				OnboardingView.swift,
 				PushStatusDisplay.swift,
 				PushStore.swift,
+				SpaceDetailLinks.swift,
+				SpaceDetailsView.swift,
 				SpaceNavigation.swift,
+				SpaceSensorsView.swift,
 				SpaceTargetView.swift,
 				StatusStore.swift,
-				SpaceDetailsView.swift,
-				SpaceSensorsView.swift,
-				SpaceDetailLinks.swift,
 			);
 			target = A10000000000000000000141 /* SpaceStateWidget-macOS */;
 		};
@@ -217,7 +229,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B20000000000000000000023 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (B20000000000000000000033, B20000000000000000000034, B20000000000000000000035, ); runOnlyForDeploymentPostprocessing = 0; };
+		B20000000000000000000023 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B20000000000000000000033 /* SpaceAPI in Frameworks */,
+				B20000000000000000000034 /* MainframeStatus in Frameworks */,
+				B20000000000000000000035 /* SpacePushClient in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -245,7 +266,34 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B20000000000000000000021 /* Push Tests */ = {isa = PBXGroup; children = (B20000000000000000000001, B20000000000000000000002, B20000000000000000000003, B20000000000000000000004, B20000000000000000000005, B20000000000000000000006, B20000000000000000000007, B30000000000000000000001, B30000000000000000000002, B30000000000000000000003, B30000000000000000000004, B30000000000000000000005, C40000000000000000000001, C40000000000000000000002, C40000000000000000000003, D60000000000000000000001, D60000000000000000000002, D10000000000000000000001, D10000000000000000000002, ); name = "Push Tests"; sourceTree = "<group>"; };
+		B20000000000000000000021 /* Push Tests */ = {
+			isa = PBXGroup;
+			children = (
+				E70000000000000000000002 /* Tests/OnboardingTests.swift */,
+				E70000000000000000000001 /* Shared/OnboardingStore.swift */,
+				B20000000000000000000001 /* Shared/PushStore.swift */,
+				B20000000000000000000002 /* Shared/StatusStore.swift */,
+				B20000000000000000000003 /* Shared/ClientIdentity.swift */,
+				B20000000000000000000004 /* Shared/StatusService+Configured.swift */,
+				B20000000000000000000005 /* Tests/PushStoreTests.swift */,
+				B20000000000000000000006 /* Tests/PushSubscriptionsTests.swift */,
+				B20000000000000000000007 /* Tests/StatusRefreshTests.swift */,
+				B30000000000000000000001 /* Shared/ObservationDisplay.swift */,
+				B30000000000000000000002 /* Shared/DirectoryStore.swift */,
+				B30000000000000000000003 /* Shared/WidgetSnapshot.swift */,
+				B30000000000000000000004 /* Tests/ObservationStatusTests.swift */,
+				B30000000000000000000005 /* Tests/WidgetObservationTests.swift */,
+				C40000000000000000000001 /* Shared/SpaceDestination.swift */,
+				C40000000000000000000002 /* Shared/SpaceNavigation.swift */,
+				C40000000000000000000003 /* Tests/SpaceNavigationTests.swift */,
+				D60000000000000000000001 /* Shared/SpaceSensors.swift */,
+				D60000000000000000000002 /* Tests/SensorPresentationTests.swift */,
+				D10000000000000000000001 /* Shared/SpaceDetailLinks.swift */,
+				D10000000000000000000002 /* Tests/SpaceDetailLinksTests.swift */,
+			);
+			name = "Push Tests";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -358,17 +406,26 @@
 			productType = "com.apple.product-type.app-extension";
 		};
 		B20000000000000000000024 /* SpaceState-PushTests */ = {
-            isa = PBXNativeTarget;
-            buildConfigurationList = B20000000000000000000025;
-            buildPhases = (B20000000000000000000022, B20000000000000000000023, );
-            buildRules = ();
-            dependencies = ();
-            name = "SpaceState-PushTests";
-            packageProductDependencies = (B20000000000000000000029, B2000000000000000000002A, B2000000000000000000002B, );
-            productName = SpaceStatePushTests;
-            productReference = B20000000000000000000020;
-            productType = "com.apple.product-type.bundle.unit-test";
-        };
+			isa = PBXNativeTarget;
+			buildConfigurationList = B20000000000000000000025 /* Build configuration list for PBXNativeTarget "SpaceState-PushTests" */;
+			buildPhases = (
+				B20000000000000000000022 /* Sources */,
+				B20000000000000000000023 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SpaceState-PushTests";
+			packageProductDependencies = (
+				B20000000000000000000029 /* SpaceAPI */,
+				B2000000000000000000002A /* MainframeStatus */,
+				B2000000000000000000002B /* SpacePushClient */,
+			);
+			productName = SpaceStatePushTests;
+			productReference = B20000000000000000000020 /* SpaceStatePushTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -480,7 +537,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B20000000000000000000022 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B2000000000000000000000B, B2000000000000000000000C, B2000000000000000000000D, B2000000000000000000000E, B2000000000000000000000F, B20000000000000000000010, B20000000000000000000011, B30000000000000000000011, B30000000000000000000012, B30000000000000000000013, B30000000000000000000014, B30000000000000000000015, C40000000000000000000011, C40000000000000000000012, C40000000000000000000013, D60000000000000000000011, D60000000000000000000012, D10000000000000000000011, D10000000000000000000012, ); runOnlyForDeploymentPostprocessing = 0; };
+		B20000000000000000000022 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E70000000000000000000012 /* Tests/OnboardingTests.swift in Sources */,
+				E70000000000000000000011 /* Shared/OnboardingStore.swift in Sources */,
+				B2000000000000000000000B /* Shared/PushStore.swift in Sources */,
+				B2000000000000000000000C /* Shared/StatusStore.swift in Sources */,
+				B2000000000000000000000D /* Shared/ClientIdentity.swift in Sources */,
+				B2000000000000000000000E /* Shared/StatusService+Configured.swift in Sources */,
+				B2000000000000000000000F /* Tests/PushStoreTests.swift in Sources */,
+				B20000000000000000000010 /* Tests/PushSubscriptionsTests.swift in Sources */,
+				B20000000000000000000011 /* Tests/StatusRefreshTests.swift in Sources */,
+				B30000000000000000000011 /* Shared/ObservationDisplay.swift in Sources */,
+				B30000000000000000000012 /* Shared/DirectoryStore.swift in Sources */,
+				B30000000000000000000013 /* Shared/WidgetSnapshot.swift in Sources */,
+				B30000000000000000000014 /* Tests/ObservationStatusTests.swift in Sources */,
+				B30000000000000000000015 /* Tests/WidgetObservationTests.swift in Sources */,
+				C40000000000000000000011 /* Shared/SpaceDestination.swift in Sources */,
+				C40000000000000000000012 /* Shared/SpaceNavigation.swift in Sources */,
+				C40000000000000000000013 /* Tests/SpaceNavigationTests.swift in Sources */,
+				D60000000000000000000011 /* Shared/SpaceSensors.swift in Sources */,
+				D60000000000000000000012 /* Tests/SensorPresentationTests.swift in Sources */,
+				D10000000000000000000011 /* Shared/SpaceDetailLinks.swift in Sources */,
+				D10000000000000000000012 /* Tests/SpaceDetailLinksTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -504,7 +588,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 7E3BJ546SA;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -532,7 +616,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7E3BJ546SA;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -566,9 +650,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2014–2026 Markus Müller";
+				INFOPLIST_KEY_NSLocationUsageDescription = "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -597,9 +684,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2014–2026 Markus Müller";
+				INFOPLIST_KEY_NSLocationUsageDescription = "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -623,7 +713,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSLocationUsageDescription = "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -652,7 +745,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SpaceState;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSLocationUsageDescription = "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SpaceState uses your location once to suggest a nearby hackerspace. Your location stays on this device and is not saved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -768,31 +864,31 @@
 			name = Release;
 		};
 		B20000000000000000000026 /* Debug */ = {
-            isa = XCBuildConfiguration;
-            buildSettings = {
-                GENERATE_INFOPLIST_FILE = YES;
-                MACOSX_DEPLOYMENT_TARGET = 26.0;
-                PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.PushTests;
-                PRODUCT_NAME = SpaceStatePushTests;
-                SDKROOT = macosx;
-                SUPPORTED_PLATFORMS = macosx;
-                CODE_SIGNING_ALLOWED = NO;
-            };
-            name = Debug;
-        };
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.PushTests;
+				PRODUCT_NAME = SpaceStatePushTests;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+			};
+			name = Debug;
+		};
 		B20000000000000000000027 /* Release */ = {
-            isa = XCBuildConfiguration;
-            buildSettings = {
-                GENERATE_INFOPLIST_FILE = YES;
-                MACOSX_DEPLOYMENT_TARGET = 26.0;
-                PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.PushTests;
-                PRODUCT_NAME = SpaceStatePushTests;
-                SDKROOT = macosx;
-                SUPPORTED_PLATFORMS = macosx;
-                CODE_SIGNING_ALLOWED = NO;
-            };
-            name = Release;
-        };
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.PushTests;
+				PRODUCT_NAME = SpaceStatePushTests;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -841,7 +937,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B20000000000000000000025 /* Push Tests configuration */ = {isa = XCConfigurationList; buildConfigurations = (B20000000000000000000026, B20000000000000000000027, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		B20000000000000000000025 /* Build configuration list for PBXNativeTarget "SpaceState-PushTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B20000000000000000000026 /* Debug */,
+				B20000000000000000000027 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -916,9 +1020,21 @@
 			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
 			productName = SpacePushClient;
 		};
-		B20000000000000000000029 /* SpaceAPI */ = {isa = XCSwiftPackageProductDependency; package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */; productName = SpaceAPI; };
-		B2000000000000000000002A /* MainframeStatus */ = {isa = XCSwiftPackageProductDependency; package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */; productName = MainframeStatus; };
-		B2000000000000000000002B /* SpacePushClient */ = {isa = XCSwiftPackageProductDependency; package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */; productName = SpacePushClient; };
+		B20000000000000000000029 /* SpaceAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
+			productName = SpaceAPI;
+		};
+		B2000000000000000000002A /* MainframeStatus */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
+			productName = MainframeStatus;
+		};
+		B2000000000000000000002B /* SpacePushClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1000000000000000000000F /* XCRemoteSwiftPackageReference "SpaceStateKit" */;
+			productName = SpacePushClient;
+		};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A10000000000000000000001 /* Project object */;

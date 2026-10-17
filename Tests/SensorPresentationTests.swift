@@ -112,6 +112,13 @@ struct SensorPresentationTests {
         #expect(view.readings.first { $0.kind == .doorLocked }?.value == .boolean(false))
     }
 
+    @Test func rawMeasurementsAreRoundedForDisplay() {
+        let german = Locale(identifier: "de_DE")
+        let texts = [21.15358495178445, 44.119776247251586, 613.4, 1013.25, 0.0012345, -0.05999999865889549]
+            .map { SpaceSensorReading.Value.number($0).text(locale: german) }
+        #expect(texts == ["21,2", "44,1", "613", "1013", "0,0012", "-0,06"])
+    }
+
     @Test func invalidCountsAndNonfiniteMeasurementsAreOmitted() {
         let view = SpaceSensorPresentation(.init(temperature: [.init(value: .nan), .init(value: .infinity), .init(value: -10)],
             peopleNowPresent: [.init(value: -1), .init(value: 1.5), .init(value: 0)],

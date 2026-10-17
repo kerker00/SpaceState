@@ -5,16 +5,16 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>CFBundleURLName</key>
 			<string>net.grafixmafia.SpaceState.status</string>
 			<key>CFBundleURLSchemes</key>
-			<array><string>spacestate</string></array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<array>
+				<string>spacestate</string>
+			</array>
 		</dict>
 	</array>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>SpacePushURL</key>
 	<string>$(SPACEPUSH_URL)</string>
 </dict>

@@ -173,6 +173,19 @@ final class PushStore {
     /// Immediate retry for settings; the automatic retry uses the same latest intent.
     func retry() { start() }
 
+    /// Only called by an explicit action in notification settings.
+    func openSystemSettings() {
+        #if os(macOS)
+        if let url = URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension") {
+            NSWorkspace.shared.open(url)
+        }
+        #else
+        if let url = URL(string: UIApplication.openNotificationSettingsURLString) {
+            UIApplication.shared.open(url)
+        }
+        #endif
+    }
+
     private var target: Target {
         guard isEnabled else { return .remove }
         if authorizationAllowed == false || subscriptions?.isEmpty == true { return .remove }

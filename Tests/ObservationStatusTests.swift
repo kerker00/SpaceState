@@ -256,7 +256,9 @@ struct DirectoryObservationTests {
         await store.load()
         #expect(store.lastError != nil)
         #expect(store.entries.count == 3)
-        #expect(store.entries(matching: "A").count == 1)
+        // Full-text search also matches the 'a' in the retained endpoint URLs.
+        #expect(store.entries(matching: "A").count == 3)
+        #expect(store.entries(matching: "https://a.invalid").map(\.info.name) == ["A"])
         #expect(store.entries.allSatisfy { store.status(for: $0) == .unknown })
     }
 
@@ -290,4 +292,69 @@ struct DirectoryObservationTests {
         #expect(store.status(for: store.entries[0]) == .unknown)
         #expect(responses.requests.count == requests)
     }
+
+    @Test func hiddenHannoverAddressFindsSpaceByCity() async {
+        let responses = ObservationResponses()
+        responses.directoryBody = Self.searchFixture
+        let store = DirectoryStore(service: responses.service(proxy: false), now: { responses.clock.date })
+        await store.load()
+        #expect(store.entries(matching: "Hannover").map(\.info.name) == ["LeineLab"])
+        #expect(store.entries(matching: "Oldenburg").map(\.info.name) == ["Mainframe"])
+    }
+
+    @Test func searchIncludesNestedPublishedContentAndURLs() async {
+        let responses = ObservationResponses()
+        responses.directoryBody = Self.searchFixture
+        let store = DirectoryStore(service: responses.service(proxy: false), now: { responses.clock.date })
+        await store.load()
+        for query in ["Lasercutter", "Nachbarschaft", "werkstattkontakt", "makers.example", "Dachboden", "21.5"] {
+            #expect(store.entries(matching: query).map(\.info.name) == ["LeineLab"])
+        }
+    }
+
+    @Test func searchCombinesWordsAcrossFieldsAndIgnoresWhitespaceAndCase() async {
+        let responses = ObservationResponses()
+        responses.directoryBody = Self.searchFixture
+        let store = DirectoryStore(service: responses.service(proxy: false), now: { responses.clock.date })
+        await store.load()
+        #expect(store.entries(matching: " \n lEiNe\tHANNOVER \n").map(\.info.name) == ["LeineLab"])
+        #expect(store.entries(matching: "Hannover Mainframe").isEmpty)
+        #expect(store.entries(matching: " \n\t ").map(\.info.name) == ["LeineLab", "Mainframe"])
+    }
+
+    @Test func searchDoesNotIndexModelPropertyNamesOrMissingValues() async {
+        let responses = ObservationResponses()
+        responses.directoryBody = Self.searchFixture
+        let store = DirectoryStore(service: responses.service(proxy: false), now: { responses.clock.date })
+        await store.load()
+        for query in ["location", "Optional", "nil", "triggerPerson"] {
+            #expect(store.entries(matching: query).isEmpty)
+        }
+    }
+
+    @Test func searchRetainsHiddenContentAfterLoadFailureWithoutExtraRequests() async {
+        let responses = ObservationResponses()
+        responses.directoryBody = Self.searchFixture
+        let store = DirectoryStore(service: responses.service(proxy: false), now: { responses.clock.date })
+        await store.load()
+        responses.failDirectory = true
+        await store.load()
+        let requests = responses.requests.count
+        #expect(store.lastError != nil)
+        #expect(store.entries(matching: "Hannover Nachbarschaft").map(\.info.name) == ["LeineLab"])
+        #expect(responses.requests.count == requests)
+    }
+
+    private static let searchFixture = #"""
+    [
+      {"url":"https://leinelab.invalid/api","lastSeen":990,"data":{
+        "space":"LeineLab","location":{"address":"Beispielstraße 5, 30159 Hannover","hint":"Seiteneingang"},
+        "contact":{"email":"werkstattkontakt@example.invalid"},
+        "links":[{"name":"Werkstatt","description":"Lasercutter für die Nachbarschaft","url":"https://links.example/werkstatt"}],
+        "projects":["https://makers.example/projekt"],
+        "sensors":{"temperature":[{"value":21.5,"unit":"°C","location":"Dachboden"}]}
+      }},
+      {"url":"https://mainframe.invalid/api","data":{"space":"Mainframe","location":{"address":"Oldenburg"}}}
+    ]
+    """#
 }

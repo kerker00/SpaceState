@@ -22,7 +22,7 @@ With increased contrast, supporting labels, unknown status and borders use `text
 
 ## Cards and text
 
-`SpaceCard` provides a surface with an optional localized heading, full content width, an 18-point inset, a 16-point corner radius and a one-point outline. Headings retain their accessibility header trait. It reads appearance itself and can be used by any app view:
+`SpaceCard` provides a surface with an optional localized heading, full content width, an 18-point inset, a continuous 16-point corner radius and a fine outline (one physical pixel on iPhone, one point on Mac). Headings retain their accessibility header trait. It reads appearance itself and can be used by any app view:
 
 ```swift
 SpaceCard("Address") {
@@ -37,9 +37,11 @@ The detail view, iPhone status screen, Mac menu bar panel and regular Mac status
 
 The iPhone screen keeps its native list, pull-to-refresh, navigation links and settings sheet. Both Mac status surfaces keep their existing actions. Space/settings pickers adopt the appropriate roles in their own step.
 
-The prominent iPhone status card uses the filled surface without an extra outline inside the grouped list's rounded clipping. Its status word, symbol, spacing and semantic colors remain the same for open, closed and unknown states. Mac status cards and other card types retain their outlines.
+The prominent iPhone status card uses the filled surface without an extra outline. The main status screen keeps native list refresh behavior but uses a plain, transparent row around its stack of cards; only SpaceCard defines their rounded contours, avoiding an additional grouped-list corner mask. Its status word, symbol, spacing and semantic colors remain the same for open, closed and unknown states. Mac status cards and other card types retain their outlines.
 
-The main iPhone status screen shows one observation date as a centered closing row with a small decorative clock, wrapping Dynamic Type footnote text and stable numeral widths. The compact row has more space above than below it, placing the date closer to the lower safe area. An inset hairline and the card surface separate this quiet footer from the list, without a button shape or outline. It uses the displayed data's original observation time and omits the separate client-attempt date. Missing observation evidence does not produce a substitute date.
+The main iPhone status screen shows one observation date as small, centered text near the lower safe area, on the same background as the page. It has no icon, separate surface, separator or frame, and retains Dynamic Type wrapping and stable numeral widths. Both Mac status footers also show only the observation date. Missing observation evidence does not produce a substitute date.
+
+Section cards use a single physical pixel for their outlines on iPhone; Mac outlines retain their one-point width. The menu bar popup uses native macOS material, system colors and unboxed sections. Ordinary Mac windows keep the app palette and card surfaces.
 
 ## Widgets
 
@@ -78,11 +80,11 @@ separate platform acceptance.
 
 ## Space selection and settings
 
-Both pickers use `SpaceSelectionRow` on the shared card surface. The caller passes the directory's effective status and original observation time; retained raw flags do not select the displayed color. Names and addresses wrap, each status has a localized word and symbol, and selection has a checkmark, outline and accessibility selection trait. Related text is combined for VoiceOver. At accessibility text sizes, the decorative leading symbol yields width to the labels.
+Both pickers and onboarding use a flat list of `SpaceSelectionRow` rows with a small status dot, the space name and a selection checkmark. Open/closed dots use the existing status green/red. Unknown uses the light-neutral border color in light appearance, the readable neutral status color in dark appearance, and stronger palette contrast when requested. There are no card surfaces or selection outlines. Long names wrap and rows grow to fit, with at least a 44-point target and an accessibility selection trait. VoiceOver reads the localized status as the row value; Mac hover help also names it. Rows use DirectoryStore.status(for:) rather than raw provider flags, so missing, expired, future or failed observation evidence remains unknown. Expiry updates the dot without another request; displaying or filtering rows does not fetch individual space endpoints.
 
-iPhone selection retains native list buttons, search and navigation/dismissal. Mac selection retains native list selection, endpoint tags and its keyboard path; its settings window has minimum dimensions and can grow. Empty searches use the system's no-results presentation. A retained directory failure has a visible retry action using the existing loader.
+iPhone selection retains native list buttons, search and navigation/dismissal. Mac selection retains native list selection, endpoint tags and its keyboard path; its settings window has minimum dimensions and can grow. Both pickers refresh the directory whenever opened while preserving the searchable cached list. Search covers all loaded entry values, including hidden addresses, contact details, links and nested metadata. For example, a space whose address contains Hannover is found without displaying that address in its row. Search words can match different fields, ignoring case and surrounding whitespace. The index is built once per successful directory response, and filtering makes no additional requests. Empty searches use the system's no-results presentation. A retained directory failure keeps the existing search index and a visible retry action.
 
-`SpaceRefreshControl` and `SpaceNotificationControl` share native picker/toggle/retry presentation. Their owners provide the existing bindings and actions. iPhone settings keep a native form with paper/slate row surfaces; Mac settings use scrollable cards for refresh, login/Dock options and notification feedback. The underlying preferences, registration, permissions, polling and directory stores retain their behavior. Device keyboard/VoiceOver and actual iPhone Dynamic Type acceptance remain separate from builds and native layout samples.
+`SpaceRefreshControl` and `SpaceNotificationControl` share native picker/toggle/retry presentation. Their owners provide the existing bindings and actions. iPhone settings keep a native form with paper/slate row surfaces; Mac settings use scrollable cards for refresh, login/Dock options and notification feedback. The underlying preferences, registration, permissions, polling and directory stores retain their behavior. Device keyboard/VoiceOver and actual iPhone Dynamic Type acceptance remain separate from builds and native layout samples. The Mac General tab reports both its natural content height and viewport height. Window fitting adds the measured missing space to the actual AppKit content height instead of assuming a tab/toolbar allowance. Its automatic height is limited by available screen space; the other windows keep their existing 680-point limit. Scroll indicators are hidden only while the content fits, with scrolling retained for small displays or a manually reduced window. Automatic fitting continues to respect a user-chosen live resize.
 
 ## Widget and notification destinations
 
@@ -111,3 +113,19 @@ Linked spaces distinguish an internal “Space status” button from their exter
 The menu-bar panel measures its cards at a consistent 380-point width. Short content uses its natural height; long content scrolls within a viewport bounded by the current display. The action bar remains below the scroll area so refresh, details, settings and quit stay reachable.
 
 Regular detail windows initially fit the measured content, with a smaller minimum height and a screen-bounded maximum. Settings fit the general tab's cards; the searchable space list keeps a useful viewport. Automatic fitting stops after a manual window resize, preserving the user's chosen size. Temporary-target windows start compact and remain resizable. No saved preferences are deleted to adjust window geometry.
+
+## Onboarding actions
+
+SpaceActionButtonStyle uses opaque palette colors with an explicit foreground:
+primary actions use the amber accent with the page background as their label color;
+secondary actions use the surface with an amber label and a visible accent outline. Both use
+continuous 12-point corners, at least 44-point height and wrapping labels. Disabled
+controls have a separate muted appearance; pressed controls slightly scale without
+reducing the text contrast. Space selection rows keep their plain list appearance.
+
+The onboarding location action and its short privacy note share a SpaceCard between
+the product heading and the manual-selection heading/search. Sensor summary cards
+use a compact 12-point inset and 8-point content spacing. The section heading remains visible even when the summary contains only a visitor
+count, including zero. TimelineView wraps the card for expiry updates, while the
+card surface measures only its heading and ordinary text rows. Detail cards keep their
+full spacing and metadata; freshness notices remain visible in both modes.

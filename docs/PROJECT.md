@@ -39,6 +39,7 @@ Xcode resolves the external package at exact version `0.3.3`; `Package.resolved`
 | --- | --- |
 | `Shared/StatusStore.swift` | Selected space, persisted check interval, polling and widget reloads when state or rooms change |
 | `Shared/DirectoryStore.swift` | Space directory and search |
+| `Shared/OnboardingStore.swift`, `Shared/OnboardingView.swift`, `Shared/OnboardingLocation.swift` | Persisted first-run progress, confirmed space choice, optional local nearest-space suggestion and notification explanation |
 | `Shared/SpaceDetailsView.swift`, `Shared/SpaceDetailLinks.swift` | Address, access hints, contacts, keyholders, feeds, projects, named links and linked-space destinations in a shared card layout |
 | `Shared/PushStore.swift`, `Shared/ClientIdentity.swift` | Notification permission, device registration and request metadata |
 | `Shared/Localizable.xcstrings` | English and German App, widget and notification strings |
