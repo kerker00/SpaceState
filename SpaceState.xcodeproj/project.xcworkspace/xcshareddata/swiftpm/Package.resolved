@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kerker00/SpaceStateKit.git",
       "state" : {
-        "revision" : "786badac5719e9c617fb1d6b672c6d1a72f4b799",
-        "version" : "0.1.0"
+        "revision" : "b5c114b6316e49884d53952799cdfcdaf02f3617",
+        "version" : "0.3.3"
       }
     }
   ],

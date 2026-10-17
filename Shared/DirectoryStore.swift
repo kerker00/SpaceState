@@ -5,15 +5,24 @@ import SpacePushClient
 
 /// The list of spaces to choose from, loaded on demand through SpacePush or from the SpaceAPI aggregator.
 @Observable
+@MainActor
 final class DirectoryStore {
     private(set) var entries: [DirectoryEntry] = []
     private(set) var lastError: (any Error)?
     private(set) var isLoading = false
 
     private let service: StatusService
+    private let now: () -> Date
+    @ObservationIgnored private let expiry: ObservationExpiry
+    private var timings: [URL: ObservationTiming] = [:]
+    private var searchTextByEndpoint: [URL: String] = [:]
+    private var freshnessRevision = 0
 
-    init(service: StatusService = .configured) {
+    init(service: StatusService = .configured, now: @escaping () -> Date = { Date() },
+         waitForExpiry: @escaping (Duration) async throws -> Void = { try await Task.sleep(for: $0) }) {
         self.service = service
+        self.now = now
+        expiry = ObservationExpiry(now: now, wait: waitForExpiry)
     }
 
     func load() async {
@@ -22,19 +31,50 @@ final class DirectoryStore {
         defer { isLoading = false }
 
         do {
-            entries = try await service.directory()
+            let observations = try await service.directoryObservations()
+            try Task.checkCancellation()
+            entries = observations.map(\.value)
+            searchTextByEndpoint = Dictionary(entries.map { entry in
+                (entry.endpoint, Self.searchableValues(in: entry).joined(separator: "\n"))
+            }, uniquingKeysWith: { $0 + "\n" + $1 })
+            timings = Dictionary(observations.map { ($0.value.endpoint, $0.timing) }, uniquingKeysWith: { first, _ in first })
             lastError = nil
+            expiry.schedule(Array(timings.values)) { [weak self] in self?.freshnessRevision += 1 }
+        } catch is CancellationError {
+            // A dismissed picker must not replace the previous result with an error.
         } catch {
             lastError = error
         }
     }
 
+    func status(for entry: DirectoryEntry) -> SpaceStatus {
+        _ = freshnessRevision
+        guard lastError == nil, let timing = timings[entry.endpoint] else { return .unknown }
+        return timing.currentStatus(entry.info.status, at: now())
+    }
+
+    func timing(for entry: DirectoryEntry) -> ObservationTiming? { timings[entry.endpoint] }
+
     func entries(matching query: String) -> [DirectoryEntry] {
-        let query = query.trimmingCharacters(in: .whitespaces)
-        guard !query.isEmpty else { return entries }
-        return entries.filter {
-            $0.info.name.localizedStandardContains(query)
-                || ($0.info.location?.address?.localizedStandardContains(query) ?? false)
+        let terms = query.split(whereSeparator: \.isWhitespace).map(String.init)
+        guard !terms.isEmpty else { return entries }
+        return entries.filter { entry in
+            let text = searchTextByEndpoint[entry.endpoint] ?? entry.info.name
+            return terms.allSatisfy { text.localizedStandardContains($0) }
         }
+    }
+
+    /// Index the loaded values once, including hidden addresses and nested data.
+    /// Traversing values keeps model/schema field names out of search results and
+    /// includes newly supported fields without a second hand-maintained field list.
+    private static func searchableValues(in value: Any) -> [String] {
+        if let text = value as? String { return [text] }
+        if let url = value as? URL {
+            let text = url.absoluteString
+            return [text.removingPercentEncoding ?? text]
+        }
+        if let date = value as? Date { return [date.formatted(.iso8601)] }
+        if let scalar = value as? any LosslessStringConvertible { return [scalar.description] }
+        return Mirror(reflecting: value).children.flatMap { searchableValues(in: $0.value) }
     }
 }

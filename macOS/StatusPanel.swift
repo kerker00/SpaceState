@@ -5,81 +5,121 @@ import SwiftUI
 /// The window that opens from the menu bar icon.
 struct StatusPanel: View {
     var store: StatusStore
+    var showDetails: () -> Void
+    var heightChanged: ((CGFloat) -> Void)? = nil
+    @State private var contentHeight: CGFloat = 160
+    @State private var footerHeight: CGFloat = 64
+    @State private var availableHeight: CGFloat = 620
     @Environment(\.openSettings) private var openSettings
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.spaceAppearance) private var appearance
+
+    private var palette: SpacePalette {
+        SpacePalette(colorScheme: colorScheme, contrast: contrast, appearance: appearance)
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            header
-
-            if let message = store.info?.state?.message, store.lastError == nil {
-                Text(message)
-                    .foregroundStyle(.secondary)
+        VStack(spacing: 0) {
+            ScrollView {
+                content
+                    .fixedSize(horizontal: false, vertical: true)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
+                        contentHeight = max(1, ceil($0))
+                    }
             }
-
-            if !store.rooms.isEmpty {
-                Divider()
-                rooms
-            }
-
-            if let error = store.lastError {
-                Label(error.localizedDescription, systemImage: "exclamationmark.triangle")
-                    .foregroundStyle(.secondary)
-                    .font(.callout)
-            }
+            .frame(height: min(contentHeight, max(80, availableHeight - footerHeight)))
+            .scrollBounceBehavior(.basedOnSize)
 
             Divider()
             footer
-        }
-        .padding()
-        .frame(width: 300)
-    }
-
-    private var header: some View {
-        HStack(alignment: .top) {
-            Image(systemName: store.status.symbolName)
-                .font(.title)
-                .foregroundStyle(store.status.color)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(store.info?.name ?? store.endpoint.host() ?? "")
-                    .font(.headline)
-                Text(store.status.title)
-                    .foregroundStyle(store.status.color)
-                if let since = store.info?.state?.lastChange, store.lastError == nil {
-                    Text("Changed \(since, format: .relative(presentation: .named))")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                .padding(.horizontal, SpaceLayout.pagePadding)
+                .padding(.vertical, 12)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height + 1 } action: {
+                    footerHeight = ceil($0)
                 }
-            }
-            Spacer()
+        }
+        .frame(width: 380)
+        .fixedSize(horizontal: false, vertical: true)
+        .background(palette.background)
+        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heightChanged?($0) }
+        .onAppear(perform: updateAvailableHeight)
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)) { _ in
+            updateAvailableHeight()
         }
     }
 
-    private var rooms: some View {
-        Grid(alignment: .leading, verticalSpacing: 6) {
-            ForEach(store.rooms) { room in
-                GridRow {
-                    StatusDot(color: room.state.color)
-                    Text(room.name)
-                    Text(room.state.title)
-                        .foregroundStyle(.secondary)
-                        .gridColumnAlignment(.trailing)
+    private func updateAvailableHeight() {
+        let screen = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) } ?? NSScreen.main
+        availableHeight = min(620, max(200, (screen?.visibleFrame.height ?? 800) - 40))
+    }
+
+    private var content: some View {
+        VStack(alignment: .leading, spacing: SpaceLayout.sectionSpacing) {
+            SpaceStatusCard(
+                status: store.status,
+                name: store.info?.name ?? store.endpoint.host() ?? "",
+                changedAt: store.lastError == nil && store.freshness == .current ? store.info?.state?.lastChange : nil,
+                message: store.lastError == nil && store.freshness == .current ? store.info?.state?.message : nil
+            )
+
+            if !store.rooms.isEmpty {
+                if appearance == .menuBar { Divider() }
+                SpaceRoomsCard(rooms: store.displayRooms, observedAt: store.roomsTiming?.observedAt,
+                    unavailable: store.lastRoomsError != nil || store.roomsFreshness != .current)
+            }
+
+            if let info = store.info, !SpaceSensorPresentation(info.sensors).summary.isEmpty {
+                if appearance == .menuBar { Divider() }
+                SpaceSensorsCard(sensors: info.sensors, timing: store.observationTiming,
+                    failed: store.lastError != nil)
+            }
+
+            if store.info != nil && store.lastError == nil && store.freshness != .current {
+                Text("No current observation").font(SpaceTypography.label)
+            }
+            if let error = store.lastRoomsError {
+                SpaceCard {
+                    Label("Rooms unavailable: \(error.localizedDescription)", systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(palette.secondaryText)
                 }
             }
+
+            if let error = store.lastError {
+                SpaceCard {
+                    Label(error.localizedDescription, systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(palette.secondaryText)
+                }
+            }
+
         }
+        .font(appearance == .menuBar ? .body : SpaceTypography.body)
+        .foregroundStyle(palette.text)
+        .tint(palette.accent)
+        .padding(SpaceLayout.pagePadding)
+        .background(palette.background)
     }
 
     private var footer: some View {
         HStack {
-            if let lastUpdate = store.lastUpdate {
-                Text("Updated \(lastUpdate, format: .dateTime.hour().minute())")
+            if let observedAt = store.observationTiming?.observedAt {
+                Text("Observed \(observedAt, format: .dateTime.day().month().hour().minute())")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+                    .foregroundStyle(palette.secondaryText)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Spacer()
             Button("Refresh", systemImage: "arrow.clockwise") {
                 Task { await store.refresh() }
             }
             .disabled(store.isRefreshing)
+            if store.info != nil {
+                Button("Space details", systemImage: "info.circle") {
+                    showDetails()
+                }
+                .help("Space details")
+            }
             if let website = store.info?.website {
                 Link(destination: website) {
                     Image(systemName: "safari")
@@ -99,5 +139,6 @@ struct StatusPanel: View {
         }
         .labelStyle(.iconOnly)
         .buttonStyle(.borderless)
+        .foregroundStyle(appearance == .menuBar ? Color.primary : palette.accent)
     }
 }
