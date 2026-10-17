@@ -45,9 +45,19 @@ struct SpaceSensorReading: Identifiable, Sendable, Equatable {
         func text(locale: Locale) -> String {
             switch self {
             case .number(let value):
-                value.formatted(.number.locale(locale).grouping(.never).precision(.significantDigits(1...15)))
+                // Raw sensor values can carry 15 digits; show what a reading needs.
+                value.formatted(.number.locale(locale).grouping(.never).precision(Self.precision(for: value)))
             case .boolean(let locked):
                 String(localized: locked ? "Locked" : "Unlocked", locale: locale)
+            }
+        }
+
+        private static func precision(for value: Double) -> NumberFormatStyleConfiguration.Precision {
+            switch abs(value) {
+            case 100...: .fractionLength(0)
+            case 1...: .fractionLength(0...1)
+            case 0: .fractionLength(0)
+            default: .significantDigits(1...2)
             }
         }
     }
