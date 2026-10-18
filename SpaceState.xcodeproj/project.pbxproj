@@ -45,6 +45,9 @@
 		D60000000000000000000012 /* Tests/SensorPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000000000000000000002 /* Tests/SensorPresentationTests.swift */; };
 		E70000000000000000000011 /* Shared/OnboardingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70000000000000000000001 /* Shared/OnboardingStore.swift */; };
 		E70000000000000000000012 /* Tests/OnboardingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70000000000000000000002 /* Tests/OnboardingTests.swift */; };
+		F10000000000000000000002 /* Tests/SpaceContactLinksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000001 /* Tests/SpaceContactLinksTests.swift */; };
+		F10000000000000000000004 /* Tests/SupportTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000003 /* Tests/SupportTypesTests.swift */; };
+		F10000000000000000000006 /* Tests/PushStoreFailureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000005 /* Tests/PushStoreFailureTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +119,9 @@
 		D60000000000000000000002 /* Tests/SensorPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SensorPresentationTests.swift; sourceTree = SOURCE_ROOT; };
 		E70000000000000000000001 /* Shared/OnboardingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/OnboardingStore.swift; sourceTree = SOURCE_ROOT; };
 		E70000000000000000000002 /* Tests/OnboardingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/OnboardingTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000001 /* Tests/SpaceContactLinksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SpaceContactLinksTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000003 /* Tests/SupportTypesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SupportTypesTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000005 /* Tests/PushStoreFailureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/PushStoreFailureTests.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -270,6 +276,9 @@
 			isa = PBXGroup;
 			children = (
 				E70000000000000000000002 /* Tests/OnboardingTests.swift */,
+				F10000000000000000000005 /* Tests/PushStoreFailureTests.swift */,
+				F10000000000000000000003 /* Tests/SupportTypesTests.swift */,
+				F10000000000000000000001 /* Tests/SpaceContactLinksTests.swift */,
 				E70000000000000000000001 /* Shared/OnboardingStore.swift */,
 				B20000000000000000000001 /* Shared/PushStore.swift */,
 				B20000000000000000000002 /* Shared/StatusStore.swift */,
@@ -542,6 +551,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E70000000000000000000012 /* Tests/OnboardingTests.swift in Sources */,
+				F10000000000000000000006 /* Tests/PushStoreFailureTests.swift in Sources */,
+				F10000000000000000000004 /* Tests/SupportTypesTests.swift in Sources */,
+				F10000000000000000000002 /* Tests/SpaceContactLinksTests.swift in Sources */,
 				E70000000000000000000011 /* Shared/OnboardingStore.swift in Sources */,
 				B2000000000000000000000B /* Shared/PushStore.swift in Sources */,
 				B2000000000000000000000C /* Shared/StatusStore.swift in Sources */,

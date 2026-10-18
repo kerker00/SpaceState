@@ -92,8 +92,11 @@ final class ControlledNotifications {
         return authorization
     }
 
+    var promptError: (any Error)?
+
     func request() async throws -> Bool {
         promptRequests += 1
+        if let promptError { throw promptError }
         if holdPrompt { return try await withCheckedThrowingContinuation { prompt = $0 } }
         return true
     }
