@@ -33,10 +33,15 @@ final class DirectoryStore {
         do {
             let observations = try await service.directoryObservations()
             try Task.checkCancellation()
-            entries = observations.map(\.value)
-            searchTextByEndpoint = Dictionary(entries.map { entry in
-                (entry.endpoint, Self.searchableValues(in: entry).joined(separator: "\n"))
-            }, uniquingKeysWith: { $0 + "\n" + $1 })
+            let loaded = observations.map(\.value)
+            // Indexing walks every entry by reflection; doing it on the main actor
+            // kept the search field from accepting input for seconds.
+            if loaded != entries {
+                let index = await Self.searchIndex(for: loaded)
+                try Task.checkCancellation()
+                entries = loaded
+                searchTextByEndpoint = index
+            }
             timings = Dictionary(observations.map { ($0.value.endpoint, $0.timing) }, uniquingKeysWith: { first, _ in first })
             lastError = nil
             expiry.schedule(Array(timings.values)) { [weak self] in self?.freshnessRevision += 1 }
@@ -64,10 +69,17 @@ final class DirectoryStore {
         }
     }
 
+    @concurrent
+    private nonisolated static func searchIndex(for entries: [DirectoryEntry]) async -> [URL: String] {
+        Dictionary(entries.map { entry in
+            (entry.endpoint, searchableValues(in: entry).joined(separator: "\n"))
+        }, uniquingKeysWith: { $0 + "\n" + $1 })
+    }
+
     /// Index the loaded values once, including hidden addresses and nested data.
     /// Traversing values keeps model/schema field names out of search results and
     /// includes newly supported fields without a second hand-maintained field list.
-    private static func searchableValues(in value: Any) -> [String] {
+    private nonisolated static func searchableValues(in value: Any) -> [String] {
         if let text = value as? String { return [text] }
         if let url = value as? URL {
             let text = url.absoluteString
