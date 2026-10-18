@@ -54,6 +54,7 @@
 		F1000000000000000000000E /* Shared/OnboardingLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000D /* Shared/OnboardingLocation.swift */; };
 		F10000000000000000000010 /* Shared/SpaceEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000F /* Shared/SpaceEntity.swift */; };
 		F10000000000000000000012 /* Tests/PresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000011 /* Tests/PresentationTests.swift */; };
+		F10000000000000000000014 /* Tests/OnboardingLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* Tests/OnboardingLocationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,6 +135,7 @@
 		F1000000000000000000000D /* Shared/OnboardingLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/OnboardingLocation.swift; sourceTree = SOURCE_ROOT; };
 		F1000000000000000000000F /* Shared/SpaceEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceEntity.swift; sourceTree = SOURCE_ROOT; };
 		F10000000000000000000011 /* Tests/PresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/PresentationTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000013 /* Tests/OnboardingLocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/OnboardingLocationTests.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -288,6 +290,7 @@
 			isa = PBXGroup;
 			children = (
 				E70000000000000000000002 /* Tests/OnboardingTests.swift */,
+				F10000000000000000000013 /* Tests/OnboardingLocationTests.swift */,
 				F10000000000000000000011 /* Tests/PresentationTests.swift */,
 				F1000000000000000000000F /* Shared/SpaceEntity.swift */,
 				F1000000000000000000000D /* Shared/OnboardingLocation.swift */,
@@ -569,6 +572,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E70000000000000000000012 /* Tests/OnboardingTests.swift in Sources */,
+				F10000000000000000000014 /* Tests/OnboardingLocationTests.swift in Sources */,
 				F10000000000000000000012 /* Tests/PresentationTests.swift in Sources */,
 				F10000000000000000000010 /* Shared/SpaceEntity.swift in Sources */,
 				F1000000000000000000000E /* Shared/OnboardingLocation.swift in Sources */,

@@ -12,12 +12,22 @@ final class OnboardingLocation: NSObject, CLLocationManagerDelegate {
     @ObservationIgnored private var timeout: Task<Void, Never>?
     @ObservationIgnored private var result: ((CLLocation?) -> Void)?
     @ObservationIgnored private var requestedAuthorization = false
+    @ObservationIgnored private let makeManager: () -> CLLocationManager
+    @ObservationIgnored private let waitForTimeout: () async throws -> Void
+
+    /// Tests supply their own manager and timeout; the app uses Core Location and 20 seconds.
+    init(makeManager: @escaping () -> CLLocationManager = { CLLocationManager() },
+         waitForTimeout: @escaping () async throws -> Void = { try await Task.sleep(for: .seconds(20)) }) {
+        self.makeManager = makeManager
+        self.waitForTimeout = waitForTimeout
+        super.init()
+    }
 
     func request(result: @escaping (CLLocation?) -> Void) {
         cancel()
         isRequesting = true
         self.result = result
-        let manager = CLLocationManager()
+        let manager = makeManager()
         self.manager = manager
         manager.desiredAccuracy = kCLLocationAccuracyKilometer
         manager.delegate = self
@@ -49,8 +59,9 @@ final class OnboardingLocation: NSObject, CLLocationManagerDelegate {
             manager.requestWhenInUseAuthorization()
         case .authorizedAlways, .authorizedWhenInUse:
             guard timeout == nil else { return }
+            let wait = waitForTimeout
             timeout = Task { [weak self] in
-                do { try await Task.sleep(for: .seconds(20)) } catch { return }
+                do { try await wait() } catch { return }
                 self?.finish(nil)
             }
             manager.requestLocation()
