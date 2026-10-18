@@ -46,21 +46,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         return false
     }
 
+    // Completion-handler variants, called back on the main actor like on iOS,
+    // where the async ones return off the main thread and crash.
     nonisolated func userNotificationCenter(
-        _ center: UNUserNotificationCenter, willPresent notification: UNNotification
-    ) async -> UNNotificationPresentationOptions {
+        _ center: UNUserNotificationCenter, willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping @Sendable (UNNotificationPresentationOptions) -> Void
+    ) {
         let endpoint = notification.request.content.userInfo["endpoint"] as? String
-        await store.notificationReceived(endpoint: endpoint)
-        return [.banner, .list, .sound]
+        Task { @MainActor in
+            self.store.notificationReceived(endpoint: endpoint)
+            completionHandler([.banner, .list, .sound])
+        }
     }
 
     nonisolated func userNotificationCenter(
-        _ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse
-    ) async {
-        guard response.actionIdentifier == UNNotificationDefaultActionIdentifier else { return }
+        _ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping @Sendable () -> Void
+    ) {
+        guard response.actionIdentifier == UNNotificationDefaultActionIdentifier else {
+            DispatchQueue.main.async(execute: completionHandler)
+            return
+        }
         let endpoint = response.notification.request.content.userInfo["endpoint"] as? String
         let room = response.notification.request.content.userInfo["room"] as? String
-        await openNotification(endpoint: endpoint, room: room)
+        Task { @MainActor in
+            self.openNotification(endpoint: endpoint, room: room)
+            completionHandler()
+        }
     }
 
     private func openNotification(endpoint: String?, room: String?) {
