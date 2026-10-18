@@ -33,9 +33,10 @@ struct OnboardingView: View {
     }
 
     private var spaceSelection: some View {
+        let entries = directory.entries(matching: query)
         // One scrolling surface keeps the introduction and search in the same
         // layout flow, including with the keyboard and accessibility text sizes.
-        List {
+        return List {
             VStack(alignment: .leading, spacing: SpaceLayout.cardSpacing) {
                 Text("SpaceState")
                     .font(.title.bold())
@@ -58,7 +59,7 @@ struct OnboardingView: View {
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
 
-            ForEach(directory.entries(matching: query)) { entry in
+            ForEach(entries) { entry in
                 Button { select(entry) } label: {
                     SpaceSelectionRow(name: entry.info.name, status: directory.status(for: entry), isSelected: false)
                 }
@@ -71,7 +72,7 @@ struct OnboardingView: View {
                 directoryState
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
-            } else if directory.entries(matching: query).isEmpty {
+            } else if entries.isEmpty {
                 ContentUnavailableView.search(text: query)
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)

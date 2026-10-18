@@ -33,10 +33,15 @@ final class DirectoryStore {
         do {
             let observations = try await service.directoryObservations()
             try Task.checkCancellation()
-            entries = observations.map(\.value)
-            searchTextByEndpoint = Dictionary(entries.map { entry in
-                (entry.endpoint, Self.searchableValues(in: entry).joined(separator: "\n"))
-            }, uniquingKeysWith: { $0 + "\n" + $1 })
+            let loaded = observations.map(\.value)
+            // Indexing walks every entry by reflection; doing it on the main actor
+            // kept the search field from accepting input for seconds.
+            if loaded != entries {
+                let index = await Self.searchIndex(for: loaded)
+                try Task.checkCancellation()
+                entries = loaded
+                searchTextByEndpoint = index
+            }
             timings = Dictionary(observations.map { ($0.value.endpoint, $0.timing) }, uniquingKeysWith: { first, _ in first })
             lastError = nil
             expiry.schedule(Array(timings.values)) { [weak self] in self?.freshnessRevision += 1 }
@@ -56,18 +61,31 @@ final class DirectoryStore {
     func timing(for entry: DirectoryEntry) -> ObservationTiming? { timings[entry.endpoint] }
 
     func entries(matching query: String) -> [DirectoryEntry] {
-        let terms = query.split(whereSeparator: \.isWhitespace).map(String.init)
+        let terms = query.split(whereSeparator: \.isWhitespace).map { Self.folded(String($0)) }
         guard !terms.isEmpty else { return entries }
         return entries.filter { entry in
-            let text = searchTextByEndpoint[entry.endpoint] ?? entry.info.name
-            return terms.allSatisfy { text.localizedStandardContains($0) }
+            let text = searchTextByEndpoint[entry.endpoint] ?? Self.folded(entry.info.name)
+            return terms.allSatisfy { text.contains($0) }
         }
+    }
+
+    /// Case-, diacritic- and width-insensitive form, computed once per indexed
+    /// text so each keystroke only needs a plain substring check.
+    private nonisolated static func folded(_ text: String) -> String {
+        text.folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive], locale: nil)
+    }
+
+    @concurrent
+    private nonisolated static func searchIndex(for entries: [DirectoryEntry]) async -> [URL: String] {
+        Dictionary(entries.map { entry in
+            (entry.endpoint, folded(searchableValues(in: entry).joined(separator: "\n")))
+        }, uniquingKeysWith: { $0 + "\n" + $1 })
     }
 
     /// Index the loaded values once, including hidden addresses and nested data.
     /// Traversing values keeps model/schema field names out of search results and
     /// includes newly supported fields without a second hand-maintained field list.
-    private static func searchableValues(in value: Any) -> [String] {
+    private nonisolated static func searchableValues(in value: Any) -> [String] {
         if let text = value as? String { return [text] }
         if let url = value as? URL {
             let text = url.absoluteString

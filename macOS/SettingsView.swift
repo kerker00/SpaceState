@@ -52,9 +52,8 @@ private struct SpacePicker: View {
     @Environment(\.colorSchemeContrast) private var contrast
 
     private var palette: SpacePalette { SpacePalette(colorScheme: colorScheme, contrast: contrast) }
-    private var entries: [DirectoryEntry] { directory.entries(matching: query) }
-
     var body: some View {
+        let entries = directory.entries(matching: query)
         VStack(alignment: .leading, spacing: SpaceLayout.compactSpacing) {
             TextField("Search spaces", text: $query)
                 .textFieldStyle(.roundedBorder)
