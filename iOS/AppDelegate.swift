@@ -55,6 +55,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         }
     }
 
+    @MainActor
     private func openNotification(endpoint: String?, room: String?) {
         guard let target = SpaceDestination.notification(endpoint: endpoint, room: room, fallback: store.endpoint) else { return }
         store.notificationReceived(endpoint: target.endpoint.absoluteString)
