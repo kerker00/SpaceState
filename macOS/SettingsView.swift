@@ -112,7 +112,7 @@ private struct GeneralSettings: View {
     var showsScrollIndicator = true
     var heightChanged: ((CGFloat) -> Void)? = nil
     var viewportHeightChanged: ((CGFloat) -> Void)? = nil
-    @AppStorage(DockIcon.defaultsKey) private var showDockIcon = false
+    @AppStorage(DockIcon.defaultsKey, store: AppEnvironment.defaults) private var showDockIcon = false
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var loginItemError: String?
     @Environment(\.colorScheme) private var colorScheme

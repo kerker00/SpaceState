@@ -6,7 +6,7 @@ enum DockIcon {
     static let defaultsKey = "showDockIcon"
 
     static var isVisible: Bool {
-        UserDefaults.standard.bool(forKey: defaultsKey)
+        AppEnvironment.defaults.bool(forKey: defaultsKey)
     }
 
     static func apply(visible: Bool) {

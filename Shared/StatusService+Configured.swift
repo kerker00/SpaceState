@@ -4,7 +4,10 @@ import SpacePushClient
 extension StatusService {
     /// SpacePush at `SpacePushURL` from the Info.plist, with direct reads as fallback.
     static var configured: StatusService {
-        StatusService(spacePush: configuredServiceURL.map(SpacePushClient.configured))
+        #if DEBUG
+        if AppEnvironment.isUITest { return UITestFixtures.service }
+        #endif
+        return StatusService(spacePush: configuredServiceURL.map(SpacePushClient.configured))
     }
 
     /// `SpacePushURL` from the Info.plist, set per build configuration with `SPACEPUSH_URL`.

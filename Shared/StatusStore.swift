@@ -108,7 +108,7 @@ final class StatusStore {
     }
 
     init(
-        service: StatusService = .configured, defaults: UserDefaults = .standard,
+        service: StatusService = .configured, defaults: UserDefaults = AppEnvironment.defaults,
         reloadWidgets: @escaping () -> Void = { WidgetCenter.shared.reloadAllTimelines() },
         waitForPoll: @escaping (Duration) async throws -> Void = { try await Task.sleep(for: $0) },
         waitForExpiry: @escaping (Duration) async throws -> Void = { try await Task.sleep(for: $0) },

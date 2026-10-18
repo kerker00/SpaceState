@@ -14,7 +14,7 @@ final class OnboardingStore {
     private(set) var isEnablingNotifications = false
     private let defaults: UserDefaults
 
-    init(defaults: UserDefaults = .standard) {
+    init(defaults: UserDefaults = AppEnvironment.defaults) {
         self.defaults = defaults
         selectedName = defaults.string(forKey: "onboardingSpaceName") ?? ""
         if defaults.bool(forKey: "onboardingComplete") {
