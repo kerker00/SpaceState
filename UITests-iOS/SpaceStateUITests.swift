@@ -114,14 +114,19 @@ final class SpaceStateUITests: XCTestCase {
         assertExists(app.buttons["Settings"])
         app.buttons["Settings"].tap()
         assertExists(app.navigationBars["Settings"])
-        text(containing: "Space").tap()
+        // The settings row names the selected space; the status behind it has a room called "Space".
+        let spaceRow = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Mainframe'")).firstMatch
+        assertExists(spaceRow)
+        spaceRow.tap()
         let search = app.searchFields["Search spaces"]
         assertExists(search)
         search.tap()
         search.typeText("Chaos")
         assertExists(app.buttons["Chaosdorf"])
         app.buttons["Chaosdorf"].tap()
-        app.navigationBars.buttons.element(boundBy: 0).tap()
+        // Choosing a space returns to the settings by itself.
+        assertExists(app.navigationBars["Settings"])
+        assertExists(app.buttons.matching(NSPredicate(format: "label CONTAINS 'Chaosdorf'")).firstMatch)
         app.buttons["Done"].tap()
         assertExists(app.navigationBars["Chaosdorf"])
     }
