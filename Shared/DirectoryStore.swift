@@ -61,18 +61,24 @@ final class DirectoryStore {
     func timing(for entry: DirectoryEntry) -> ObservationTiming? { timings[entry.endpoint] }
 
     func entries(matching query: String) -> [DirectoryEntry] {
-        let terms = query.split(whereSeparator: \.isWhitespace).map(String.init)
+        let terms = query.split(whereSeparator: \.isWhitespace).map { Self.folded(String($0)) }
         guard !terms.isEmpty else { return entries }
         return entries.filter { entry in
-            let text = searchTextByEndpoint[entry.endpoint] ?? entry.info.name
-            return terms.allSatisfy { text.localizedStandardContains($0) }
+            let text = searchTextByEndpoint[entry.endpoint] ?? Self.folded(entry.info.name)
+            return terms.allSatisfy { text.contains($0) }
         }
+    }
+
+    /// Case-, diacritic- and width-insensitive form, computed once per indexed
+    /// text so each keystroke only needs a plain substring check.
+    private nonisolated static func folded(_ text: String) -> String {
+        text.folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive], locale: nil)
     }
 
     @concurrent
     private nonisolated static func searchIndex(for entries: [DirectoryEntry]) async -> [URL: String] {
         Dictionary(entries.map { entry in
-            (entry.endpoint, searchableValues(in: entry).joined(separator: "\n"))
+            (entry.endpoint, folded(searchableValues(in: entry).joined(separator: "\n")))
         }, uniquingKeysWith: { $0 + "\n" + $1 })
     }
 
