@@ -30,8 +30,9 @@ final class ObservationExpiry {
 
     func cancel() {
         id = nil
-        task?.cancel()
+        let oldTask = task
         task = nil
+        oldTask?.cancel()
     }
 
     func schedule(_ timings: [ObservationTiming], changed: @escaping () -> Void) {
@@ -43,12 +44,19 @@ final class ObservationExpiry {
         let wait = wait
         // Large configured limits cannot overflow Duration. Rechecking also
         // catches clock changes before a very distant expiry.
-        let delay = Duration.seconds(min(900, expiry.timeIntervalSince(date)))
+        let interval = expiry.timeIntervalSince(date)
+        guard interval.isFinite, interval > 0 else { return }
         task = Task { [weak self] in
-            do { try await wait(delay) } catch { return }
-            guard !Task.isCancelled, let self, self.id == identifier else { return }
-            changed()
-            self.schedule(timings, changed: changed)
+            while !Task.isCancelled {
+                let currentDate = self?.now() ?? date
+                guard let nextExpiry = timings.compactMap(\.expiresAt).filter({ $0 > currentDate }).min() else { return }
+                let interval = nextExpiry.timeIntervalSince(currentDate)
+                guard interval.isFinite, interval > 0 else { return }
+                let delay = Duration.seconds(min(900, interval))
+                do { try await wait(delay) } catch { return }
+                guard !Task.isCancelled, let self, self.id == identifier else { return }
+                changed()
+            }
         }
     }
 }

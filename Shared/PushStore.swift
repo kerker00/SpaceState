@@ -83,9 +83,36 @@ final class PushStore {
     private static let possibleTokensKey = "pushTokensPendingCleanup"
     private static let environment: PushEnvironment = SigningEnvironment.current
 
-    convenience init(serviceURL: URL? = StatusService.configuredServiceURL, defaults: UserDefaults = .standard) {
+    convenience init(serviceURL: URL? = StatusService.configuredServiceURL, defaults: UserDefaults = AppEnvironment.defaults) {
+        #if DEBUG
+        if AppEnvironment.isUITest {
+            self.init(client: Self.uiTestClient, defaults: defaults, system: Self.uiTestSystem)
+            Self.uiTestStore = self
+            return
+        }
+        #endif
         self.init(client: serviceURL.map(SpacePushClient.configured), defaults: defaults, system: .live)
     }
+
+    #if DEBUG
+    /// UI tests never reach APNs or SpacePush: a fixed token comes back at once and
+    /// registrations succeed locally. `-UITestPushDenied` makes the system refuse.
+    private static weak var uiTestStore: PushStore?
+
+    private static let uiTestClient = SpacePushClient(baseURL: URL(string: "https://push.invalid")!, load: { request in
+        (Data(), HTTPURLResponse(url: request.url!, statusCode: 204, httpVersion: nil, headerFields: nil)!)
+    })
+
+    private static var uiTestSystem: NotificationSystem {
+        let denied = UITestFixtures.has("-UITestPushDenied")
+        return NotificationSystem(
+            authorization: { denied ? .denied : .authorized },
+            requestAuthorization: { !denied },
+            requestToken: { uiTestStore?.didRegister(deviceToken: Data(repeating: 0x5a, count: 32)) },
+            waitForRetry: { try await Task.sleep(for: .seconds(5)) }
+        )
+    }
+    #endif
 
     init(client: SpacePushClient?, defaults: UserDefaults, system: NotificationSystem) {
         self.client = client

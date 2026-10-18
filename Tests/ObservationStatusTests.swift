@@ -232,6 +232,37 @@ struct ObservationStatusTests {
         wait.respond(1)
         try await eventually { changes == 1 }
     }
+
+    @Test func notificationRefreshCanOverlapDirectoryLoadAndExpiryScheduling() async throws {
+        let responses = ObservationResponses()
+        let directory = DirectoryStore(service: responses.service(proxy: false), now: { responses.clock.date })
+        let expiry = ObservationExpiry(now: { responses.clock.date }, wait: { _ in
+            try await Task.sleep(for: .milliseconds(1))
+        })
+        defer { expiry.cancel() }
+
+        let timing = ObservationTiming(source: .direct,
+                                       observedAt: responses.clock.date,
+                                       receivedAt: responses.clock.date,
+                                       maximumAge: 100)
+        expiry.schedule([timing]) { }
+
+        async let directoryLoad: Void = directory.load()
+        let refreshStore = StatusStore(service: responses.service(proxy: false),
+                                       waitForExpiry: { _ in
+                                           try await Task.sleep(for: .milliseconds(1))
+                                       },
+                                       now: { responses.clock.date },
+                                       selection: .temporary(URL(string: "https://a.invalid/api")!))
+        refreshStore.notificationReceived(endpoint: "https://a.invalid/api")
+        await directoryLoad
+        await refreshStore.refresh()
+
+        #expect(directory.entries.count == 3)
+        #expect(refreshStore.endpoint.absoluteString == "https://a.invalid/api")
+        #expect(refreshStore.info != nil)
+        refreshStore.pausePolling()
+    }
 }
 
 @Suite(.serialized)

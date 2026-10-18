@@ -45,6 +45,18 @@
 		D60000000000000000000012 /* Tests/SensorPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60000000000000000000002 /* Tests/SensorPresentationTests.swift */; };
 		E70000000000000000000011 /* Shared/OnboardingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70000000000000000000001 /* Shared/OnboardingStore.swift */; };
 		E70000000000000000000012 /* Tests/OnboardingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70000000000000000000002 /* Tests/OnboardingTests.swift */; };
+		F10000000000000000000002 /* Tests/SpaceContactLinksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000001 /* Tests/SpaceContactLinksTests.swift */; };
+		F10000000000000000000004 /* Tests/SupportTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000003 /* Tests/SupportTypesTests.swift */; };
+		F10000000000000000000006 /* Tests/PushStoreFailureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000005 /* Tests/PushStoreFailureTests.swift */; };
+		F10000000000000000000008 /* Shared/StatusDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000007 /* Shared/StatusDisplay.swift */; };
+		F1000000000000000000000A /* Shared/PushStatusDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000009 /* Shared/PushStatusDisplay.swift */; };
+		F1000000000000000000000C /* Shared/SpaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000B /* Shared/SpaceStyle.swift */; };
+		F1000000000000000000000E /* Shared/OnboardingLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000D /* Shared/OnboardingLocation.swift */; };
+		F10000000000000000000010 /* Shared/SpaceEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000F /* Shared/SpaceEntity.swift */; };
+		F10000000000000000000012 /* Tests/PresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000011 /* Tests/PresentationTests.swift */; };
+		F10000000000000000000014 /* Tests/OnboardingLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* Tests/OnboardingLocationTests.swift */; };
+		F10000000000000000000016 /* Shared/AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000015 /* Shared/AppEnvironment.swift */; };
+		F10000000000000000000018 /* Shared/UITestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000017 /* Shared/UITestFixtures.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +73,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = A10000000000000000000141;
 			remoteInfo = "SpaceStateWidget-macOS";
+		};
+		C90000000000000000000006 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000000000000000000022;
+			remoteInfo = "SpaceState-iOS";
+		};
+		CA0000000000000000000006 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000000000000000000007;
+			remoteInfo = "SpaceState-macOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -116,6 +142,20 @@
 		D60000000000000000000002 /* Tests/SensorPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SensorPresentationTests.swift; sourceTree = SOURCE_ROOT; };
 		E70000000000000000000001 /* Shared/OnboardingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/OnboardingStore.swift; sourceTree = SOURCE_ROOT; };
 		E70000000000000000000002 /* Tests/OnboardingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/OnboardingTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000001 /* Tests/SpaceContactLinksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SpaceContactLinksTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000003 /* Tests/SupportTypesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SupportTypesTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000005 /* Tests/PushStoreFailureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/PushStoreFailureTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000007 /* Shared/StatusDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/StatusDisplay.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000009 /* Shared/PushStatusDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/PushStatusDisplay.swift; sourceTree = SOURCE_ROOT; };
+		F1000000000000000000000B /* Shared/SpaceStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceStyle.swift; sourceTree = SOURCE_ROOT; };
+		F1000000000000000000000D /* Shared/OnboardingLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/OnboardingLocation.swift; sourceTree = SOURCE_ROOT; };
+		F1000000000000000000000F /* Shared/SpaceEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceEntity.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000011 /* Tests/PresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/PresentationTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000013 /* Tests/OnboardingLocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/OnboardingLocationTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000015 /* Shared/AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/AppEnvironment.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000017 /* Shared/UITestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/UITestFixtures.swift; sourceTree = SOURCE_ROOT; };
+		C90000000000000000000001 /* SpaceState-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpaceState-iOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA0000000000000000000001 /* SpaceState-macOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpaceState-macOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -186,6 +226,16 @@
 			path = Widget;
 			sourceTree = "<group>";
 		};
+		C90000000000000000000002 /* UITests-iOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "UITests-iOS";
+			sourceTree = "<group>";
+		};
+		CA0000000000000000000002 /* UITests-macOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "UITests-macOS";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +289,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C90000000000000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA0000000000000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -247,6 +311,8 @@
 			children = (
 				A10000000000000000000005 /* Shared */,
 				B20000000000000000000021 /* Push Tests */,
+				CA0000000000000000000002 /* UITests-macOS */,
+				C90000000000000000000002 /* UITests-iOS */,
 				A10000000000000000000006 /* macOS */,
 				A10000000000000000000021 /* iOS */,
 				A10000000000000000000150 /* Widget */,
@@ -262,6 +328,8 @@
 				A10000000000000000000130 /* SpaceStateWidget.appex */,
 				A10000000000000000000140 /* SpaceStateWidget.appex */,
 				B20000000000000000000020 /* SpaceStatePushTests.xctest */,
+				CA0000000000000000000001 /* SpaceState-macOSUITests.xctest */,
+				C90000000000000000000001 /* SpaceState-iOSUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -270,6 +338,18 @@
 			isa = PBXGroup;
 			children = (
 				E70000000000000000000002 /* Tests/OnboardingTests.swift */,
+				F10000000000000000000017 /* Shared/UITestFixtures.swift */,
+				F10000000000000000000015 /* Shared/AppEnvironment.swift */,
+				F10000000000000000000013 /* Tests/OnboardingLocationTests.swift */,
+				F10000000000000000000011 /* Tests/PresentationTests.swift */,
+				F1000000000000000000000F /* Shared/SpaceEntity.swift */,
+				F1000000000000000000000D /* Shared/OnboardingLocation.swift */,
+				F1000000000000000000000B /* Shared/SpaceStyle.swift */,
+				F10000000000000000000009 /* Shared/PushStatusDisplay.swift */,
+				F10000000000000000000007 /* Shared/StatusDisplay.swift */,
+				F10000000000000000000005 /* Tests/PushStoreFailureTests.swift */,
+				F10000000000000000000003 /* Tests/SupportTypesTests.swift */,
+				F10000000000000000000001 /* Tests/SpaceContactLinksTests.swift */,
 				E70000000000000000000001 /* Shared/OnboardingStore.swift */,
 				B20000000000000000000001 /* Shared/PushStore.swift */,
 				B20000000000000000000002 /* Shared/StatusStore.swift */,
@@ -426,6 +506,48 @@
 			productReference = B20000000000000000000020 /* SpaceStatePushTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C90000000000000000000008 /* SpaceState-iOSUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C90000000000000000000009 /* Build configuration list for PBXNativeTarget "SpaceState-iOSUITests" */;
+			buildPhases = (
+				C90000000000000000000003 /* Sources */,
+				C90000000000000000000004 /* Frameworks */,
+				C90000000000000000000005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C90000000000000000000007 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C90000000000000000000002 /* UITests-iOS */,
+			);
+			name = "SpaceState-iOSUITests";
+			productName = "SpaceState-iOSUITests";
+			productReference = C90000000000000000000001 /* SpaceState-iOSUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		CA0000000000000000000008 /* SpaceState-macOSUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA0000000000000000000009 /* Build configuration list for PBXNativeTarget "SpaceState-macOSUITests" */;
+			buildPhases = (
+				CA0000000000000000000003 /* Sources */,
+				CA0000000000000000000004 /* Frameworks */,
+				CA0000000000000000000005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CA0000000000000000000007 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CA0000000000000000000002 /* UITests-macOS */,
+			);
+			name = "SpaceState-macOSUITests";
+			productName = "SpaceState-macOSUITests";
+			productReference = CA0000000000000000000001 /* SpaceState-macOSUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -436,6 +558,14 @@
 				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
+					CA0000000000000000000008 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = A10000000000000000000007;
+					};
+					C90000000000000000000008 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = A10000000000000000000022;
+					};
 					A10000000000000000000007 = {
 						CreatedOnToolsVersion = 27.0;
 					};
@@ -473,6 +603,8 @@
 				A10000000000000000000131 /* SpaceStateWidget-iOS */,
 				A10000000000000000000141 /* SpaceStateWidget-macOS */,
 				B20000000000000000000024 /* SpaceState-PushTests */,
+				CA0000000000000000000008 /* SpaceState-macOSUITests */,
+				C90000000000000000000008 /* SpaceState-iOSUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -500,6 +632,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A10000000000000000000144 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C90000000000000000000005 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA0000000000000000000005 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -542,6 +688,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				E70000000000000000000012 /* Tests/OnboardingTests.swift in Sources */,
+				F10000000000000000000018 /* Shared/UITestFixtures.swift in Sources */,
+				F10000000000000000000016 /* Shared/AppEnvironment.swift in Sources */,
+				F10000000000000000000014 /* Tests/OnboardingLocationTests.swift in Sources */,
+				F10000000000000000000012 /* Tests/PresentationTests.swift in Sources */,
+				F10000000000000000000010 /* Shared/SpaceEntity.swift in Sources */,
+				F1000000000000000000000E /* Shared/OnboardingLocation.swift in Sources */,
+				F1000000000000000000000C /* Shared/SpaceStyle.swift in Sources */,
+				F1000000000000000000000A /* Shared/PushStatusDisplay.swift in Sources */,
+				F10000000000000000000008 /* Shared/StatusDisplay.swift in Sources */,
+				F10000000000000000000006 /* Tests/PushStoreFailureTests.swift in Sources */,
+				F10000000000000000000004 /* Tests/SupportTypesTests.swift in Sources */,
+				F10000000000000000000002 /* Tests/SpaceContactLinksTests.swift in Sources */,
 				E70000000000000000000011 /* Shared/OnboardingStore.swift in Sources */,
 				B2000000000000000000000B /* Shared/PushStore.swift in Sources */,
 				B2000000000000000000000C /* Shared/StatusStore.swift in Sources */,
@@ -565,6 +723,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C90000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA0000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -577,6 +749,16 @@
 			isa = PBXTargetDependency;
 			target = A10000000000000000000141 /* SpaceStateWidget-macOS */;
 			targetProxy = A1000000000000000000015A /* PBXContainerItemProxy */;
+		};
+		C90000000000000000000007 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000000022 /* SpaceState-iOS */;
+			targetProxy = C90000000000000000000006 /* PBXContainerItemProxy */;
+		};
+		CA0000000000000000000007 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000000007 /* SpaceState-macOS */;
+			targetProxy = CA0000000000000000000006 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -889,6 +1071,64 @@
 			};
 			name = Release;
 		};
+		C9000000000000000000000A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.UITests.iOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				TEST_TARGET_NAME = "SpaceState-iOS";
+			};
+			name = Debug;
+		};
+		C9000000000000000000000B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.UITests.iOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				TEST_TARGET_NAME = "SpaceState-iOS";
+			};
+			name = Release;
+		};
+		CA000000000000000000000A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.UITests.macOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				TEST_TARGET_NAME = "SpaceState-macOS";
+			};
+			name = Debug;
+		};
+		CA000000000000000000000B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.grafixmafia.SpaceState.UITests.macOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				TEST_TARGET_NAME = "SpaceState-macOS";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -942,6 +1182,24 @@
 			buildConfigurations = (
 				B20000000000000000000026 /* Debug */,
 				B20000000000000000000027 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C90000000000000000000009 /* Build configuration list for PBXNativeTarget "SpaceState-iOSUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9000000000000000000000A /* Debug */,
+				C9000000000000000000000B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CA0000000000000000000009 /* Build configuration list for PBXNativeTarget "SpaceState-macOSUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CA000000000000000000000A /* Debug */,
+				CA000000000000000000000B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
