@@ -66,11 +66,15 @@ final class OnboardingLocation: NSObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard manager === self.manager else { return }
-        let location = locations.last {
+        finish(Self.usableLocation(in: locations))
+    }
+
+    /// The newest fix with a valid coordinate and accuracy, taken within the last minute.
+    nonisolated static func usableLocation(in locations: [CLLocation], now: Date = Date()) -> CLLocation? {
+        locations.last {
             $0.horizontalAccuracy >= 0 && $0.horizontalAccuracy.isFinite &&
-                abs($0.timestamp.timeIntervalSinceNow) <= 60 && CLLocationCoordinate2DIsValid($0.coordinate)
+                abs($0.timestamp.timeIntervalSince(now)) <= 60 && CLLocationCoordinate2DIsValid($0.coordinate)
         }
-        finish(location)
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {

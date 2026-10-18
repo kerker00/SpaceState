@@ -48,6 +48,12 @@
 		F10000000000000000000002 /* Tests/SpaceContactLinksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000001 /* Tests/SpaceContactLinksTests.swift */; };
 		F10000000000000000000004 /* Tests/SupportTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000003 /* Tests/SupportTypesTests.swift */; };
 		F10000000000000000000006 /* Tests/PushStoreFailureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000005 /* Tests/PushStoreFailureTests.swift */; };
+		F10000000000000000000008 /* Shared/StatusDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000007 /* Shared/StatusDisplay.swift */; };
+		F1000000000000000000000A /* Shared/PushStatusDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000009 /* Shared/PushStatusDisplay.swift */; };
+		F1000000000000000000000C /* Shared/SpaceStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000B /* Shared/SpaceStyle.swift */; };
+		F1000000000000000000000E /* Shared/OnboardingLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000D /* Shared/OnboardingLocation.swift */; };
+		F10000000000000000000010 /* Shared/SpaceEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000F /* Shared/SpaceEntity.swift */; };
+		F10000000000000000000012 /* Tests/PresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000011 /* Tests/PresentationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +128,12 @@
 		F10000000000000000000001 /* Tests/SpaceContactLinksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SpaceContactLinksTests.swift; sourceTree = SOURCE_ROOT; };
 		F10000000000000000000003 /* Tests/SupportTypesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/SupportTypesTests.swift; sourceTree = SOURCE_ROOT; };
 		F10000000000000000000005 /* Tests/PushStoreFailureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/PushStoreFailureTests.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000007 /* Shared/StatusDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/StatusDisplay.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000009 /* Shared/PushStatusDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/PushStatusDisplay.swift; sourceTree = SOURCE_ROOT; };
+		F1000000000000000000000B /* Shared/SpaceStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceStyle.swift; sourceTree = SOURCE_ROOT; };
+		F1000000000000000000000D /* Shared/OnboardingLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/OnboardingLocation.swift; sourceTree = SOURCE_ROOT; };
+		F1000000000000000000000F /* Shared/SpaceEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/SpaceEntity.swift; sourceTree = SOURCE_ROOT; };
+		F10000000000000000000011 /* Tests/PresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/PresentationTests.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -276,6 +288,12 @@
 			isa = PBXGroup;
 			children = (
 				E70000000000000000000002 /* Tests/OnboardingTests.swift */,
+				F10000000000000000000011 /* Tests/PresentationTests.swift */,
+				F1000000000000000000000F /* Shared/SpaceEntity.swift */,
+				F1000000000000000000000D /* Shared/OnboardingLocation.swift */,
+				F1000000000000000000000B /* Shared/SpaceStyle.swift */,
+				F10000000000000000000009 /* Shared/PushStatusDisplay.swift */,
+				F10000000000000000000007 /* Shared/StatusDisplay.swift */,
 				F10000000000000000000005 /* Tests/PushStoreFailureTests.swift */,
 				F10000000000000000000003 /* Tests/SupportTypesTests.swift */,
 				F10000000000000000000001 /* Tests/SpaceContactLinksTests.swift */,
@@ -551,6 +569,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E70000000000000000000012 /* Tests/OnboardingTests.swift in Sources */,
+				F10000000000000000000012 /* Tests/PresentationTests.swift in Sources */,
+				F10000000000000000000010 /* Shared/SpaceEntity.swift in Sources */,
+				F1000000000000000000000E /* Shared/OnboardingLocation.swift in Sources */,
+				F1000000000000000000000C /* Shared/SpaceStyle.swift in Sources */,
+				F1000000000000000000000A /* Shared/PushStatusDisplay.swift in Sources */,
+				F10000000000000000000008 /* Shared/StatusDisplay.swift in Sources */,
 				F10000000000000000000006 /* Tests/PushStoreFailureTests.swift in Sources */,
 				F10000000000000000000004 /* Tests/SupportTypesTests.swift in Sources */,
 				F10000000000000000000002 /* Tests/SpaceContactLinksTests.swift in Sources */,
